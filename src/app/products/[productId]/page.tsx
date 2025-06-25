@@ -44,7 +44,7 @@ export default function ProductDetail({ params }: { params: Promise<{ productId:
       <p className="text-lg font-semibold mb-4">${product.price}</p>
 
       <button
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
         onClick={handleAddToCart}
       >
         Add to Cart

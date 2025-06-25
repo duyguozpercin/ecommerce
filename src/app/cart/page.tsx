@@ -38,7 +38,7 @@ export default function Cart() {
             </div>
           </div>
           <button
-            className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-700"
+            className="bg-amber-500 text-white px-3 py-1 rounded hover:bg-amber-600"
             onClick={() => removeFromCart(item.id)}
           >
             Sil
