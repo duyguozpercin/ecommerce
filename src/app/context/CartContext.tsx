@@ -1,4 +1,3 @@
-// app/context/CartContext.tsx
 
 'use client';
 
@@ -12,7 +11,7 @@ interface Product {
   thumbnail: string;
 }
 
-// Sepetteki ürün tipi:
+
 export interface CartItem extends Product {
   quantity: number;
 }
@@ -44,12 +43,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
-        // Adedi 1 artır
+        
         return prev.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      // Yeni ürün ekleniyor
+      
       return [...prev, { ...product, quantity: 1 }];
     });
   }
@@ -72,7 +71,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         .map(item =>
           item.id === id ? { ...item, quantity: item.quantity - 1 } : item
         )
-        .filter(item => item.quantity > 0) // 0 olursa sepetten kaldır
+        .filter(item => item.quantity > 0)
     );
   }
 

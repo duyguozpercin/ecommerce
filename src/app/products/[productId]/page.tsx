@@ -12,9 +12,9 @@ interface Product {
   thumbnail: string;
 }
 
-// --- BURADA: params Promise olarak tanımlı!
+
 export default function ProductDetail({ params }: { params: Promise<{ productId: string }> }) {
-  // --- BURADA: params'ı çöz!
+  
   const { productId } = React.use(params);
 
   const [product, setProduct] = React.useState<Product | null>(null);

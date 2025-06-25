@@ -1,4 +1,4 @@
-// app/products/page.tsx
+
 interface Product {
   id: number;
   title: string;
@@ -11,7 +11,7 @@ export default async function ProductsPage() {
   const data = await res.json();
   const products: Product[] = data.products;
 
-  // Ürünleri kategoriye göre gruplama
+
   const productsByCategory: { [key: string]: Product[] } = {};
   products.forEach(product => {
     if (!productsByCategory[product.category]) {
