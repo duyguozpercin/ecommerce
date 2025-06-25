@@ -1,51 +1,54 @@
-// app/products/page.tsx
+'use client';
+
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useCart } from '../../context/CartContext';
+
 interface Product {
   id: number;
   title: string;
-  category: string;
+  description: string;
+  price: number;
   thumbnail: string;
 }
 
-export default async function ProductsPage() {
-  const res = await fetch('https://dummyjson.com/products');
-  const data = await res.json();
-  const products: Product[] = data.products;
+// --- BURADA: params Promise olarak tanımlı!
+export default function ProductDetail({ params }: { params: Promise<{ productId: string }> }) {
+  // --- BURADA: params'ı çöz!
+  const { productId } = React.use(params);
 
-  // Ürünleri kategoriye göre gruplama
-  const productsByCategory: { [key: string]: Product[] } = {};
-  products.forEach(product => {
-    if (!productsByCategory[product.category]) {
-      productsByCategory[product.category] = [];
+  const [product, setProduct] = React.useState<Product | null>(null);
+  const { addToCart } = useCart();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    fetch(`https://dummyjson.com/products/${productId}`)
+      .then(res => res.json())
+      .then(data => setProduct(data));
+  }, [productId]);
+
+  if (!product) return <div>Loading...</div>;
+
+  function handleAddToCart() {
+    if (product) {
+      addToCart(product);
     }
-    productsByCategory[product.category].push(product);
-  });
+    router.push('/cart');
+  }
 
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold mb-6 text-center">All Products by Category</h1>
-      <div className="space-y-8">
-        {Object.entries(productsByCategory).map(([category, items]) => (
-          <section key={category}>
-            <h2 className="text-xl font-semibold mb-2">{category.toUpperCase()}</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {items.map(product => (
-                <a
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="border p-4 hover:bg-gray-100 rounded flex items-center gap-4"
-                >
-                  <img
-                    src={product.thumbnail}
-                    alt={product.title}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                  <span>{product.title}</span>
-                </a>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-    </main>
+    <div className="p-8 max-w-xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
+      <img src={product.thumbnail} alt={product.title} className="w-full rounded mb-4" />
+      <p className="mb-2">{product.description}</p>
+      <p className="text-lg font-semibold mb-4">${product.price}</p>
+
+      <button
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        onClick={handleAddToCart}
+      >
+        Add to Cart
+      </button>
+    </div>
   );
 }

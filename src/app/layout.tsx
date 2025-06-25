@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import { CartProvider } from "../app/context/CartContext"; // import ekle
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,10 +27,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="relative flex min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}>
+        <div
+          className="relative flex min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
+          style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
+        >
           <div className="layout-container flex h-full grow flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
+            <CartProvider>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+            </CartProvider>
           </div>
         </div>
       </body>
