@@ -1,6 +1,12 @@
-import { Category } from '@/app/types/product';
+// Removed circular import of Category
 import { newProductFormState } from '@/app/admin/products/new/page';
 import { z } from 'zod';
+
+export enum Category {
+  fragrance = 'fragrance',
+  beauty = 'beauty',
+  groceiries = 'groceries',
+}
 
 const productSchema = z.object({
   title: z.string().min(3).max(100),
@@ -8,7 +14,7 @@ const productSchema = z.object({
   category: z.nativeEnum(Category),
 });
 
-export function addNewProduct (currentState: newProductFormState | null, formData: FormData) {
+export function addNewProductAction(currentState: newProductFormState | null, formData: FormData) {
 
   const rawData = {
     title: formData.get('title') as string,
@@ -17,7 +23,22 @@ export function addNewProduct (currentState: newProductFormState | null, formDat
 
   };
 
-  productSchema.safeParse(rawData);
+ const result = productSchema.safeParse(rawData);
 
+  if (!result.success) {
+    console.log(result)
+    return {
+      success: false,
+      message: 'Please correct the form input',
+      inputs: {...rawData},
+      errors: result.error.flatten().fieldErrors
+    }
+  } else {
+    console.log(result);
+    return {
+      success: true,
+      message: 'The product is created successfully',
+    }
+  }
   console.log("Add new product action triggered");
 }
