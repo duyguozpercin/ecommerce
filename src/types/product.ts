@@ -2,7 +2,7 @@ export interface Product {
   id:  number;
   title: string;
   description: string;
-  category: Category // TODO: update with an enum value
+  category: string; // TODO: update with an enum value
   price: number;
   discountPercentage?: number;
   rating?: number;

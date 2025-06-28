@@ -1,12 +1,6 @@
-// Removed circular import of Category
-import { newProductFormState } from '@/app/admin/products/new/page';
+import { NewProductFormState } from '@/app/admin/products/new/page';
+import { Category } from '@/types/product';
 import { z } from 'zod';
-
-export enum Category {
-  fragrance = 'fragrance',
-  beauty = 'beauty',
-  groceiries = 'groceries',
-}
 
 const productSchema = z.object({
   title: z.string().min(3).max(100),
@@ -14,19 +8,20 @@ const productSchema = z.object({
   category: z.nativeEnum(Category),
 });
 
-export function addNewProductAction(currentState: newProductFormState | null, formData: FormData) {
-
+export async function addNewProductAction(
+  currentState: NewProductFormState,
+  formData: FormData
+): Promise<NewProductFormState> {
   const rawData = {
     title: formData.get('title') as string,
     description: formData.get('description') as string,
     category: formData.get('category') as string,
-
   };
 
- const result = productSchema.safeParse(rawData);
+  const result = productSchema.safeParse(rawData);
 
   if (!result.success) {
-    console.log(result)
+    console.log(result);
     return {
       success: false,
       message: 'Please correct the form input',
@@ -35,10 +30,12 @@ export function addNewProductAction(currentState: newProductFormState | null, fo
     }
   } else {
     console.log(result);
+    // TODO: Send data to Firebase
     return {
       success: true,
       message: 'The product is created successfully',
     }
   }
-  console.log("Add new product action triggered");
+
+  console.log('Adding a new product...');
 }
