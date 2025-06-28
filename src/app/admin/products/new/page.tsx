@@ -4,9 +4,10 @@ import { allCategories, Product } from "@/types/product";
 import { useActionState } from "react";
 import Form from "next/form";
 
-const initialState = {
-  status: false,
-  message: '',
+const initialState: NewProductFormState = {
+  success: false,
+  inputs: {},
+  errors: {},
 }
 export interface NewProductFormState {
   success: boolean;
