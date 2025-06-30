@@ -23,6 +23,7 @@ export interface Product {
   thumbnail: string;
 }
 
+
 export enum Category {
   fragrance = 'fragrance',
   beauty = 'beauty',

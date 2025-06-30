@@ -1,8 +1,21 @@
 'use client';
 import { addNewProductAction } from "@/app/actions/admin/products";
-import { allCategories, Product } from "@/types/product";
+import { allCategories, Product, Category } from "@/types/product";
+
+interface ProductForm {
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: Category;
+}
 import { useActionState } from "react";
 import Form from "next/form";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import InputField from "@/components/shared/Input";
+import SelectField from "@/components/shared/select";
+import { productSchema } from "@/app/actions/admin/products";
 
 const initialState: NewProductFormState = {
   success: false,
@@ -19,36 +32,67 @@ export interface NewProductFormState {
 }
 export default function Admin() {
   const [state, formAction, isPending] = useActionState<NewProductFormState, FormData>(addNewProductAction, initialState);
+  const { register, handleSubmit, formState: { errors } } = useForm<ProductForm>({
+    resolver: zodResolver(productSchema),
+    mode: "onChange",})
+  const onSubmit: SubmitHandler<ProductForm> = (data) => {
+
+  }
   if (isPending) return <p>Loading...</p>;
   console.log(state);
   return (
-    <main className="max-w-xl mx-auto">
+    <main className="max-w-xl mx-auto" >
       <h1>Add a new product</h1>
-      <Form action={formAction} >
+      <form onSubmit={handleSubmit(onSubmit)} >
         <div className="flex flex-col">
-          <label htmlFor="title">Title</label>
-          <input
+          <InputField
+            label="Title"
             type="text"
-            id="title"
-            name="title"
-            className="bg-stone-200"
-            defaultValue={state?.inputs?.title ?? ''} />
-          {state?.errors?.title ? <p>{state?.errors?.title}</p> : <></>}
+            placeholder="Product Name"
+            {...register("title")}
+            error={errors.title?.message}
+          />
         </div>
         <div className="flex flex-col">
-          <label htmlFor="description">Description</label>
-          <input type="text" id="description" name="description" className="bg-stone-200" />
+          <InputField
+            label="Description"
+            type="text"
+            placeholder="Product Description"
+            {...register("description")}
+            error={errors.description?.message}
+          />
         </div>
         <div className="flex flex-col">
-          <label htmlFor="category">Category</label>
-          <select className="bg-stone-200">
-            <option value="">Select Category</option>
-            {allCategories.map(category => <option key={category} value={category}>{category}</option>)}
-          </select>
+          <InputField
+            label="Price"
+            type="text"
+            placeholder="Enter price"
+            {...register("price", { valueAsNumber: true })}
+            error={errors.price?.message}
+          />
+        </div>
+        <div className="flex flex-col">
+          <InputField
+            label="Stock"
+            type="number"
+            placeholder="Enter stock"
+            {...register("stock", { valueAsNumber: true })}
+            error={errors.stock?.message}
+          />
+        </div>
+
+
+        <div className="flex flex-col">
+          <SelectField
+            label="Category"
+            options={allCategories}
+            {...register("category")}
+            error={errors.category?.message}
+          />
         </div>
         <button type="submit" className="bg-blue-500 text-white p-2 rounded mt-4">
           Create Product </button>
-      </Form>
+      </form>
     </main>
   )
 }
