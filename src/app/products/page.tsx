@@ -1,4 +1,4 @@
-import { allCategories } from "@/types/product";
+
 
 interface Product {
   id: number;

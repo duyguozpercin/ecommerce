@@ -98,7 +98,7 @@ export default function Admin() {
 
           <button
             type="submit"
-            className="w-full bg-emerald-500 text-white py-2 cursor-pointer rounded-lg text-lg font-semibold hover:bg-emerald-600 transition-colors duration-200"
+            className="w-full bg-[#baba8d] text-white py-2 cursor-pointer rounded-lg text-lg font-semibold hover:bg-[#a4a489] transition-colors duration-200"
           >
             Create Product
           </button>
