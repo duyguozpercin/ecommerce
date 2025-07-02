@@ -12,7 +12,7 @@ const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
     <div className="flex flex-col">
       <label htmlFor={name}>{label}</label>
       <select
-        className="bg-stone-200" id={name}
+        className="bg-stone-200 border" id={name}
         name={name}
         ref={ref}
         {...rest}>

@@ -18,7 +18,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           type={type}
           ref={ref}
           className="p-2 border rounded"
-          {...rest} // HTML input props (placeholder, min, max, disabled, vs.)
+          {...rest}
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>

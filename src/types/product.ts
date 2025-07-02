@@ -27,7 +27,8 @@ export interface Product {
 export enum Category {
   fragrance = 'fragrance',
   beauty = 'beauty',
-  groceiries = 'groceries',
+  groceries = 'groceries',
+  smartphones = 'smartphones',
 }
 
 export const allCategories = Object.keys(Category);
