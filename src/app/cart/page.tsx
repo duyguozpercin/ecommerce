@@ -4,13 +4,7 @@ import { useCart } from '../context/CartContext';
 
 export default function Cart() {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart();
-  const [mounted, setMounted] = require('react').useState(false);
-
-  require('react').useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  
 
   if (cart.length === 0) {
     return <h1 className="text-center m-12">Cart is empty</h1>;
