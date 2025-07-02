@@ -38,10 +38,10 @@ export default function ProductDetail({ params }: { params: Promise<{ productId:
 
   return (
     <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
+      <h1 className="text-3xl font-bold mb-4 dark:text-stone-800">{product.title}</h1>
       <img src={product.thumbnail} alt={product.title} className="w-full rounded mb-4" />
-      <p className="mb-2">{product.description}</p>
-      <p className="text-lg font-semibold mb-4">${product.price}</p>
+      <p className="mb-2 dark:text-stone-800">{product.description}</p>
+      <p className="text-lg font-semibold mb-4 dark:text-stone-800">${product.price}</p>
 
       <button
         className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
