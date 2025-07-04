@@ -1,5 +1,5 @@
 export interface Product {
-  id:  number;
+  id:  number | string; // Use number for auto-incremented IDs or string for UUIDs
   title: string;
   description: string;
   category: string; // TODO: update with an enum value

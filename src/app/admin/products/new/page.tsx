@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import InputField from "@/components/shared/Input";
 import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/actions/admin/products";
+import { SuccessPage } from "../Success";
 
 interface ProductForm {
   title: string;
@@ -24,6 +25,7 @@ export interface NewProductFormState {
   errors?: {
     [K in keyof Product]?: string[];
   };
+  data?: Partial<Product>;
 }
 
 const initialState: NewProductFormState = {
@@ -38,6 +40,10 @@ export default function Admin() {
     initialState
   );
 
+if (isPending) return <p className="text-center text-lg font-medium">Loading...</p>;
+if (state.success) return <SuccessPage product={state.data}/>;
+  
+
   const {
     register,
     handleSubmit,
@@ -48,12 +54,16 @@ export default function Admin() {
   });
 
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
-    console.log("Form Data:", data);
-
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("price", data.price.toString());
+    formData.append("stock", data.stock.toString());
+    formData.append("category", data.category);
+  
+    formAction(formData);
   };
-
-  if (isPending) return <p className="text-center text-lg font-medium">Loading...</p>;
-  console.log("State:", state);
+  
 
   return (
     <main className="flex justify-center py-10 bg-[#f9f9f1] min-h-screen">
