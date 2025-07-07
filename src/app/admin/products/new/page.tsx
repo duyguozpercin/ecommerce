@@ -34,7 +34,6 @@ const initialState: NewProductFormState = {
 };
 
 export default function Admin() {
-  // 🟢 Bütün hook'lar yukarıda, koşulsuz!
   const [state, formAction, isPending] = useActionState<NewProductFormState, FormData>(
     addNewProductAction,
     initialState
@@ -49,7 +48,7 @@ export default function Admin() {
     mode: "onChange",
   });
 
-  // 🟢 Submit handler hook'lardan sonra geliyor
+
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
     const formData = new FormData();
     formData.append("title", data.title);
@@ -61,10 +60,10 @@ export default function Admin() {
     startTransition(() => {
       formAction(formData);
     });
-  
+
   };
 
-  // 🟢 Koşullar hook'lardan sonra kontrol ediliyor
+
   if (isPending) return <p className="text-center text-lg font-medium">Loading...</p>;
   if (state.success) return <SuccessPage product={state.data} />;
 
