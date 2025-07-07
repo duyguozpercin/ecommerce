@@ -40,6 +40,7 @@ export default async function Home() {
               width={200}
               height={200}
               className="object-cover rounded-xl mb-4"
+              priority
             />
             <h2 className="text-lg font-semibold text-center">{product.brand}</h2>
             <h2 className="text-lg font-semibold text-center">{product.title}</h2>

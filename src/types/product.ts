@@ -31,7 +31,7 @@ export enum Category {
   smartphones = 'smartphones',
 }
 
-export const allCategories = Object.keys(Category);
+export const allCategories = Object.values(Category);
 
 
 export enum AvailabilityStatus {
