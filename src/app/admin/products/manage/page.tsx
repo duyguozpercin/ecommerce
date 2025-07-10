@@ -6,11 +6,9 @@ import { db, collections } from '@/utils/firebase';
 import UpdateProduct from '@/app/admin/products/manage/update/page';
 import DeleteProduct from '@/app/admin/products/manage/delete/page';
 import { Pencil, Trash2 } from 'lucide-react';
-
 export default function ManageProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
-
   useEffect(() => {
     const fetchProducts = async () => {
       const querySnapshot = await getDocs(collection(db, collections.products));
@@ -21,12 +19,10 @@ export default function ManageProductsPage() {
       });
       setProducts(productsData);
     };
-
     fetchProducts();
   }, []);
-
   return (
-    <main className="flex justify-center py-10 bg-[#F9F9F1] min-h-screen">
+    <main className="flex justify-center py-10 bg-[#F9F9F1] min-h-screen relative">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Product List</h1>
@@ -37,36 +33,34 @@ export default function ManageProductsPage() {
             Add New Product
           </a>
         </div>
-
-        <ProductTablePage
-          products={products}
-          onEdit={(p) => setEditProduct(p)}
-        />
-
+        {/* Listeyi blur yapmak için conditional class */}
+        <div className={editProduct ? 'blur-sm pointer-events-none' : ''}>
+          <ProductTablePage
+            products={products}
+            onEdit={(p) => setEditProduct(p)}
+          />
+        </div>
         {editProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow max-w-md w-full">
-              <UpdateProduct
-                product={editProduct}
-                onUpdated={() => {
-                  setEditProduct(null);
-                  window.location.reload();
-                }}
-              />
-              <button
-                onClick={() => setEditProduct(null)}
-                className="mt-2 text-red-500 hover:underline"
-              >
-                Cancel
-              </button>
-            </div>
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-white p-6 rounded shadow max-w-md w-full z-20 border border-gray-300">
+            <UpdateProduct
+              product={editProduct}
+              onUpdated={() => {
+                setEditProduct(null);
+                window.location.reload();
+              }}
+            />
+            <button
+              onClick={() => setEditProduct(null)}
+              className="mt-2 text-red-500 hover:underline"
+            >
+              Cancel
+            </button>
           </div>
         )}
       </div>
     </main>
   );
 }
-
 function ProductTablePage({
   products,
   onEdit,
@@ -75,7 +69,7 @@ function ProductTablePage({
   onEdit: (p: Product) => void;
 }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto min-h-[500px]"> {/* 👈 buraya min-h eklendi */}
       <table className="min-w-full border border-gray-300">
         <thead>
           <tr className="bg-[#BABA8D] text-white">

@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -26,7 +25,6 @@ interface UpdateProductProps {
 type ProductForm = z.infer<typeof productSchema>;
 
 export default function UpdateProduct({ product, onUpdated }: UpdateProductProps) {
-  const router = useRouter();
   const [showSuccess, setShowSuccess] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProductForm>({
@@ -49,9 +47,9 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
     setShowSuccess(true);
 
     setTimeout(() => {
+      setShowSuccess(false);
       if (onUpdated) onUpdated();
-      router.push('/admin/products/manage');
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -67,7 +65,6 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       {showSuccess && (
         <div className="absolute inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center p-4 rounded shadow">
           <p className="text-green-600 font-semibold text-lg mb-2">Product updated successfully!</p>
-          <p className="text-neutral-700 text-sm">Redirecting to manage page...</p>
         </div>
       )}
     </div>
