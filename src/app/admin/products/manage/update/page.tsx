@@ -15,6 +15,7 @@ const productSchema = z.object({
   category: z.string(),
   price: z.number().min(0, "Price cannot be negative"),
   stock: z.number().min(0, "Stock cannot be negative"),
+  brand: z.string().optional(),
 });
 
 interface UpdateProductProps {

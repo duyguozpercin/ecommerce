@@ -1,6 +1,6 @@
 'use client';
 import { addNewProductAction } from "@/app/actions/admin/products";
-import { allCategories, Product, Category } from "@/types/product";
+import { Product, Category, AvailabilityStatus, returnPolicy } from "@/types/product";
 import { useActionState, startTransition } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,9 @@ interface ProductForm {
   price: number;
   stock: number;
   category: Category;
+  brand?: string;
+  availabilityStatus: AvailabilityStatus;
+  returnPolicy?: returnPolicy; // Assuming returnPolicy is a string, update as needed
 }
 
 export interface NewProductFormState {
@@ -42,12 +45,15 @@ export default function Admin() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<ProductForm>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productSchema as any),
     mode: "onChange",
+    defaultValues: {
+      category: Object.values(Category)[0],
+      availabilityStatus: Object.values(AvailabilityStatus)[0],
+    },
   });
-
 
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
     const formData = new FormData();
@@ -56,13 +62,14 @@ export default function Admin() {
     formData.append("price", data.price.toString());
     formData.append("stock", data.stock.toString());
     formData.append("category", data.category);
+    formData.append("brand", data.brand ? data.brand : "");
+    formData.append("availabilityStatus", data.availabilityStatus);
+    formData.append("returnPolicy", data.returnPolicy ?? "");
 
     startTransition(() => {
       formAction(formData);
     });
-
   };
-
 
   if (isPending) return <p className="text-center text-lg font-medium">Loading...</p>;
   if (state.success) return <SuccessPage product={state.data} />;
@@ -100,15 +107,35 @@ export default function Admin() {
             {...register("stock", { valueAsNumber: true })}
             error={errors.stock?.message}
           />
+          <InputField
+            label="Brand"
+            type="text"
+            placeholder="Enter brand"
+            {...register("brand")}
+          />
           <SelectField
             label="Category"
-            options={allCategories}
+            options={Object.values(Category).map((category) => category)}
             {...register("category")}
             error={errors.category?.message}
           />
+          <SelectField
+            label="Availability Status"
+            options={Object.values(AvailabilityStatus).map((status) => status)}
+            {...register("availabilityStatus")}
+            error={errors.availabilityStatus?.message}
+          />
+          <SelectField
+            label="Return Policy"
+            options={Object.values(returnPolicy)}
+            {...register("returnPolicy")}
+            error={errors.returnPolicy?.message}
+          />
+
           <button
             type="submit"
-            className="w-full bg-[#BABA8D] text-white py-2 cursor-pointer rounded-lg text-lg font-semibold hover:bg-[#A4A489] transition-colors duration-200"
+            disabled={!isValid}
+            className={`w-full bg-[#BABA8D] text-white py-2 cursor-pointer rounded-lg text-lg font-semibold transition-colors duration-200 ${!isValid ? "opacity-50 cursor-not-allowed" : "hover:bg-[#A4A489]"}`}
           >
             Create Product
           </button>

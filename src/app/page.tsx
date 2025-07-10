@@ -7,6 +7,7 @@ interface Product {
   thumbnail: string;
   price: number;
   brand: string;
+  
 }
 
 export default async function Home() {
@@ -45,6 +46,7 @@ export default async function Home() {
             <h2 className="text-lg font-semibold text-center">{product.brand}</h2>
             <h2 className="text-lg font-semibold text-center">{product.title}</h2>
             <p className="text-md text-center">{product.price + "$"}</p>
+            
           </Link>
         ))}
       </div>
