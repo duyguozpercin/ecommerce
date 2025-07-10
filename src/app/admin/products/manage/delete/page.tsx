@@ -26,9 +26,9 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
     <div className="relative">
       <button
         onClick={() => setShowConfirm(true)}
-        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
+        className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors"
       >
-        X
+        x
       </button>
 
     

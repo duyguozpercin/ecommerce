@@ -5,7 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db, collections } from '@/utils/firebase';
 import UpdateProduct from '@/app/admin/products/manage/update/page';
 import DeleteProduct from '@/app/admin/products/manage/delete/page';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil} from 'lucide-react';
 export default function ManageProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
@@ -33,7 +33,7 @@ export default function ManageProductsPage() {
             Add New Product
           </a>
         </div>
-        {/* Listeyi blur yapmak için conditional class */}
+        
         <div className={editProduct ? 'blur-sm pointer-events-none' : ''}>
           <ProductTablePage
             products={products}
@@ -69,7 +69,7 @@ function ProductTablePage({
   onEdit: (p: Product) => void;
 }) {
   return (
-    <div className="overflow-x-auto min-h-[500px]"> {/* 👈 buraya min-h eklendi */}
+    <div className="overflow-x-auto min-h-[500px]"> 
       <table className="min-w-full border border-gray-300">
         <thead>
           <tr className="bg-[#BABA8D] text-white">
@@ -89,7 +89,7 @@ function ProductTablePage({
               <td className="border px-4 py-2">{product.stock}</td>
               <td className="border px-4 py-2 flex gap-2">
                 <button onClick={() => onEdit(product)} title="Edit">
-                  <Pencil className="w-5 h-5 text-blue-600 hover:text-blue-800" />
+                  <Pencil className="w-5 h-5 text-gray-600 hover:text-gray-800" />
                 </button>
                 <DeleteProduct
                   productId={String(product.id)}
