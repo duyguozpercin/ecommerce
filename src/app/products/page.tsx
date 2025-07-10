@@ -5,6 +5,7 @@ interface Product {
   title: string;
   category: string;
   thumbnail: string;
+  price: number;
 }
 
 export default async function ProductsPage() {
@@ -45,6 +46,9 @@ export default async function ProductsPage() {
                   />
                   <p className="text-center font-medium text-neutral-800  transition-colors">
                     {product.title}
+                  </p>
+                  <p className="text-sm text-neutral-600 font-bold mt-1">
+                    {product.price} $
                   </p>
                 </a>
               ))}
