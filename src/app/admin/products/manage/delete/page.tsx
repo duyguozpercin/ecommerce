@@ -31,7 +31,7 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
         X
       </button>
 
-      {/* Inline Confirm Box */}
+    
       {showConfirm && (
         <div className="absolute top-12 right-0 bg-white border border-gray-300 shadow-lg p-4 rounded w-64 z-10">
           <p className="text-neutral-800 mb-4 text-sm">Are you sure you want to delete this product?</p>
@@ -52,7 +52,6 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
         </div>
       )}
 
-      {/* Inline Success Box */}
       {showSuccess && (
         <div className="absolute top-12 right-0 bg-green-100 border border-green-300 shadow p-2 rounded w-64 text-center z-10">
           <p className="text-green-700 text-sm">Product deleted successfully!</p>

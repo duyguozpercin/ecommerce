@@ -17,7 +17,7 @@ interface ProductForm {
   category: Category;
   brand?: string;
   availabilityStatus: AvailabilityStatus;
-  returnPolicy?: returnPolicy; // Assuming returnPolicy is a string, update as needed
+  returnPolicy?: returnPolicy;
 }
 
 export interface NewProductFormState {
