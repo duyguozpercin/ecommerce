@@ -8,6 +8,7 @@ import InputField from "@/components/shared/Input";
 import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/actions/admin/products";
 import { SuccessPage } from "../manage/successPage";
+import Loading from "@/components/shared/Loading";
 
 interface ProductForm {
   title: string;
@@ -71,7 +72,7 @@ export default function Admin() {
     });
   };
 
-  if (isPending) return <p className="text-center text-lg font-medium">Loading...</p>;
+  if (isPending) return <Loading />;
   if (state.success) return <SuccessPage product={state.data} />;
 
   return (

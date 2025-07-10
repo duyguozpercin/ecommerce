@@ -18,7 +18,7 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data() as Product;
-        const { id: _, ...restData } = data; // data içindeki id'yi at
+        const { id: _, ...restData } = data; 
         setProducts([{ id: String(product.id), ...restData }]);
       } else {
         console.log("No such document!");
