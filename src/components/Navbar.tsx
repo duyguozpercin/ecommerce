@@ -24,7 +24,7 @@ export default function Navbar() {
             </svg>
           </div>
         </Link>
-        <Link href="/admin/products/new" className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 text-[#171212] gap-2 text-xl font-extrabold leading-normal tracking-[0.015em] min-w-0 ">
+        <Link href="/admin/products/manage" className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 text-[#171212] gap-2 text-xl font-extrabold leading-normal tracking-[0.015em] min-w-0 ">
           <div>
           <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import InputField from "@/components/shared/Input";
 import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/actions/admin/products";
-import { SuccessPage } from "../manage/page";
+import { SuccessPage } from "../manage/successPage";
 
 interface ProductForm {
   title: string;
