@@ -5,6 +5,7 @@ interface Product {
   title: string;
   category: string;
   thumbnail: string;
+  price: number;
 }
 
 export default async function ProductsPage() {
@@ -23,7 +24,7 @@ export default async function ProductsPage() {
   });
 
   return (
-    <main className="p-8 bg-[#f9f9f1] min-h-screen">
+    <main className="p-8 bg-[#f5f5f5] min-h-screen">
       <h1 className="text-3xl font-bold mb-10 text-center text-neutral-800">All Products by Category</h1>
       <div className="space-y-12">
         {Object.entries(productsByCategory).map(([category, items]) => (
@@ -45,6 +46,9 @@ export default async function ProductsPage() {
                   />
                   <p className="text-center font-medium text-neutral-800  transition-colors">
                     {product.title}
+                  </p>
+                  <p className="text-sm text-neutral-600 font-bold mt-1">
+                    {product.price} $
                   </p>
                 </a>
               ))}

@@ -1,5 +1,5 @@
 export interface Product {
-  id:  number;
+  id:  number | string; // Use number for auto-incremented IDs or string for UUIDs
   title: string;
   description: string;
   category: string; // TODO: update with an enum value
@@ -31,7 +31,7 @@ export enum Category {
   smartphones = 'smartphones',
 }
 
-export const allCategories = Object.keys(Category);
+export const allCategories = Object.values(Category);
 
 
 export enum AvailabilityStatus {
@@ -65,7 +65,7 @@ export enum returnPolicy {
 export interface Meta {
   createdAt: string;
   updatedAt: string;
-  barcode: string;
-  qrCode: string;
+  barcode?: string;
+  qrCode?: string;
 }
 

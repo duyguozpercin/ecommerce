@@ -11,13 +11,14 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ({ label, name, type = "text", error, ...rest }, ref) => {
     return (
       <div className="flex flex-col mb-4">
-        <label htmlFor={name}>{label}</label>
+        <label className='dark:text-black' htmlFor={name}>{label}</label>
         <input
           id={name}
           name={name}
           type={type}
           ref={ref}
-          className="p-2 border rounded"
+          className="p-2 border rounded dark:text-black />
+"
           {...rest}
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}

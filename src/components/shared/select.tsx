@@ -10,9 +10,9 @@ type SelectFieldProps = {
 const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
   ({ label, options, name, error, ...rest }, ref) => (
     <div className="flex flex-col">
-      <label htmlFor={name}>{label}</label>
+      <label className='dark:text-black' htmlFor={name}>{label}</label>
       <select
-        className="bg-stone-200 border" id={name}
+        className="bg-stone-200 border dark:text-black" id={name}
         name={name}
         ref={ref}
         {...rest}>
