@@ -29,9 +29,9 @@ export async function addNewProductAction(
     availabilityStatus: formData.get('availabilityStatus') as AvailabilityStatus,
     returnPolicy: formData.get('returnPolicy') as returnPolicy || undefined,
   };
-  console.log(':mag_right: rawData:', rawData);
+
   const result = productSchema.safeParse(rawData);
-  console.log(':white_check_mark: Zod parse result:', result);
+  
   if (!result.success) {
     console.error(':x: Failed parsing form data', result.error.flatten().fieldErrors);
     return {
@@ -43,8 +43,7 @@ export async function addNewProductAction(
   }
   const id = Date.now().toString();
   const dateNow = Date.now();
-  console.log(':id: Generated ID:', id);
-  console.log(':date: Timestamps:', dateNow);
+  
 
   const finalData = {
     title: result.data.title,
@@ -60,11 +59,11 @@ export async function addNewProductAction(
       updatedAt: dateNow,
     },
   };
-  console.log(':memo: Final data before write:', finalData);
+  
   try {
-    console.log(':floppy_disk: Trying to write to Firestore...');
+    
     await setDoc(doc(db, collections.products, id), finalData);
-    console.log(':white_check_mark: Firestore write successful!');
+    
     return {
       success: true,
       message: 'The product is created successfully',

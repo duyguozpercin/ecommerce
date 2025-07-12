@@ -21,7 +21,7 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
         const { id: _, ...restData } = data; 
         setProducts([{ id: String(product.id), ...restData }]);
       } else {
-        console.log("No such document!");
+        
       }
     };
     fetchProductData();
