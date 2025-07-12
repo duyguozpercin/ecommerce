@@ -36,8 +36,8 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
   return (
     <>
       <div className="text-center p-4">
-        <h1 className="text-2xl font-bold">The product was added successfully</h1>
-        <p>ID: {product.id}</p>
+        <h1 className="text-2xl font-bold dark:text-stone-900">The product was added successfully</h1>
+        <p className='dark:text-stone-900'>ID: {product.id}</p>
       </div>
       <ProductTablePage
         products={products}
@@ -96,7 +96,7 @@ function ProductTablePage({
                   <td className="border px-4 py-2">{product.stock}</td>
                   <td className="border px-4 py-2 flex gap-2">
                     <button onClick={() => onEdit(product)} title="Edit">
-                      <Pencil className="w-5 h-5 text-blue-600 hover:text-blue-800" />
+                      <Pencil className="w-5 h-5 text-black-600 hover:text-blue-800" />
                     </button>
                     <DeleteProduct
                       productId={String(product.id)}
