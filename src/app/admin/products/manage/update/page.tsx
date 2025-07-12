@@ -28,6 +28,8 @@ type ProductForm = z.infer<typeof productSchema>;
 export default function UpdateProduct({ product, onUpdated }: UpdateProductProps) {
   const [showSuccess, setShowSuccess] = useState(false);
 
+  if (!product) return null;
+
   const { register, handleSubmit, formState: { errors } } = useForm<ProductForm>({
     resolver: zodResolver(productSchema),
     defaultValues: {

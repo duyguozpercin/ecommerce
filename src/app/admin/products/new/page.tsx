@@ -1,4 +1,5 @@
 'use client';
+
 import { addNewProductAction } from "@/app/actions/admin/products";
 import { Product, Category, AvailabilityStatus, returnPolicy } from "@/types/product";
 import { useActionState, startTransition } from "react";
@@ -7,8 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import InputField from "@/components/shared/Input";
 import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/actions/admin/products";
-import { SuccessPage } from "../manage/successPage";
 import Loading from "@/components/shared/Loading";
+import { useRouter } from "next/navigation";
 
 interface ProductForm {
   title: string;
@@ -38,6 +39,8 @@ const initialState: NewProductFormState = {
 };
 
 export default function Admin() {
+  const router = useRouter();
+
   const [state, formAction, isPending] = useActionState<NewProductFormState, FormData>(
     addNewProductAction,
     initialState
@@ -63,7 +66,7 @@ export default function Admin() {
     formData.append("price", data.price.toString());
     formData.append("stock", data.stock.toString());
     formData.append("category", data.category);
-    formData.append("brand", data.brand ? data.brand : "");
+    formData.append("brand", data.brand ?? "");
     formData.append("availabilityStatus", data.availabilityStatus);
     formData.append("returnPolicy", data.returnPolicy ?? "");
 
@@ -72,8 +75,13 @@ export default function Admin() {
     });
   };
 
+
+  if (state.success) {
+    router.push("/admin/products/manage");
+    return null;
+  }
+
   if (isPending) return <Loading />;
-  if (state.success) return <SuccessPage product={state.data} />;
 
   return (
     <main className="flex justify-center py-10 bg-[#f5f5f5] min-h-screen">
@@ -116,13 +124,13 @@ export default function Admin() {
           />
           <SelectField
             label="Category"
-            options={Object.values(Category).map((category) => category)}
+            options={Object.values(Category)}
             {...register("category")}
             error={errors.category?.message}
           />
           <SelectField
             label="Availability Status"
-            options={Object.values(AvailabilityStatus).map((status) => status)}
+            options={Object.values(AvailabilityStatus)}
             {...register("availabilityStatus")}
             error={errors.availabilityStatus?.message}
           />
