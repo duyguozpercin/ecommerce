@@ -11,7 +11,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-8">
+    <div className="max-w-xl mx-auto p-8 bg-[#f5f5f5]">
       <h1 className="text-2xl font-bold dark:text-stone-900 mb-6 text-center">Cart</h1>
       {cart.map(item => (
         <div key={item.id} className="flex items-center gap-4 border-b py-4">

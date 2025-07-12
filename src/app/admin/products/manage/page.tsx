@@ -22,7 +22,7 @@ export default function ManageProductsPage() {
     fetchProducts();
   }, []);
   return (
-    <main className="flex justify-center py-10 bg-[#F9F9F1] min-h-screen relative">
+    <main className="flex justify-center py-10 bg-[#f5f5f5] min-h-screen relative">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Product List</h1>
@@ -70,24 +70,24 @@ function ProductTablePage({
 }) {
   return (
     <div className="overflow-x-auto min-h-[500px]"> 
-      <table className="min-w-full border border-gray-300">
+      <table className="w-full md:min-w-full border border-gray-300 text-sm md:text-base">
         <thead>
           <tr className="bg-[#BABA8D] text-white">
-            <th className="py-3 px-4 text-left">Title</th>
-            <th className="py-3 px-4 text-left">Category</th>
-            <th className="py-3 px-4 text-left">Price</th>
-            <th className="py-3 px-4 text-left">Stock</th>
-            <th className="py-3 px-4 text-left">Actions</th>
+            <th className="py-2 px-2 md:py-3 md:px-4 text-left">Title</th>
+            <th className="py-2 px-2 md:py-3 md:px-4 text-left">Category</th>
+            <th className="py-2 px-2 md:py-3 md:px-4 text-left">Price</th>
+            <th className="py-2 px-2 md:py-3 md:px-4 text-left">Stock</th>
+            <th className="py-2 px-2 md:py-3 md:px-4 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
           {products.map((product) => (
             <tr key={product.id} className="hover:bg-gray-50 transition-colors align-top">
-              <td className="border px-4 py-2">{product.title}</td>
-              <td className="border px-4 py-2">{product.category}</td>
-              <td className="border px-4 py-2">${product.price}</td>
-              <td className="border px-4 py-2">{product.stock}</td>
-              <td className="border px-4 py-2 flex gap-2">
+              <td className="border px-2 py-1 md:px-4 md:py-2">{product.title}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">{product.category}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">${product.price}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">{product.stock}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2 flex gap-2">
                 <button onClick={() => onEdit(product)} title="Edit">
                   <Pencil className="w-5 h-5 text-gray-600 hover:text-gray-800" />
                 </button>

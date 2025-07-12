@@ -26,14 +26,14 @@ export default async function Home() {
   if (loading) return <p>Loading....</p>;
 
   return (
-    <main className="px-8 py-12 bg-[#FFFEF2]">
+    <main className="px-8 py-12 bg-[#f5f5f5]">
       <h1 className="text-center text-3xl m-12 font-bold dark:text-stone-900 ">Ecom website</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product: Product) => (
           <Link
             key={product.id}
             href={`/products/${product.id}`}
-            className="bg-[#f0efe0] shadow-xl dark:text-stone-900 rounded-2xl p-6 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF]"
+            className="bg-white shadow-xl dark:text-stone-900 rounded-2xl p-6 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF]"
           >
              <Image
               src={product.thumbnail}

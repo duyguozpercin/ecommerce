@@ -76,7 +76,7 @@ export default function Admin() {
   if (state.success) return <SuccessPage product={state.data} />;
 
   return (
-    <main className="flex justify-center py-10 bg-[#F9F9F1] min-h-screen">
+    <main className="flex justify-center py-10 bg-[#f5f5f5] min-h-screen">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8">
         <h1 className="text-3xl dark:text-stone-800 font-bold mb-6 text-center text-neutral-800">Add a New Product</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 dark:text-stone-800">
