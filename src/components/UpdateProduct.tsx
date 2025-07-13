@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,8 +29,6 @@ type ProductForm = z.infer<typeof productSchema>;
 export default function UpdateProduct({ product, onUpdated }: UpdateProductProps) {
   const [showSuccess, setShowSuccess] = useState(false);
 
-  
-
   const { register, handleSubmit, formState: { errors } } = useForm<ProductForm>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -39,8 +38,6 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       stock: product.stock,
     },
   });
-
-  if (!product) return <p>Loading...</p>;
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
     const docRef = doc(db, collections.products, String(product.id));
