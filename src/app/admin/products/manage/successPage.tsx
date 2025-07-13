@@ -4,7 +4,7 @@ import { Product } from '@/types/product';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, collections } from '@/utils/firebase';
 import UpdateProduct from '@/app/admin/products/manage/update/page';
-import DeleteProduct from '@/app/admin/products/manage/delete/page';
+import DeleteProduct from '@/components/DeleteProduct';
 import { Pencil } from 'lucide-react';
 
 

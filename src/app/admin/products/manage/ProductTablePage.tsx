@@ -2,7 +2,7 @@
 
 import { Product } from '@/types/product';
 import { Pencil } from 'lucide-react';
-import DeleteProduct from '@/app/admin/products/manage/delete/page';
+import DeleteProduct from '@/components/DeleteProduct';
 
 export default function ProductTablePage({
   products,
