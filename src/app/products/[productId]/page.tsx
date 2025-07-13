@@ -4,6 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../../context/CartContext';
 import { returnPolicy } from '@/types/product';
+import Image from 'next/image';
 
 interface Product {
   id: number;
@@ -24,7 +25,7 @@ interface Product {
 
 
 export default function ProductDetail({ params }: { params: Promise<{ productId: string }> }) {
-  
+
   const { productId } = React.use(params);
 
   const [product, setProduct] = React.useState<Product | null>(null);
@@ -49,11 +50,17 @@ export default function ProductDetail({ params }: { params: Promise<{ productId:
   return (
     <div className="p-8 max-w-xl mx-auto">
       <h1 className="text-3xl font-bold mb-4 dark:text-stone-800">{product.title}</h1>
-      <img src={product.thumbnail} alt={product.title} className="w-full rounded mb-4" />
+      <Image
+        src={product.thumbnail}
+        alt={product.title}
+        width={500}    // resmin gerçek veya yaklaşık genişliği
+        height={500}   // resmin gerçek veya yaklaşık yüksekliği
+        className="w-full rounded mb-4 object-cover"
+      />
       <h3 className='font-bold dark:text-black'>Description:</h3>
       <p className="mb-2 dark:text-stone-800">{product.description}</p>
       <p className='mb-2 dark:text-stone-800'><span className="font-bold dark:text-black">Dimensions:</span>
-      {product.dimensions.width}x${product.dimensions.height}x${product.dimensions.depth}
+        {product.dimensions.width}x${product.dimensions.height}x${product.dimensions.depth}
 
       </p>
       <p className='mb-2 dark:text-stone-800'>{product.availabilityStatus}</p>

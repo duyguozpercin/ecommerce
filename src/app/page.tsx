@@ -18,7 +18,7 @@ export default async function Home() {
     const data = await res.json();
     products = data.products;
   } catch (error) {
-    
+    console.error(error);
   } finally {
     loading = false;
   }
