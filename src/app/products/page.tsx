@@ -1,4 +1,4 @@
-
+import Image from 'next/image';
 
 interface Product {
   id: number;
@@ -39,10 +39,12 @@ export default async function ProductsPage() {
                   href={`/products/${product.id}`}
                   className="bg-white shadow-md hover:shadow-xl transition-shadow duration-300 rounded-lg p-4 flex flex-col items-center group hover:scale-[1.02] transform"
                 >
-                  <img
+                  <Image
                     src={product.thumbnail}
                     alt={product.title}
-                    className="w-32 h-32 object-cover rounded-md mb-4"
+                    width={128}
+                    height={128}
+                    className="object-cover rounded-md mb-4"
                   />
                   <p className="text-center font-medium text-neutral-800  transition-colors">
                     {product.title}

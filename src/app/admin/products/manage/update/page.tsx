@@ -28,7 +28,7 @@ type ProductForm = z.infer<typeof productSchema>;
 export default function UpdateProduct({ product, onUpdated }: UpdateProductProps) {
   const [showSuccess, setShowSuccess] = useState(false);
 
-  if (!product) return null;
+  
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProductForm>({
     resolver: zodResolver(productSchema),
@@ -39,6 +39,8 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       stock: product.stock,
     },
   });
+
+  if (!product) return <p>Loading...</p>;
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
     const docRef = doc(db, collections.products, String(product.id));

@@ -4,8 +4,8 @@ import { Product } from '@/types/product';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, collections } from '@/utils/firebase';
 import UpdateProduct from '@/app/admin/products/manage/update/page';
-import DeleteProduct from '@/app/admin/products/manage/delete/page';
-import { Pencil, Trash2 } from 'lucide-react';
+import DeleteProduct from '@/components/DeleteProduct';
+import { Pencil } from 'lucide-react';
 
 
 export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
@@ -18,9 +18,9 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data() as Product;
-        const { id: _, ...restData } = data; 
-        setProducts([{ id: String(product.id), ...restData }]);
-      } else {
+        setProducts([data]);
+      }
+       else {
         
       }
     };

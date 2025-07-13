@@ -19,7 +19,7 @@ interface ProductForm {
   category: Category;
   brand?: string;
   availabilityStatus: AvailabilityStatus;
-  returnPolicy?: returnPolicy;
+  returnPolicy: returnPolicy;
 }
 
 export interface NewProductFormState {
@@ -51,7 +51,7 @@ export default function Admin() {
     handleSubmit,
     formState: { errors, isValid }
   } = useForm<ProductForm>({
-    resolver: zodResolver(productSchema as any),
+    resolver: zodResolver(productSchema),
     mode: "onChange",
     defaultValues: {
       category: Object.values(Category)[0],
