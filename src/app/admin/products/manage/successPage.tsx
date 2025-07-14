@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Product } from '@/types/product';
 import { doc, getDoc } from 'firebase/firestore';
 import { db, collections } from '@/utils/firebase';
-import UpdateProduct from '@/app/admin/products/manage/update/page';
+import UpdateProduct from '@/components/UpdateProduct';
 import DeleteProduct from '@/components/DeleteProduct';
 import { Pencil } from 'lucide-react';
 

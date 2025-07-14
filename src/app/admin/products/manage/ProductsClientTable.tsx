@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Product } from '@/types/product';
-import UpdateProduct from '@/app/admin/products/manage/update/page';
+import UpdateProduct from '@/components/UpdateProduct';
 import ProductTablePage from '@/app/admin/products/manage/ProductTablePage';
 
 export default function ProductsClientTable({ products }: { products: Product[] }) {
