@@ -3,6 +3,8 @@ import { AvailabilityStatus, Category, returnPolicy } from '@/types/product';
 import { z } from 'zod';
 import { db, collections } from '@/utils/firebase';
 import { doc, setDoc } from "firebase/firestore";
+import { put } from '@vercel/blob';
+import { Images } from 'lucide-react';
 
 export const productSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
@@ -43,6 +45,46 @@ export async function addNewProductAction(
   }
   const id = Date.now().toString();
   const dateNow = Date.now();
+
+  let imageUrl = '';
+  const MAX_ALLOWED_IMAGE_SIZE = 4.5 * 1024 * 1024;
+  const image = formData.get('image') as File | null;
+  const allowedImageTypes = ['.jpeg', '.jpg', '.webp'];
+
+  if (image && image.size > 0) {
+    const imageName = id + '.' + image.type.slice(6,);
+
+    const blob = await put(imageName, image, {
+      access: 'public',
+      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
+    });
+    console.log('blob:', blob);
+
+    imageUrl = blob.url;
+    if (
+      !allowedImageTypes.map((allowedType) => image.name.toLowerCase().endsWith(allowedType))
+    ) {
+      return {
+        success: false,
+        message: 'Please update product image.',
+        inputs: { ...rawData },
+        errors: {
+          images: ['Allowed image formats: .jpeg, .jpg, .webp.'],
+        },
+      };
+    }
+    if (image.size > MAX_ALLOWED_IMAGE_SIZE) {
+      return {
+        success: false,
+        message: 'Please update product image, maximum allowed size 4.5 MB',
+        inputs: { ...rawData },
+        errors: {
+          images: ['Maximum allowed size 4.5 MB'],
+        },
+      };
+    }
+  }
+
   
 
   const finalData = {
@@ -58,6 +100,7 @@ export async function addNewProductAction(
       createdAt: dateNow,
       updatedAt: dateNow,
     },
+    Images: [imageUrl],
   };
   
   try {

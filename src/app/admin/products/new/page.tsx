@@ -1,5 +1,4 @@
 'use client';
-
 import { addNewProductAction } from "@/app/actions/admin/products";
 import { Product, Category, AvailabilityStatus, returnPolicy } from "@/types/product";
 import { useActionState, startTransition } from "react";
@@ -10,6 +9,7 @@ import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/actions/admin/products";
 import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface ProductForm {
   title: string;
@@ -70,16 +70,22 @@ export default function Admin() {
     formData.append("availabilityStatus", data.availabilityStatus);
     formData.append("returnPolicy", data.returnPolicy ?? "");
 
+    // 👇 image input'u ekle (daha önce aldığını varsayıyoruz)
+    const imageInput = document.getElementById("image") as HTMLInputElement;
+    if (imageInput && imageInput.files && imageInput.files[0]) {
+      formData.append("image", imageInput.files[0]);
+    }
+
     startTransition(() => {
       formAction(formData);
     });
   };
 
-
-  if (state.success) {
-    router.push("/admin/products/manage");
-    return null;
-  }
+  useEffect(() => {
+    if (state.success) {
+      router.push("/admin/products/manage");
+    }
+  }, [state.success, router]);
 
   if (isPending) return <Loading />;
 
@@ -140,6 +146,17 @@ export default function Admin() {
             {...register("returnPolicy")}
             error={errors.returnPolicy?.message}
           />
+
+          <div className="flex flex-col">
+            <label htmlFor="image">Product Image</label>
+            <input
+              type="file"
+              id="image"
+              accept=".jpeg, .jpg, .webp"
+              name="image"
+              className="dark:bg-stone-200 dark:text-stone-900"
+            />
+          </div>
 
           <button
             type="submit"
