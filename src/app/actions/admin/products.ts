@@ -60,7 +60,7 @@ export async function addNewProductAction(
     });
     console.log('blob:', blob);
 
-    imageUrl = blob.url;
+     
     if (
       !allowedImageTypes.map((allowedType) => image.name.toLowerCase().endsWith(allowedType))
     ) {
