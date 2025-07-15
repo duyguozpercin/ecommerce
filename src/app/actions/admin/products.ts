@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { db, collections } from '@/utils/firebase';
 import { doc, setDoc } from "firebase/firestore";
 import { put } from '@vercel/blob';
-import { Images } from 'lucide-react';
+
 
 export const productSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
@@ -46,7 +46,7 @@ export async function addNewProductAction(
   const id = Date.now().toString();
   const dateNow = Date.now();
 
-  let imageUrl = '';
+  const imageUrl = '';
   const MAX_ALLOWED_IMAGE_SIZE = 4.5 * 1024 * 1024;
   const image = formData.get('image') as File | null;
   const allowedImageTypes = ['.jpeg', '.jpg', '.webp'];
