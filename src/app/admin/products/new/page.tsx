@@ -11,6 +11,7 @@ import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import DimensionsField from "@/components/DimensionsField";
+import CheckboxField from "@/components/CheckboxField";
 
 interface ProductForm {
   title: string;
@@ -31,6 +32,7 @@ interface ProductForm {
     height: number;
     depth: number;
   };
+  tags?: string[];
 }
 
 export interface NewProductFormState {
@@ -192,6 +194,16 @@ export default function Admin() {
             Product Dimensions
           </h2>
           <DimensionsField register={register} errors={errors.dimensions} />
+
+
+          <CheckboxField
+            label="Tags"
+            name="tags"
+            options={["Organic", "Eco-Friendly", "Bestseller", "Limited Edition"]}
+            register={register}
+            error={errors.tags?.message}
+          />
+
 
 
           <SelectField
