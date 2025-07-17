@@ -11,7 +11,7 @@ export default async function ManageProductsPage() {
     productsData.push({ id: docSnap.id, ...productData });
   });
 
-  console.log("🔥 ProductsData:", productsData); // ✨ kontrol logu
+  console.log("🔥 ProductsData:", productsData);
 
   return (
     <main className="flex justify-center py-10 bg-[#f5f5f5] min-h-screen relative">
