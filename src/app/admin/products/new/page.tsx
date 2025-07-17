@@ -10,6 +10,7 @@ import { productSchema } from "@/app/actions/admin/products";
 import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import DimensionsField from "@/components/DimensionsField";
 
 interface ProductForm {
   title: string;
@@ -21,6 +22,15 @@ interface ProductForm {
   availabilityStatus: AvailabilityStatus;
   returnPolicy: returnPolicy;
   image?: File;
+  sku?: string;
+  weight?: string;
+  warrantyInformation?: string;
+  shippingInformation?: string;
+  dimensions?: {
+    width: number;
+    height: number;
+    depth: number;
+  };
 }
 
 export interface NewProductFormState {
@@ -142,7 +152,48 @@ export default function Admin() {
             type="text"
             placeholder="Enter brand"
             {...register("brand")}
+            error={errors.brand?.message}
           />
+
+          <InputField
+            label="SKU"
+            type="text"
+            placeholder="Enter SKU"
+            {...register("sku")}
+            error={errors.sku?.message}
+          />
+
+          <InputField
+            label="Weight"
+            type="text"
+            placeholder="Enter product weight"
+            {...register("weight")}
+            error={errors.weight?.message}
+          />
+
+          <InputField
+            label="Warranty Information"
+            type="text"
+            placeholder="Enter warranty information"
+            {...register("warrantyInformation")}
+            error={errors.warrantyInformation?.message}
+
+          />
+
+          <InputField
+            label="Shipping Information"
+            type="text"
+            placeholder="Enter shipping information"
+            {...register("shippingInformation")}
+            error={errors.shippingInformation?.message}
+          />
+
+          <h2 className="text-md font-semibold text-gray-900 dark:text-gray-100">
+            Product Dimensions
+          </h2>
+          <DimensionsField register={register} errors={errors.dimensions} />
+
+
           <SelectField
             label="Category"
             options={Object.values(Category)}
@@ -162,7 +213,6 @@ export default function Admin() {
             error={errors.returnPolicy?.message}
           />
 
-          {/* --- Estetik Dosya Seçme ve Ön İzleme --- */}
           <div className="flex flex-col items-center">
             <label htmlFor="image" className="mb-1">Product Image</label>
 
