@@ -79,10 +79,12 @@ export async function addNewProductAction(
   
     // Eğer kontrol geçtiyse blob'a yükle
     const imageName = id + '.' + image.type.slice(6,);
+
+    console.log('TOKEN (server):', process.env.BLOB_READ_WRITE_TOKEN);
   
     const blob = await put(imageName, image, {
       access: 'public',
-      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
+      token: process.env.BLOB_READ_WRITE_TOKEN
     });
   
     console.log('blob:', blob);

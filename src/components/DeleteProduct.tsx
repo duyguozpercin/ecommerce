@@ -1,8 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { doc, deleteDoc, getDoc } from 'firebase/firestore';
-import { db, collections } from '@/utils/firebase';
-import { del } from '@vercel/blob'; // 👈 Bunu ekleyeceğiz
 
 interface DeleteProductProps {
   productId: string;
@@ -15,32 +12,26 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
 
   const handleDelete = async () => {
     try {
-      // Ürün verilerini çek
-      const productRef = doc(db, collections.products, productId);
-      const productSnap = await getDoc(productRef);
+      const res = await fetch('/api/delete-product', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId }),
+      });
 
-      if (productSnap.exists()) {
-        const productData = productSnap.data();
+      const data = await res.json();
 
-        // Üründe images alanı varsa ve URL içeriyorsa
-        if (productData.images && productData.images.length > 0) {
-          for (const imageUrl of productData.images) {
-            await del(imageUrl); // Vercel Blob'dan sil
-          }
-        }
+      if (data.success) {
+        setShowConfirm(false);
+        setShowSuccess(true);
+        if (onDeleted) onDeleted();
+        setTimeout(() => {
+          setShowSuccess(false);
+        }, 2000);
+      } else {
+        console.error('🔥 Deletion failed:', data.message);
       }
-
-      // Firestore'dan sil
-      await deleteDoc(productRef);
-
-      setShowConfirm(false);
-      setShowSuccess(true);
-      if (onDeleted) onDeleted();
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 2000);
     } catch (error) {
-      console.error("🔥 Error deleting product or image", error);
+      console.error('🔥 Error deleting product or image', error);
     }
   };
 
