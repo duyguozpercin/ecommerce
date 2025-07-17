@@ -9,7 +9,7 @@ import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/actions/admin/products";
 import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductForm {
   title: string;
@@ -20,6 +20,7 @@ interface ProductForm {
   brand?: string;
   availabilityStatus: AvailabilityStatus;
   returnPolicy: returnPolicy;
+  image?: File;
 }
 
 export interface NewProductFormState {
@@ -40,6 +41,7 @@ const initialState: NewProductFormState = {
 
 export default function Admin() {
   const router = useRouter();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const [state, formAction, isPending] = useActionState<NewProductFormState, FormData>(
     addNewProductAction,
@@ -70,7 +72,6 @@ export default function Admin() {
     formData.append("availabilityStatus", data.availabilityStatus);
     formData.append("returnPolicy", data.returnPolicy ?? "");
 
-    // 👇 image input'u ekle (daha önce aldığını varsayıyoruz)
     const imageInput = document.getElementById("image") as HTMLInputElement;
     if (imageInput && imageInput.files && imageInput.files[0]) {
       formData.append("image", imageInput.files[0]);
@@ -79,6 +80,20 @@ export default function Admin() {
     startTransition(() => {
       formAction(formData);
     });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    const label = document.getElementById("file-label");
+
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
+      if (label) label.innerText = file.name;
+    } else {
+      setPreviewUrl(null);
+      if (label) label.innerText = "No file selected";
+    }
   };
 
   useEffect(() => {
@@ -147,16 +162,37 @@ export default function Admin() {
             error={errors.returnPolicy?.message}
           />
 
-          <div className="flex flex-col">
-            <label htmlFor="image">Product Image</label>
+          {/* --- Estetik Dosya Seçme ve Ön İzleme --- */}
+          <div className="flex flex-col items-center">
+            <label htmlFor="image" className="mb-1">Product Image</label>
+
             <input
               type="file"
               id="image"
               accept=".jpeg, .jpg, .webp"
               name="image"
-              className="dark:bg-stone-200 dark:text-stone-900"
+              className="hidden"
+              onChange={handleImageChange}
             />
+
+            <label
+              htmlFor="image"
+              className="cursor-pointer bg-[#BABA8D] text-white py-2 px-4 rounded-md text-center hover:bg-[#A4A489] transition-colors"
+            >
+              Choose File
+            </label>
+
+            <p id="file-label" className="mt-2 text-sm text-gray-600 text-center">No file selected</p>
+
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="mt-4 max-h-40 rounded shadow"
+              />
+            )}
           </div>
+          {/* ----------------------------------------- */}
 
           <button
             type="submit"

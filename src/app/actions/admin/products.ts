@@ -46,21 +46,13 @@ export async function addNewProductAction(
   const id = Date.now().toString();
   const dateNow = Date.now();
 
-  const imageUrl = '';
+  let imageUrl = '';
   const MAX_ALLOWED_IMAGE_SIZE = 4.5 * 1024 * 1024;
   const image = formData.get('image') as File | null;
   const allowedImageTypes = ['.jpeg', '.jpg', '.webp'];
 
   if (image && image.size > 0) {
-    const imageName = id + '.' + image.type.slice(6,);
-
-    const blob = await put(imageName, image, {
-      access: 'public',
-      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
-    });
-    console.log('blob:', blob);
-
-     
+    // Dosya tipini kontrol
     if (
       !allowedImageTypes.map((allowedType) => image.name.toLowerCase().endsWith(allowedType))
     ) {
@@ -73,6 +65,7 @@ export async function addNewProductAction(
         },
       };
     }
+  
     if (image.size > MAX_ALLOWED_IMAGE_SIZE) {
       return {
         success: false,
@@ -83,7 +76,19 @@ export async function addNewProductAction(
         },
       };
     }
+  
+    // Eğer kontrol geçtiyse blob'a yükle
+    const imageName = id + '.' + image.type.slice(6,);
+  
+    const blob = await put(imageName, image, {
+      access: 'public',
+      token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
+    });
+  
+    console.log('blob:', blob);
+    imageUrl = blob.url;
   }
+  
 
   
 
@@ -100,7 +105,7 @@ export async function addNewProductAction(
       createdAt: dateNow,
       updatedAt: dateNow,
     },
-    Images: [imageUrl],
+    images: imageUrl ? [imageUrl] : [],
   };
   
   try {
