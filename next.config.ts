@@ -1,13 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'dummyjson.com',
-      'cdn.dummyjson.com',
-      'w7n3amhklme2o7vw.public.blob.vercel-storage.com'],
-
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'dummyjson.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.dummyjson.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'w7n3amhklme2o7vw.public.blob.vercel-storage.com',
+      },
+    ],
+  },
+  env: {
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
   },
 };
 
 export default nextConfig;
-

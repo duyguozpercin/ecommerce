@@ -1,3 +1,4 @@
+
 import { NewProductFormState } from '@/app/admin/products/new/page';
 import { AvailabilityStatus, Category, returnPolicy } from '@/types/product';
 import { z } from 'zod';
@@ -14,7 +15,8 @@ export const productSchema = z.object({
   stock: z.number().min(0, "Stock cannot be negative"),
   brand: z.string().optional(),
   availabilityStatus: z.nativeEnum(AvailabilityStatus),
-  returnPolicy: z.nativeEnum(returnPolicy)
+  returnPolicy: z.nativeEnum(returnPolicy),
+  
 });
 export async function addNewProductAction(
   currentState: NewProductFormState,
