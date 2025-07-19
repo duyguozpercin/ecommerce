@@ -1,5 +1,3 @@
-
-
 import { NewProductFormState } from '@/app/admin/products/new/page';
 import { AvailabilityStatus, Category, returnPolicy } from '@/types/product';
 import { z } from 'zod';
