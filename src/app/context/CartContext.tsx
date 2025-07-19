@@ -1,27 +1,20 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  thumbnail: string;
-}
-
-
-export interface CartItem extends Product {
+interface CartItem {
+  id: string;
   quantity: number;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product) => void;
-  removeFromCart: (id: number) => void;
-  increaseQuantity: (id: number) => void;
-  decreaseQuantity: (id: number) => void;
+  addToCart: (id: string) => void;
+  removeFromCart: (id: string) => void;
+  increaseQuantity: (id: string) => void;
+  decreaseQuantity: (id: string) => void;
+  clearCart: () => void; 
+  totalItems: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -39,33 +32,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  function addToCart(product: Product) {
+  const addToCart = (id: string) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+      const existing = prev.find(item => item.id === id);
       if (existing) {
-        
         return prev.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { id, quantity: 1 }];
     });
-  }
+  };
 
-  function removeFromCart(id: number) {
+  const removeFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.id !== id));
-  }
+  };
 
-  function increaseQuantity(id: number) {
+  const increaseQuantity = (id: string) => {
     setCart(prev =>
       prev.map(item =>
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
-  }
+  };
 
-  function decreaseQuantity(id: number) {
+  const decreaseQuantity = (id: string) => {
     setCart(prev =>
       prev
         .map(item =>
@@ -73,10 +64,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
         )
         .filter(item => item.quantity > 0)
     );
-  }
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity }}>
+    <CartContext.Provider value={{
+      cart,
+      addToCart,
+      removeFromCart,
+      increaseQuantity,
+      decreaseQuantity,
+      clearCart,
+      totalItems,
+    }}>
       {children}
     </CartContext.Provider>
   );

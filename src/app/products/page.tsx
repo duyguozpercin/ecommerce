@@ -1,20 +1,20 @@
-import Image from 'next/image';
 
-interface Product {
-  id: number;
-  title: string;
-  category: string;
-  thumbnail: string;
-  price: number;
-}
+import Image from 'next/image';
+import Link from 'next/link';
+import { getAllProducts } from '@/services/productService';
+import { Product } from '@/types/product';
 
 export default async function ProductsPage() {
-  const res = await fetch('https://dummyjson.com/products');
-  const data = await res.json();
-  const products: Product[] = data.products;
+  let products: Product[] = [];
 
+  try {
+    products = await getAllProducts();
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return <p className="text-center text-red-500 mt-10">Failed to load products.</p>;
+  }
 
-
+  
   const productsByCategory: { [key: string]: Product[] } = {};
   products.forEach(product => {
     if (!productsByCategory[product.category]) {
@@ -34,25 +34,25 @@ export default async function ProductsPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {items.map(product => (
-                <a
+                <Link
                   key={product.id}
                   href={`/products/${product.id}`}
                   className="bg-white shadow-md hover:shadow-xl transition-shadow duration-300 rounded-lg p-4 flex flex-col items-center group hover:scale-[1.02] transform"
                 >
                   <Image
-                    src={product.thumbnail}
+                    src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
                     alt={product.title}
                     width={128}
                     height={128}
                     className="object-cover rounded-md mb-4"
                   />
-                  <p className="text-center font-medium text-neutral-800  transition-colors">
+                  <p className="text-center font-medium text-neutral-800 transition-colors">
                     {product.title}
                   </p>
                   <p className="text-sm text-neutral-600 font-bold mt-1">
                     {product.price} $
                   </p>
-                </a>
+                </Link>
               ))}
             </div>
           </section>

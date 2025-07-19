@@ -1,78 +1,61 @@
-'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useCart } from '../../context/CartContext';
-import { returnPolicy } from '@/types/product';
-import Image from 'next/image';
+import { doc, getDoc } from "firebase/firestore";
+import { db, collections } from "@/utils/firebase";
+import { Product } from "@/types/product";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import AddToCartButton from "@/components/AddToCartButton";
 
-interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  thumbnail: string;
-  brand: string;
-  dimensions: {
-    width: number;
-    height: number;
-    depth: number;
-  };
-  availabilityStatus: 'In Stock' | 'Out of Stock';
-  stock: number;
-  returnPolicy: returnPolicy;
+interface ProductDetailPageProps {
+  params: { productId: string };
 }
 
+export default async function ProductDetail({ params }: ProductDetailPageProps) {
+  const { productId } = params;
 
-export default function ProductDetail({ params }: { params: Promise<{ productId: string }> }) {
+  const docRef = doc(db, collections.products, productId);
+  const snapshot = await getDoc(docRef);
 
-  const { productId } = React.use(params);
-
-  const [product, setProduct] = React.useState<Product | null>(null);
-  const { addToCart } = useCart();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    fetch(`https://dummyjson.com/products/${productId}`)
-      .then(res => res.json())
-      .then(data => setProduct(data));
-  }, [productId]);
-
-  if (!product) return <div>Loading...</div>;
-
-  function handleAddToCart() {
-    if (product) {
-      addToCart(product);
-    }
-    router.push('/cart');
+  if (!snapshot.exists()) {
+    return notFound();
   }
+
+  const product = snapshot.data() as Product;
+
+  
 
   return (
     <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4 dark:text-stone-800">{product.title}</h1>
+      <h1 className="text-3xl font-bold mb-4 text-neutral-900">{product.title}</h1>
+
       <Image
-        src={product.thumbnail}
+        src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
         alt={product.title}
-        width={500}   
+        width={500}
         height={500}
         className="w-full rounded mb-4 object-cover"
       />
-      <h3 className='font-bold dark:text-black'>Description:</h3>
-      <p className="mb-2 dark:text-stone-800">{product.description}</p>
-      <p className='mb-2 dark:text-stone-800'><span className="font-bold dark:text-black">Dimensions:</span>
-        {product.dimensions.width}x${product.dimensions.height}x${product.dimensions.depth}
 
-      </p>
-      <p className='mb-2 dark:text-stone-800'>{product.availabilityStatus}</p>
-      <p className='mb-2 dark:text-stone-800'>{product.returnPolicy}</p>
-      <p className="text-lg font-semibold mb-4 dark:text-stone-800">${product.price}</p>
+      <h3 className="font-bold text-neutral-800">Description:</h3>
+      <p className="mb-2 text-neutral-700">{product.description}</p>
 
-      <button
-        className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
-        onClick={handleAddToCart}
-      >
-        Add to Cart
-      </button>
+      {product.dimensions && (
+        <p className="mb-2 text-neutral-700">
+          <span className="font-bold text-neutral-800">Dimensions: </span>
+          {product.dimensions.width} x {product.dimensions.height} x {product.dimensions.depth} cm
+        </p>
+      )}
+
+      <p className="mb-2 text-neutral-700">{product.availabilityStatus}</p>
+      <p className="mb-2 text-neutral-700">{product.returnPolicy}</p>
+      <p className="text-lg font-semibold mb-4 text-neutral-800">${product.price}</p>
+
+    
+      <AddToCartButton product={{ ...product, id: productId }} />
+
+      
     </div>
+    
   );
 }
+
