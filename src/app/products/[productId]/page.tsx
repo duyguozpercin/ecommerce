@@ -53,8 +53,8 @@ export default function ProductDetail({ params }: { params: Promise<{ productId:
       <Image
         src={product.thumbnail}
         alt={product.title}
-        width={500}    // resmin gerçek veya yaklaşık genişliği
-        height={500}   // resmin gerçek veya yaklaşık yüksekliği
+        width={500}   
+        height={500}
         className="w-full rounded mb-4 object-cover"
       />
       <h3 className='font-bold dark:text-black'>Description:</h3>

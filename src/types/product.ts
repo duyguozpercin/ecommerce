@@ -1,13 +1,13 @@
 export interface Product {
-  id:  number | string; // Use number for auto-incremented IDs or string for UUIDs
+  id:  number | string;
   title: string;
   description: string;
-  category: string; // TODO: update with an enum value
+  category: string; 
   price: number;
   discountPercentage?: number;
   rating?: number;
   stock: number;
-  tags?: string[]; //TODO: update with an enum value
+  tags: string[];
   brand: string;
   sku: string;
   weight: number;
@@ -21,6 +21,27 @@ export interface Product {
   meta: Meta;
   images: string[];
   thumbnail: string;
+}
+
+export interface ProductForm {
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: Category;
+  availabilityStatus: AvailabilityStatus;
+  brand: string;
+  returnPolicy: returnPolicy;
+  sku: string;
+  weight: number;
+  warrantyInformation: string;
+  shippingInformation: string;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  tags: string[];
 }
 
 
