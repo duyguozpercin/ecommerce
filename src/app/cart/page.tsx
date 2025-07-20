@@ -69,7 +69,7 @@ export default function Cart() {
       {cartItems.map(item => (
         <div key={String(item.id)} className="flex items-center gap-4 border-b py-4">
           <Image
-            src={item.thumbnail || '/placeholder.png'}
+            src={item.thumbnail || item.images?.[0] || "/placeholder.png"}
             alt={item.title}
             width={64}
             height={64}
@@ -108,7 +108,7 @@ export default function Cart() {
       <div className="text-center mt-6">
         <button
           onClick={clearCart}
-          className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700"
+          className="bg-amber-500 text-white px-6 py-2 rounded hover:bg-amber-600 cursor-pointer"
         >
           Clear Cart
         </button>

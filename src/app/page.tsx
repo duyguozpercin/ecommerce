@@ -32,8 +32,8 @@ export default async function Home() {
               priority
             />
             <h2 className="text-lg font-semibold text-center">{product.brand}</h2>
-            <h2 className="text-lg font-semibold text-center">{product.title}</h2>
-            <p className="text-md text-center">{product.price + "$"}</p>
+            <p className="text-lg font-semibold text-center">{product.title}</p>
+            <h2 className="text-md text-center">{product.price + "$"}</h2>
           </Link>
         ))}
       </div>
