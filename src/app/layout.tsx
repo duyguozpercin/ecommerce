@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import { CartProvider } from "../app/context/CartContext";
+import { CategoryProvider } from "../app/context/CategoryContext"; // 🟢 Yeni eklendi
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,10 @@ export default function RootLayout({
         >
           <div className="layout-container flex h-full grow flex-col">
             <CartProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
+            <CategoryProvider> {/* 🟢 Yeni eklendi */}
+                <Navbar />
+                <main className="flex-1">{children}</main>
+              </CategoryProvider>
             </CartProvider>
           </div>
         </div>
