@@ -135,7 +135,7 @@ export default function Admin() {
 
           <div className="flex flex-col items-center">
             <label htmlFor="image" className="mb-1">Product Image</label>
-            <input type="file" id="image" accept=".jpeg,.jpg,.webp" name="image" className="hidden" onChange={handleImageChange} />
+            <input type="file" id="image" accept=".jpeg,.jpg,.webp,.png" name="image" className="hidden" onChange={handleImageChange} />
             <label htmlFor="image" className="cursor-pointer bg-[#BABA8D] text-white py-2 px-4 rounded-md text-center hover:bg-[#A4A489] transition-colors">
               Choose File
             </label>

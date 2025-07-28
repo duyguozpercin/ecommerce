@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllProducts } from "@/services/productService";
 import { Product } from "@/types/product";
+import HeroSlider from "@/components/HeroSlider";
 
 export default async function Home() {
   let products: Product[] = [];
@@ -14,8 +15,11 @@ export default async function Home() {
   }
 
   return (
-    <main className="px-8 py-12 bg-[#f5f5f5]">
-      <h1 className="text-center text-3xl m-12 font-bold dark:text-stone-900">Ecom Website</h1>
+    <main className="px-8 py-12">
+      <HeroSlider />
+      <h1 className="text-center text-3xl m-12 font-bold dark:text-stone-900">
+        Ecom Website
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product: Product) => (
           <Link
@@ -32,8 +36,8 @@ export default async function Home() {
               priority
             />
             <h2 className="text-lg font-semibold text-center">{product.brand}</h2>
-            <p className="text-lg font-semibold text-center">{product.title}</p>
-            <h2 className="text-md text-center">{product.price + "$"}</h2>
+            <p className="text-lg text-md text-center">{product.title}</p>
+            <h2 className="font-semibold text-center">{product.price + "$"}</h2>
           </Link>
         ))}
       </div>

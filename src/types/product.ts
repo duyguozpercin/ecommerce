@@ -46,10 +46,11 @@ export interface ProductForm {
 
 
 export enum Category {
-  fragrance = 'fragrance',
-  beauty = 'beauty',
-  groceries = 'groceries',
-  smartphones = 'smartphones',
+  decoration = 'Decoration',
+  chair = 'Chair',
+  sofa = 'Sofa',
+  table = 'Table',
+  
 }
 
 export const allCategories = Object.values(Category);

@@ -79,10 +79,10 @@ export async function addNewProductAction(
 
   if (image && image.size > 0) {
     const MAX_ALLOWED_IMAGE_SIZE = 4.5 * 1024 * 1024;
-    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/webp'];
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/webp', 'image/png'];
 
     if (!allowedImageTypes.includes(image.type)) {
-      return { success: false, message: 'İzin verilen resim formatları: .jpeg, .jpg, .webp.' };
+      return { success: false, message: 'İzin verilen resim formatları: .jpeg, .jpg, .webp, .png' };
     }
   
     if (image.size > MAX_ALLOWED_IMAGE_SIZE) {
