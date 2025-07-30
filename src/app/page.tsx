@@ -15,8 +15,10 @@ export default async function Home() {
   }
 
   return (
+    <>
+    <HeroSlider />
     <main className="px-8 py-12">
-      <HeroSlider />
+      
       <h1 className="text-center text-3xl m-12 font-bold dark:text-stone-900">
         Ecom Website
       </h1>
@@ -46,5 +48,6 @@ export default async function Home() {
         ))}
       </div>
     </main>
+    </>
   );
 }

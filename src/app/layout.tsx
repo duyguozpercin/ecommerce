@@ -34,7 +34,7 @@ export default function RootLayout({
           className="relative flex min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
           style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
         >
-          <div className="layout-container flex h-full grow flex-col bg-amber-400">
+          <div className="layout-container flex h-full grow flex-col bg-orange-50">
             <CartProvider>
               <AuthProvider>
                 <Navbar />

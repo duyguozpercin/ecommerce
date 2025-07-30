@@ -29,7 +29,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="bg-[#f9f9f9] px-8 py-5 border-b border-neutral-200 shadow-sm">
+    <header className="bg-blue-50 px-8 py-5 border-b border-neutral-200 shadow-sm">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Sol: Home */}
         <div className="flex items-center justify-center md:justify-start w-full md:w-auto">

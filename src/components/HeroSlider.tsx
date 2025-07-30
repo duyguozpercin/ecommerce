@@ -19,7 +19,7 @@ export default function HeroSlider() {
   });
 
   return (
-    <div ref={sliderRef} className="keen-slider h-[300px] md:h-[450px] overflow-hidden rounded-lg mt-4">
+    <div ref={sliderRef} className="keen-slider h-[300px] md:h-[450px] overflow-hidden">
       {images.map((img, i) => (
         <div key={i} className="keen-slider__slide flex items-center justify-center bg-gray-200">
           <img src={img} alt={`Slide ${i + 1}`} className="w-full h-full object-cover" />
