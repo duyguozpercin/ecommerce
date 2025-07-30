@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import { CartProvider } from "../app/context/CartContext"
+import { AuthProvider } from "./context/AuthContext";
 
 
 
@@ -35,13 +36,10 @@ export default function RootLayout({
         >
           <div className="layout-container flex h-full grow flex-col bg-amber-400">
             <CartProvider>
-
-              <Navbar />
-              
-
-              
-              <main className="flex-1">{children}</main>
-
+              <AuthProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+              </AuthProvider>
             </CartProvider>
           </div>
         </div>

@@ -42,9 +42,9 @@ export default function Navbar() {
             className="relative flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
             aria-label="Cart"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#171212" viewBox="0 0 24 24">
-              <path d="M7 4h-2l-3 9v2h2l3-9zm13.3 0h-10.3l-1.6 4h12.7c.6 0 1.1-.4 1.2-1l.8-3c.1-.6-.3-1.1-.8-1.1zM6 20c-1.1 0-1.99-.9-1.99-2s.89-2 1.99-2 2 .9 2 2-.9 2-2 2zm10 0c-1.1 0-1.99-.9-1.99-2s.89-2 1.99-2 2 .9 2 2-.9 2-2 2z" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-cart3" viewBox="0 0 16 16">
+  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+</svg>
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
                 {totalItems}

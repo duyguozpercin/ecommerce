@@ -1,0 +1,71 @@
+// app/signup/page.tsx
+'use client';
+
+import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { auth, db, collections } from "@/utils/firebase";
+
+export default function SignUpPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      // 1. Firebase Auth ile kullanıcı oluştur
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 2. Firestore'a kullanıcıyı role: "user" olarak kaydet
+      await setDoc(doc(db, collections.users, user.uid), {
+        email: user.email,
+        role: "user",
+      });
+
+      // 3. Anasayfaya yönlendir
+      router.push("/");
+    } catch (err: any) {
+      console.error("Signup error:", err.message);
+      setError("Kayıt başarısız. E-posta zaten kullanılıyor olabilir.");
+    }
+  };
+
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
+      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold text-center mb-6">Kayıt Ol</h1>
+        <form onSubmit={handleSignUp} className="space-y-4">
+          <input
+            type="email"
+            placeholder="E-posta"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Şifre"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-2 border rounded"
+            required
+          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <button type="submit" className="w-full bg-[#BABA8D] text-white py-2 rounded hover:bg-[#A4A489]">
+            Kayıt Ol
+          </button>
+        </form>
+        <p className="mt-4 text-sm text-center">
+          Zaten hesabınız var mı? <a href="/login" className="text-blue-600 underline">Giriş Yap</a>
+        </p>
+      </div>
+    </main>
+  );
+}
