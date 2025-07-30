@@ -1,4 +1,4 @@
-// context/AuthContext.tsx
+
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -36,10 +36,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const userDoc = await getDoc(userDocRef);
           const roleFromDb = userDoc.data()?.role as Role;
 
-          setRole(roleFromDb || "user"); // role yoksa default: user
+          setRole(roleFromDb || "user"); 
         } catch (error) {
           console.error("Rol alınırken hata:", error);
-          setRole("user"); // güvenli varsayılan
+          setRole("user");
         }
       } else {
         setRole(null);

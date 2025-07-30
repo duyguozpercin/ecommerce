@@ -13,7 +13,7 @@ export default function ProductTablePage({
   products: Product[];
   onEdit: (p: Product) => void;
 }) {
-  const [activeId, setActiveId] = useState<string | null>(null); // 👈 sadece bir silme kutucuğu açık olsun
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   return (
     <div className="overflow-x-auto min-h-[500px]">

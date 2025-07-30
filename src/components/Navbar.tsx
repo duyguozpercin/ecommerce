@@ -33,19 +33,19 @@ export default function Navbar() {
   return (
     <header className="bg-blue-50 px-6 py-4 border-b border-neutral-200 shadow-sm">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Sol: Logo */}
+        
         <div className="flex items-center justify-between w-full md:w-auto">
           <Link href="/" className="text-2xl font-bold text-[#171212] hover:text-black font-sans tracking-wide">
             Home
           </Link>
 
-          {/* Mobile menu button */}
+          
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2">
             {menuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
 
-        {/* Orta: Kategoriler (Desktop) */}
+        
         <nav className="hidden md:flex flex-wrap justify-center gap-6 text-lg font-semibold font-sans text-neutral-700">
           {categories.map((category) => (
             <Link
@@ -58,9 +58,9 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Sağ: Cart & User */}
+        
         <div className="flex items-center justify-center md:justify-end w-full md:w-auto gap-4 relative">
-          {/* Cart */}
+          
           <Link
   href="/cart"
   className="relative flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
@@ -76,7 +76,7 @@ export default function Navbar() {
   )}
 </Link>
 
-          {/* User */}
+          
           <div className="relative" ref={dropdownRef}>
   <button
     onClick={() => setDropdownOpen((prev) => !prev)}
@@ -118,7 +118,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobil menü: kategoriler */}
+      {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden mt-4 space-y-2">
           {categories.map((category) => (

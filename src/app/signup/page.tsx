@@ -1,4 +1,4 @@
-// app/signup/page.tsx
+
 'use client';
 
 import { useState } from "react";
@@ -18,17 +18,17 @@ export default function SignUpPage() {
     setError(null);
 
     try {
-      // 1. Firebase Auth ile kullanıcı oluştur
+      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // 2. Firestore'a kullanıcıyı role: "user" olarak kaydet
+      
       await setDoc(doc(db, collections.users, user.uid), {
         email: user.email,
         role: "user",
       });
 
-      // 3. Anasayfaya yönlendir
+      
       router.push("/");
     } catch (err: any) {
       console.error("Signup error:", err.message);

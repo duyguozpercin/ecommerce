@@ -1,4 +1,4 @@
-// app/login/page.tsx
+
 'use client';
 
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
 
-      // Giriş başarılıysa role göre yönlendir
+      
       if (role === "admin") {
         router.push("/admin");
       } else {

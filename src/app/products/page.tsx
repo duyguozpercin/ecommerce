@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types/product';
 
-// ✨ searchParams ile URL'den gelen parametreyi alıyoruz
+
 interface ProductsPageProps {
   searchParams?: {
     category?: string;
@@ -20,13 +20,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     return <p className="text-center text-red-500 mt-10">Failed to load products.</p>;
   }
 
-  // ✨ URL'den gelen kategoriye göre filtreleme yap
+  
   const selectedCategory = searchParams?.category;
   const filteredProducts = selectedCategory
     ? products.filter(product => product.category === selectedCategory)
     : products;
 
-  // Kategori bazlı gruplama
+  
   const productsByCategory: { [key: string]: Product[] } = {};
   filteredProducts.forEach(product => {
     if (!productsByCategory[product.category]) {
