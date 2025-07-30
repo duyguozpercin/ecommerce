@@ -1,4 +1,3 @@
-
 'use client';
 import { addNewProductAction } from "@/app/actions/admin/products";
 import { Product, Category, AvailabilityStatus, returnPolicy } from "@/types/product";
@@ -112,7 +111,7 @@ export default function Admin() {
   return (
     <main className="flex justify-center py-10 bg-[#F5F5F5] min-h-screen">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8">
-        <h1 className="text-3xl font-bold mb-6 text-center text-neutral-800">Add New Product</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-neutral-800">Add New Product</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-stone-800">
           <InputField label="Title" type="text" placeholder="Product Name" {...register("title")} error={errors.title?.message} />
           <InputField label="Description" type="text" placeholder="Product Description" {...register("description")} error={errors.description?.message} />
