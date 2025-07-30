@@ -4,10 +4,17 @@ import { useState } from 'react';
 interface DeleteProductProps {
   productId: string;
   onDeleted?: () => void;
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
 }
 
-export default function DeleteProduct({ productId, onDeleted }: DeleteProductProps) {
-  const [showConfirm, setShowConfirm] = useState(false);
+export default function DeleteProduct({
+  productId,
+  onDeleted,
+  activeId,
+  setActiveId,
+}: DeleteProductProps) {
+  const isActive = activeId === productId;
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleDelete = async () => {
@@ -21,7 +28,7 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
       const data = await res.json();
 
       if (data.success) {
-        setShowConfirm(false);
+        setActiveId(null);
         setShowSuccess(true);
         if (onDeleted) onDeleted();
         setTimeout(() => {
@@ -38,13 +45,13 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
   return (
     <div className="relative">
       <button
-        onClick={() => setShowConfirm(true)}
+        onClick={() => setActiveId(productId)}
         className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors"
       >
         x
       </button>
 
-      {showConfirm && (
+      {isActive && (
         <div className="absolute top-12 right-0 bg-white border border-gray-300 shadow-lg p-4 rounded w-64 z-10">
           <p className="text-neutral-800 mb-4 text-sm">Are you sure you want to delete this product?</p>
           <div className="flex justify-end gap-2">
@@ -55,7 +62,7 @@ export default function DeleteProduct({ productId, onDeleted }: DeleteProductPro
               Yes
             </button>
             <button
-              onClick={() => setShowConfirm(false)}
+              onClick={() => setActiveId(null)}
               className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400 text-sm"
             >
               Cancel

@@ -4,6 +4,7 @@ import { Product } from '@/types/product';
 import { Pencil } from 'lucide-react';
 import DeleteProduct from '@/components/DeleteProduct';
 import Image from 'next/image';
+import { useState } from 'react';
 
 export default function ProductTablePage({
   products,
@@ -12,6 +13,8 @@ export default function ProductTablePage({
   products: Product[];
   onEdit: (p: Product) => void;
 }) {
+  const [activeId, setActiveId] = useState<string | null>(null); // 👈 sadece bir silme kutucuğu açık olsun
+
   return (
     <div className="overflow-x-auto min-h-[500px]">
       <table className="w-full md:min-w-full border border-gray-300 text-sm md:text-base">
@@ -55,6 +58,8 @@ export default function ProductTablePage({
                   <DeleteProduct
                     productId={String(product.id)}
                     onDeleted={() => window.location.reload()}
+                    activeId={activeId}
+                    setActiveId={setActiveId}
                   />
                 </div>
               </td>
