@@ -16,20 +16,19 @@ export default async function Home() {
 
   return (
     <>
-    <HeroSlider />
-    <main className="px-8 py-12">
-      
-      <h1 className="text-center text-3xl m-12 font-bold dark:text-stone-900">
-        Ecom Website
-      </h1>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {products.map((product: Product) => (
-          <Link
+  <HeroSlider />
+  <main className="px-4 py-6 sm:px-6 sm:py-8">
+    <h1 className="text-center text-2xl sm:text-3xl m-8 font-bold dark:text-stone-900">
+      Ecom Website
+    </h1>
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      {products.map((product: Product) => (
+        <Link
           key={product.id}
           href={`/products/${product.id}`}
-          className="bg-white shadow-xl dark:text-stone-900 rounded p-6 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
+          className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
         >
-          <div className="w-full h-[200px] relative overflow-hidden rounded mb-4">
+          <div className="w-full h-[160px] sm:h-[180px] relative overflow-hidden rounded mb-3">
             <Image
               src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
               alt={product.title}
@@ -39,15 +38,13 @@ export default async function Home() {
               priority
             />
           </div>
-          <h2 className="text-lg font-semibold text-center">{product.brand}</h2>
-          <p className="text-lg text-md text-center">{product.title}</p>
-          <h2 className="font-semibold text-center">{product.price + "$"}</h2>
+          <h2 className="text-sm sm:text-base font-semibold text-center">{product.brand}</h2>
+          <p className="text-sm sm:text-md text-center">{product.title}</p>
+          <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
         </Link>
-        
-        
-        ))}
-      </div>
-    </main>
-    </>
+      ))}
+    </div>
+  </main>
+</>
   );
 }
