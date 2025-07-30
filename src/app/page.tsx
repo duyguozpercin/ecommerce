@@ -20,7 +20,7 @@ export default async function Home() {
       <h1 className="text-center text-3xl m-12 font-bold dark:text-stone-900">
         Ecom Website
       </h1>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {products.map((product: Product) => (
           <Link
           key={product.id}
