@@ -36,7 +36,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6">Giriş Yap</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 dark:text-stone-700">Giriş Yap</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
@@ -59,7 +59,7 @@ export default function LoginPage() {
             Giriş Yap
           </button>
         </form>
-        <p className="mt-4 text-sm text-center">
+        <p className="mt-4 text-sm text-center dark:text-stone-700">
           Hesabınız yok mu? <a href="/signup" className="text-blue-600 underline">Kayıt Ol</a>
         </p>
       </div>
