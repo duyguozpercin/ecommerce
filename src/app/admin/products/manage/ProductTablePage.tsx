@@ -1,7 +1,7 @@
 'use client';
 
 import { Product } from '@/types/product';
-import { Pencil } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import DeleteProduct from '@/components/DeleteProduct';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -16,57 +16,59 @@ export default function ProductTablePage({
   const [activeId, setActiveId] = useState<string | null>(null);
 
   return (
-    <div className="overflow-x-auto min-h-[500px]">
-      <table className="w-full md:min-w-full border border-gray-300 text-sm md:text-base">
-        <thead>
-          <tr className="bg-[#BABA8D] text-white">
-            <th className="py-2 px-2 md:py-3 md:px-4 text-center align-middle dark:text-black">Image</th>
-            <th className="py-2 px-2 md:py-3 md:px-4 text-center align-middle dark:text-black">Title</th>
-            <th className="py-2 px-2 md:py-3 md:px-4 text-center align-middle dark:text-black">Category</th>
-            <th className="py-2 px-2 md:py-3 md:px-4 text-center align-middle dark:text-black">Price</th>
-            <th className="py-2 px-2 md:py-3 md:px-4 text-center align-middle dark:text-black">Stock</th>
-            <th className="py-2 px-2 md:py-3 md:px-4 text-center align-middle dark:text-black">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.id} className="hover:bg-gray-50 transition-colors align-top">
-              <td className="border px-2 py-1 md:px-4 md:py-2 text-center align-middle">
-                {product.images && product.images.length > 0 && product.images[0] ? (
-                  <Image
-                    width={50}
-                    height={50}
-                    src={product.images[0]}
-                    alt={product.title}
-                    className="object-cover rounded mx-auto"
-                  />
-                ) : (
-                  <div className="w-[50px] h-[50px] bg-gray-200 flex items-center justify-center text-gray-500 mx-auto">
-                    No image
-                  </div>
-                )}
-              </td>
-              <td className="border px-2 py-1 md:px-4 md:py-2 text-center align-middle dark:text-black">{product.title}</td>
-              <td className="border px-2 py-1 md:px-4 md:py-2 text-center align-middle dark:text-black">{product.category}</td>
-              <td className="border px-2 py-1 md:px-4 md:py-2 text-center align-middle dark:text-black">${product.price}</td>
-              <td className="border px-2 py-1 md:px-4 md:py-2 text-center align-middle dark:text-black">{product.stock}</td>
-              <td className="border px-2 py-1 md:px-4 md:py-2 text-center align-middle dark:text-black">
-                <div className="flex gap-2 items-center justify-center">
-                  <button onClick={() => onEdit(product)} title="Edit">
-                    <Pencil className="w-5 h-5 text-gray-600 hover:text-gray-800" />
-                  </button>
-                  <DeleteProduct
-                    productId={String(product.id)}
-                    onDeleted={() => window.location.reload()}
-                    activeId={activeId}
-                    setActiveId={setActiveId}
-                  />
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-4">
+      {products.map((product) => (
+        <div
+          key={product.id}
+          className="flex items-center justify-between bg-white rounded-lg shadow p-4 border border-gray-200 hover:shadow-md transition-shadow"
+        >
+          {/* Sol taraf: Resim + Başlık + Fiyat */}
+          <div className="flex items-center gap-4">
+            {product.images?.[0] ? (
+              <Image
+                src={product.images[0]}
+                alt={product.title}
+                width={60}
+                height={60}
+                className="rounded-lg object-cover border border-gray-100"
+              />
+            ) : (
+              <div className="w-[60px] h-[60px] bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                No Image
+              </div>
+            )}
+
+            <div>
+              <p className="font-medium text-gray-800">{product.title}</p>
+              <p className="text-sm text-gray-500">${product.price}</p>
+            </div>
+          </div>
+
+          {/* Sağ taraf: Düzenle / Sil butonları */}
+          <div className="flex gap-3">
+            <button
+              onClick={() => onEdit(product)}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Edit"
+            >
+              <Pencil className="w-5 h-5 text-blue-600" />
+            </button>
+
+            <button
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Delete"
+            >
+              <DeleteProduct
+                productId={String(product.id)}
+                onDeleted={() => window.location.reload()}
+                activeId={activeId}
+                setActiveId={setActiveId}
+              />
+            
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
