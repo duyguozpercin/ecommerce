@@ -10,7 +10,7 @@ import InputField from '@/components/shared/Input';
 import SelectField from '@/components/shared/select';
 import DimensionsField from '@/components/DimensionsField';
 import CheckboxField from '@/components/CheckboxField';
-import { productSchema } from '@/app/actions/admin/products'; // Add New Product'taki Zod şema
+import { productSchema } from '@/app/actions/admin/products';
 
 interface UpdateProductProps {
   product: Product;
