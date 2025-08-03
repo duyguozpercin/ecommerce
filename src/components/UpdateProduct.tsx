@@ -45,7 +45,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
     let imageUrl = product.images?.[0] || null;
 
-    // 📌 Yeni resim seçildiyse Blob'a yükle
+    
     if (selectedImage) {
       const formData = new FormData();
       formData.append('file', selectedImage);
@@ -61,7 +61,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       }
     }
 
-    // 📌 Firestore güncelle
+    
     const docRef = doc(db, collections.products, String(product.id));
     await updateDoc(docRef, {
       ...data,
@@ -87,7 +87,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
   return (
     <div className="relative">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
-        {/* Temel Alanlar */}
+        
         <InputField label="Title" {...register('title')} error={errors.title?.message} />
         <InputField label="Description" {...register('description')} error={errors.description?.message} />
         <InputField label="Price" type="number" {...register('price', { valueAsNumber: true })} error={errors.price?.message} />
@@ -98,11 +98,11 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
         <InputField label="Warranty Information" {...register('warrantyInformation')} error={errors.warrantyInformation?.message} />
         <InputField label="Shipping Information" {...register('shippingInformation')} error={errors.shippingInformation?.message} />
 
-        {/* Boyutlar */}
+        
         <h2 className="text-md font-semibold text-gray-900">Product Dimensions</h2>
         <DimensionsField register={register} errors={errors.dimensions} />
 
-        {/* Etiketler */}
+        
         <CheckboxField
           label="Tags"
           name="tags"
@@ -111,12 +111,12 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
           error={errors.tags?.message}
         />
 
-        {/* Seçim Alanları */}
+        
         <SelectField label="Category" options={Object.values(Category)} {...register('category')} error={errors.category?.message} />
         <SelectField label="Stock Status" options={Object.values(AvailabilityStatus)} {...register('availabilityStatus')} error={errors.availabilityStatus?.message} />
         <SelectField label="Return Policy" options={Object.values(returnPolicy)} {...register('returnPolicy')} error={errors.returnPolicy?.message} />
 
-        {/* Resim Yükleme */}
+        
         <div className="flex flex-col items-center">
           <label htmlFor="image" className="mb-1">Product Image</label>
           <input type="file" id="image" accept=".jpeg,.jpg,.webp,.png" name="image" className="hidden" onChange={handleImageChange} />
@@ -126,11 +126,11 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
           {previewUrl && <img src={previewUrl} alt="Preview" className="mt-4 max-h-40 rounded shadow" />}
         </div>
 
-        {/* Kaydet Butonu */}
+        
         <button type="submit" className="w-full bg-green-600 text-white py-2 rounded">Save</button>
       </form>
 
-      {/* Başarılı Güncelleme Mesajı */}
+      
       {showSuccess && (
         <div className="absolute inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center p-4 rounded shadow">
           <p className="text-green-600 font-semibold text-lg mb-2">Product updated successfully!</p>
