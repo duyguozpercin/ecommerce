@@ -7,10 +7,13 @@ import UpdateProduct from '@/components/UpdateProduct';
 import DeleteProduct from '@/components/DeleteProduct';
 import { Pencil } from 'lucide-react';
 
-
 export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
+
+  // ✅ activeId state
+  const [activeId, setActiveId] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchProductData = async () => {
       if (!product?.id) return;
@@ -20,12 +23,10 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
         const data = docSnap.data() as Product;
         setProducts([data]);
       }
-       else {
-        
-      }
     };
     fetchProductData();
   }, [product?.id]);
+
   if (!product) {
     return (
       <div className="text-center p-8">
@@ -33,16 +34,21 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
       </div>
     );
   }
+
   return (
     <>
       <div className="text-center p-4">
         <h1 className="text-2xl font-bold dark:text-stone-900">The product was added successfully</h1>
         <p className='dark:text-stone-900'>ID: {product.id}</p>
       </div>
+
       <ProductTablePage
         products={products}
-        onEdit={(p) => setEditProduct(p)}
+        onEdit={setEditProduct}
+        activeId={activeId}
+        setActiveId={setActiveId}
       />
+
       {editProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow max-w-md w-full">
@@ -65,12 +71,18 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
     </>
   );
 };
+
+// ✅ ProductTablePage artık activeId ve setActiveId propslarını alıyor
 function ProductTablePage({
   products,
   onEdit,
+  activeId,
+  setActiveId,
 }: {
   products: Product[];
   onEdit: (p: Product) => void;
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
 }) {
   return (
     <main className="flex justify-center py-10 bg-[#F9F9F1] min-h-screen">
@@ -101,6 +113,8 @@ function ProductTablePage({
                     <DeleteProduct
                       productId={String(product.id)}
                       onDeleted={() => window.location.reload()}
+                      activeId={activeId}
+                      setActiveId={setActiveId}
                     />
                   </td>
                 </tr>
@@ -112,4 +126,3 @@ function ProductTablePage({
     </main>
   );
 }
-
