@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -12,7 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { user, role } = useAuth();
+  const { role } = useAuth(); // 'user' kaldırıldı
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,15 +20,19 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
 
-      
       if (role === "admin") {
         router.push("/admin");
       } else {
         router.push("/");
       }
-    } catch (err: any) {
-      console.error("Login error:", err.message);
-      setError("Giriş başarısız. E-posta ya da şifre hatalı.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Login error:", err.message);
+        setError("Giriş başarısız. E-posta ya da şifre hatalı.");
+      } else {
+        console.error("Bilinmeyen bir hata:", err);
+        setError("Bilinmeyen bir hata oluştu.");
+      }
     }
   };
 

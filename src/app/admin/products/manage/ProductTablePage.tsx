@@ -1,7 +1,7 @@
 'use client';
 
 import { Product } from '@/types/product';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import DeleteProduct from '@/components/DeleteProduct';
 import Image from 'next/image';
 import { useState } from 'react';

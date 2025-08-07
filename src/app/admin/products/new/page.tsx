@@ -11,7 +11,8 @@ import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
 import DimensionsField from "@/components/DimensionsField";
 import CheckboxField from "@/components/CheckboxField";
-import {ProductForm} from "@/types/product";
+import { ProductForm } from "@/types/product";
+import Image from "next/image";
 
 export interface NewProductFormState {
   success: boolean;
@@ -111,7 +112,7 @@ export default function Admin() {
   return (
     <main className="flex justify-center py-10 bg-[#F5F5F5] min-h-screen">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8">
-      <h1 className="text-3xl font-bold mb-6 text-center text-neutral-800">Add New Product</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center text-neutral-800">Add New Product</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-stone-800">
           <InputField label="Title" type="text" placeholder="Product Name" {...register("title")} error={errors.title?.message} />
           <InputField label="Description" type="text" placeholder="Product Description" {...register("description")} error={errors.description?.message} />
@@ -139,7 +140,18 @@ export default function Admin() {
               Choose File
             </label>
             <p id="file-label" className="mt-2 text-sm text-gray-600 text-center">No file selected</p>
-            {previewUrl && <img src={previewUrl} alt="Preview" className="mt-4 max-h-40 rounded shadow" />}
+
+            {previewUrl && (
+              <div className="relative mt-4 w-full h-40">
+                <Image
+                  src={previewUrl}
+                  alt="Preview"
+                  fill
+                  className="object-contain rounded shadow"
+                  unoptimized
+                />
+              </div>
+            )}
           </div>
 
           <button type="submit" disabled={!isValid || isPending} className={`w-full bg-[#BABA8D] text-white py-2 cursor-pointer rounded-lg text-lg font-semibold transition-colors duration-200 ${!isValid ? "opacity-50 cursor-not-allowed" : "hover:bg-[#A4A489]"}`}>

@@ -11,6 +11,7 @@ import SelectField from '@/components/shared/select';
 import DimensionsField from '@/components/DimensionsField';
 import CheckboxField from '@/components/CheckboxField';
 import { productSchema } from '@/app/actions/admin/products';
+import Image from 'next/image';
 
 interface UpdateProductProps {
   product: Product;
@@ -123,7 +124,16 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
           <label htmlFor="image" className="cursor-pointer bg-[#BABA8D] text-white py-2 px-4 rounded-md text-center hover:bg-[#A4A489] transition-colors">
             Choose File
           </label>
-          {previewUrl && <img src={previewUrl} alt="Preview" className="mt-4 max-h-40 rounded shadow" />}
+          {previewUrl && (
+  <div className="relative w-full max-w-sm h-40 mt-4">
+    <Image
+      src={previewUrl}
+      alt="Preview"
+      fill
+      className="rounded shadow object-contain"
+    />
+  </div>
+)}
         </div>
 
         
