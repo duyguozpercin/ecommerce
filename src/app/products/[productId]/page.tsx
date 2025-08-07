@@ -5,12 +5,15 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 
-export default async function ProductDetail({
-  params,
-}: {
-  params: { productId: string };
-}) {
-  const { productId } = params;
+// ✅ params tipini ayrı bir type ile tanımlıyoruz
+type PageProps = {
+  params: {
+    productId: string;
+  };
+};
+
+export default async function ProductDetail(props: PageProps) {
+  const { productId } = props.params;
 
   const docRef = doc(db, collections.products, productId);
   const snapshot = await getDoc(docRef);
@@ -25,7 +28,6 @@ export default async function ProductDetail({
     <div className="p-8 max-w-xl mx-auto">
       <div className="product-details bg-white shadow-md rounded-lg p-6">
         <h1 className="text-3xl font-bold mb-4 text-neutral-900">{product.title}</h1>
-
         <Image
           src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
           alt={product.title}
@@ -33,7 +35,6 @@ export default async function ProductDetail({
           height={500}
           className="w-full rounded mb-4 object-cover"
         />
-
         <h3 className="font-bold text-neutral-800">Description:</h3>
         <p className="mb-2 text-neutral-700">{product.description}</p>
 
