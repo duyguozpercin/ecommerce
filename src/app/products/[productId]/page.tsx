@@ -5,11 +5,11 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
 
-interface ProductDetailPageProps {
+export default async function ProductDetail({
+  params,
+}: {
   params: { productId: string };
-}
-
-export default async function ProductDetail({ params }: ProductDetailPageProps) {
+}) {
   const { productId } = params;
 
   const docRef = doc(db, collections.products, productId);
