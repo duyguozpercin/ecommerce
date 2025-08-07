@@ -30,9 +30,14 @@ export default function SignUpPage() {
 
       
       router.push("/");
-    } catch (err: any) {
-      console.error("Signup error:", err.message);
-      setError("Kayıt başarısız. E-posta zaten kullanılıyor olabilir.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Signup error:", err.message);
+        setError("Kayıt başarısız. E-posta zaten kullanılıyor olabilir.");
+      } else {
+        console.error("Bilinmeyen bir hata:", err);
+        setError("Beklenmeyen bir hata oluştu.");
+      }
     }
   };
 

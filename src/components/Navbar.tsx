@@ -92,9 +92,9 @@ export default function Navbar() {
     <div className="absolute right-0 mt-2 w-40 bg-white border border-neutral-300 rounded shadow-lg z-50">
       {user ? (
         <>
-          <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil</Link>
+          <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</Link>
           {role === "admin" && (
-            <Link href="/admin/products/manage" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Admin Panel</Link>
+            <Link href="/admin/products/manage" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</Link>
           )}
           <button
             onClick={() => {
@@ -103,13 +103,13 @@ export default function Navbar() {
             }}
             className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
           >
-            Çıkış Yap
+            Log Out
           </button>
         </>
       ) : (
         <>
-          <Link href="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Giriş Yap</Link>
-          <Link href="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Kayıt Ol</Link>
+          <Link href="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login </Link>
+          <Link href="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</Link>
         </>
       )}
     </div>
@@ -118,7 +118,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      
       {menuOpen && (
         <div className="md:hidden mt-4 space-y-2">
           {categories.map((category) => (

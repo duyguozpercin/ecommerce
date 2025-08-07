@@ -1,22 +1,21 @@
-
 import React from "react";
-import { UseFormRegister } from "react-hook-form";
+import { UseFormRegister, Path, FieldValues } from "react-hook-form";
 
-interface CheckboxFieldProps {
+interface CheckboxFieldProps<T extends FieldValues> {
   label: string;
-  name: string;
+  name: Path<T>;
   options: string[];
-  register: UseFormRegister<any>;
+  register: UseFormRegister<T>;
   error?: string;
 }
 
-export default function CheckboxField({
+export default function CheckboxField<T extends FieldValues>({
   label,
   name,
   options,
   register,
   error,
-}: CheckboxFieldProps) {
+}: CheckboxFieldProps<T>) {
   return (
     <div>
       <p className="mb-1 font-medium">{label}</p>
