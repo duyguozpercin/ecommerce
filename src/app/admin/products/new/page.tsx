@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputField from "@/components/shared/Input";
 import SelectField from "@/components/shared/select";
-import { productSchema } from "@/app/actions/admin/products";
+import { productSchema } from "@/app/schemas/productSchema";
 import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
 import DimensionsField from "@/components/DimensionsField";
