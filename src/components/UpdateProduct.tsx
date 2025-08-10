@@ -93,7 +93,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       }, 1200);
     } else {
       alert(resp?.message || 'Update failed');
-      console.error(resp?.errors);
+      console.error(resp?.message || 'An error occurred');
     }
   };
 
