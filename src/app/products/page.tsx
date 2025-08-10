@@ -4,15 +4,27 @@ import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types/product';
 import { BuyButton } from '../BuyButton';
 
-
-
-interface ProductsPageProps {
-  searchParams?: {
+interface PageProps {
+  searchParams: {
+    canceled?: string;
     category?: string;
   };
 }
 
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+export default async function ProductsPage({ searchParams }: PageProps) {
+  const { canceled } = searchParams;
+
+
+
+if (canceled) {
+
+console.log(
+
+'Order canceled -- continue to shop around and checkout when you’re ready.',
+
+);
+
+}
  
   let products: Product[] = [];
 
@@ -83,6 +95,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                     <p className="text-xs text-neutral-400 mt-2">
                       Category: {product.category}
                     </p>
+                    <BuyButton productId={String(product.id)} className="mt-4" />
                 
                   </Link>
                 ))}
