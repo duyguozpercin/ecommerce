@@ -21,6 +21,12 @@ export interface Product {
   meta: Meta;
   images: string[];
   thumbnail: string;
+
+  // --- Stripe fields ---
+  stripeProductId?: string;
+  stripePriceId?: string;     // aktif (default) price
+  stripeCurrency?: string;    // "usd" gibi
+
 }
 
 export interface ProductForm {
@@ -85,8 +91,8 @@ export enum returnPolicy {
 }
 
 export interface Meta {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   barcode?: string;
   qrCode?: string;
 }
