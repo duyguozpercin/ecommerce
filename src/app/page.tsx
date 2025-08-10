@@ -3,8 +3,25 @@ import Image from "next/image";
 import { getAllProducts } from "@/services/productService";
 import { Product } from "@/types/product";
 import HeroSlider from "@/components/HeroSlider";
+import { BuyButton } from "./BuyButton";
 
-export default async function Home() {
+
+interface SuccessProps {
+  searchParams: {
+    canceled?: string;
+    
+  };
+}
+
+export default async function Home({ searchParams }: SuccessProps) {
+  const { canceled } = searchParams;
+
+  if (canceled) {
+    console.log(
+      'Order canceled -- continue to shop around and checkout when you’re ready.',
+    );
+  }
+
   let products: Product[] = [];
 
   try {
@@ -23,11 +40,11 @@ export default async function Home() {
     </h1>
     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       {products.map((product: Product) => (
-        <Link
-          key={product.id}
-          href={`/products/${product.id}`}
-          className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
-        >
+        <div
+        key={product.id}
+        className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
+      >
+        <Link href={`/products/${product.id}`} className="w-full">
           <div className="w-full h-[160px] sm:h-[180px] relative overflow-hidden rounded mb-3">
             <Image
               src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
@@ -42,6 +59,10 @@ export default async function Home() {
           <p className="text-sm sm:text-md text-center">{product.title}</p>
           <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
         </Link>
+      
+        <BuyButton productId={String(product.id)} className="mt-2 z-10 relative" />
+      </div>
+      
       ))}
     </div>
   </main>

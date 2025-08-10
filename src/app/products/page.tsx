@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types/product';
+import { BuyButton } from '../BuyButton';
+
 
 
 interface ProductsPageProps {
@@ -11,6 +13,7 @@ interface ProductsPageProps {
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+ 
   let products: Product[] = [];
 
   try {
@@ -80,6 +83,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                     <p className="text-xs text-neutral-400 mt-2">
                       Category: {product.category}
                     </p>
+                
                   </Link>
                 ))}
               </div>
