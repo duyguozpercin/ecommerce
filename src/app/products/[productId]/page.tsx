@@ -4,12 +4,21 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
+import { BuyButton } from "@/app/BuyButton";
 
 interface ProductDetailPageProps {
   params: { productId: string };
+  searchParams: { canceled?: string }; // 'canceled' opsiyonel olabilir
 }
 
-export default async function ProductDetail({ params }: ProductDetailPageProps) {
+// Sonra fonksiyonu bu tek tiple doğru şekilde kullanın
+export default async function ProductDetail({ params, searchParams }: ProductDetailPageProps) {
+  const { canceled } = searchParams;
+
+  if (canceled) {
+    console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+  }
+
   const { productId } = params;
 
   const docRef = doc(db, collections.products, productId);
@@ -49,6 +58,7 @@ export default async function ProductDetail({ params }: ProductDetailPageProps) 
         <p className="text-lg font-semibold mb-4 text-neutral-800">${product.price}</p>
 
         <AddToCartButton product={{ ...product, id: productId }} />
+        <BuyButton productId={productId} className="mt-4" />
       </div>
     </div>
   );
