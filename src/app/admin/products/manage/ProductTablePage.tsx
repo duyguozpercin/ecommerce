@@ -54,18 +54,17 @@ export default function ProductTablePage({
               <Pencil className="w-5 h-5 text-blue-600" />
             </button>
 
-            <button
+    
+              <DeleteProduct
               className="p-2 rounded-full hover:bg-gray-100 transition"
               title="Delete"
-            >
-              <DeleteProduct
                 productId={String(product.id)}
                 onDeleted={() => window.location.reload()}
                 activeId={activeId}
                 setActiveId={setActiveId}
               />
             
-            </button>
+            
           </div>
         </div>
       ))}

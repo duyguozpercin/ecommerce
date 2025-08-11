@@ -35,16 +35,9 @@ export default async function Home({ searchParams }: SuccessProps) {
     <>
       <HeroSlider />
       <main className="px-4 py-6 sm:px-6 sm:py-8">
-        <h1 className="text-center text-2xl sm:text-3xl m-8 font-bold dark:text-stone-900">
-          Ecom Website
-        </h1>
+        
         <div className="text-center my-12">
-          <Link
-            href="/products"
-            className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors duration-300"
-          >
-            Tüm Ürünleri Keşfet
-          </Link>
+          
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {products.map((product: Product) => (
