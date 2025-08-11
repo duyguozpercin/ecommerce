@@ -26,7 +26,7 @@ export default function HeroSlider() {
           key={i}
           className="keen-slider__slide relative w-full h-full bg-gray-200"
         >
-          {/* Görsel */}
+          
           <Image
             src={img}
             alt={`Slide ${i + 1}`}
@@ -35,7 +35,7 @@ export default function HeroSlider() {
             priority={i === 0}
           />
 
-          {/* Buton */}
+          
           <div className="absolute inset-0 flex items-center justify-center">
             <Link
               href="/products"
