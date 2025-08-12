@@ -37,13 +37,12 @@ export default function HeroSlider() {
 
           {/* Buton */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <Link
-              href="/products"
-              className="px-10 py-5 text-2xl font-bold text-gray-900 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-              style={{ backgroundColor: 'rgba(255,255,255,0.8)' }}
-            >
-              Explore All Categories
-            </Link>
+          <div
+        className="px-10 py-5 text-2xl font-bold text-white rounded-lg shadow-lg"
+        style={{ backgroundColor: 'rgba(180, 142, 120, 0.8)' }}
+      >
+        Tüm Ürünleri Keşfet
+      </div>
           </div>
         </div>
       ))}
