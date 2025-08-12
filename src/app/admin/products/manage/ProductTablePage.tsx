@@ -44,7 +44,7 @@ export default function ProductTablePage({
             </div>
           </div>
 
-          {/* Sağ taraf: Düzenle / Sil butonları */}
+      
           <div className="flex gap-3">
             <button
               onClick={() => onEdit(product)}

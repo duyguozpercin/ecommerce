@@ -1,18 +1,15 @@
-// app/actions/stripe.ts
 
 'use server';
 
 import { Product } from '@/types/product';
 import { redirect } from 'next/navigation';
 
-// Adım 1'de oluşturduğumuz dosyadan stripe nesnesini import ediyoruz.
 import { stripe } from '@/utils/stripe';
 
 interface CartItemWithDetails extends Product {
   quantity: number;
 }
 
-// Bu dosya SADECE async fonksiyonları export ediyor.
 export async function createCheckoutSession(items: CartItemWithDetails[]) {
   const lineItems = items.map(item => ({
     price_data: {
