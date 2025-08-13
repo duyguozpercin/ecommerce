@@ -1,5 +1,3 @@
-// components/CheckoutButton.tsx
-
 'use client';
 
 import { createCheckoutSession } from '@/app/actions/stripe';

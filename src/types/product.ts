@@ -22,10 +22,10 @@ export interface Product {
   images: string[];
   thumbnail: string;
 
-  // --- Stripe fields ---
+
   stripeProductId?: string;
-  stripePriceId?: string;     // aktif (default) price
-  stripeCurrency?: string;    // "usd" gibi
+  stripePriceId?: string;
+  stripeCurrency?: string;
 
 }
 

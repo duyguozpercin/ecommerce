@@ -47,7 +47,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
     let imageUrl = product.images?.[0] || "";
 
-    // 1) Yeni görsel seçildiyse upload et
+
     if (selectedImage) {
       const fd = new FormData();
       fd.append('file', selectedImage);
@@ -56,7 +56,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       if (result.url) imageUrl = result.url as string;
     }
 
-    // 2) Server action'a FormData hazırla (tüm alanlar)
+  
     const send = new FormData();
     send.append('id', String(product.id));
     send.append('title', data.title);

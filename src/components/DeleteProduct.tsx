@@ -6,7 +6,7 @@ interface DeleteProductProps {
   onDeleted?: () => void;
   activeId: string | null;
   setActiveId: (id: string | null) => void;
-  className?: string; // BU SATIRI EKLEYİN
+  className?: string;
   title?: string;  
 }
 
