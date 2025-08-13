@@ -54,7 +54,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       dimW: num(formData.get("dimensions.width")),
       dimH: num(formData.get("dimensions.height")),
       dimD: num(formData.get("dimensions.depth")),
-      tags: formData.get("tags")?.toString(), // "a,b,c"
+      tags: formData.get("tags")?.toString(),
       image: formData.get("image")?.toString() || "",
     };
 

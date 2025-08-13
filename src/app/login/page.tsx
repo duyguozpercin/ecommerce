@@ -28,10 +28,10 @@ export default function LoginPage() {
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error("Login error:", err.message);
-        setError("Giriş başarısız. E-posta ya da şifre hatalı.");
+        setError("Login failed. The email or password is incorrect.");
       } else {
-        console.error("Bilinmeyen bir hata:", err);
-        setError("Bilinmeyen bir hata oluştu.");
+        console.error("Unknown error", err);
+        setError("An unknown error occurred. Please try again later.");
       }
     }
   };
@@ -39,11 +39,11 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6 dark:text-stone-700">Giriş Yap</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 dark:text-stone-700">Log in</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
-            placeholder="E-posta"
+            placeholder="E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border rounded"
@@ -51,7 +51,7 @@ export default function LoginPage() {
           />
           <input
             type="password"
-            placeholder="Şifre"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 border rounded"
@@ -59,11 +59,11 @@ export default function LoginPage() {
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button type="submit" className="w-full bg-[#BABA8D] text-white py-2 rounded hover:bg-[#A4A489]">
-            Giriş Yap
+            Log in
           </button>
         </form>
         <p className="mt-4 text-sm text-center dark:text-stone-700">
-          Hesabınız yok mu? <a href="/signup" className="text-blue-600 underline">Kayıt Ol</a>
+        Don't have an account? <a href="/signup" className="text-blue-600 underline">Sign Up</a>
         </p>
       </div>
     </main>

@@ -41,7 +41,7 @@ export default function HeroSlider() {
         className="px-10 py-5 text-2xl font-bold text-white rounded-lg shadow-lg"
         style={{ backgroundColor: 'rgba(180, 142, 120, 0.8)' }}
       >
-        Tüm Ürünleri Keşfet
+        Explore All Products
       </div>
           </div>
         </div>

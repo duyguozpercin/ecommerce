@@ -33,10 +33,10 @@ export default function SignUpPage() {
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error("Signup error:", err.message);
-        setError("Kayıt başarısız. E-posta zaten kullanılıyor olabilir.");
+        setError("Registration failed. The email may already be in use.");
       } else {
-        console.error("Bilinmeyen bir hata:", err);
-        setError("Beklenmeyen bir hata oluştu.");
+        console.error("Unknown error:", err);
+        setError("An unknown error occurred.");
       }
     }
   };
@@ -44,7 +44,7 @@ export default function SignUpPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6 dark:text-stone-700">Kayıt Ol</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 dark:text-stone-700">Sign Up</h1>
         <form onSubmit={handleSignUp} className="space-y-4">
           <input
             type="email"
@@ -64,11 +64,11 @@ export default function SignUpPage() {
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button type="submit" className="w-full bg-[#BABA8D] text-white py-2 rounded hover:bg-[#A4A489]">
-            Kayıt Ol
+            Sign Up
           </button>
         </form>
         <p className="mt-4 text-sm text-center dark:text-stone-700">
-          Zaten hesabınız var mı? <a href="/login" className="text-blue-600 underline">Giriş Yap</a>
+        Do you already have an account? <a href="/login" className="text-blue-600 underline">Log in</a>
         </p>
       </div>
     </main>
