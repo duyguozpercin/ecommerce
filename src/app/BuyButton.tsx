@@ -9,7 +9,7 @@ export const BuyButton = ({
       <input type="hidden" name="productId" value={productId} />
       <button
         type="submit"
-        className={`text-[#49739c] text-sm font-normal leading-normal z-10 ${className ?? ""}`}
+        className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ""}`}
       >
         Buy Now
       </button>

@@ -4,16 +4,17 @@ import { getAllProducts } from "@/services/productService";
 import { Product } from "@/types/product";
 import HeroSlider from "@/components/HeroSlider";
 import { BuyButton } from "./BuyButton";
+import AddToCartButton from "@/components/AddToCartButton";
 
-
-interface SuccessProps {
+// Sadece 'searchParams' için tip tanımı yeterli
+interface HomeProps {
   searchParams: {
     canceled?: string;
   };
-
 }
 
-export default async function Home({ searchParams }: SuccessProps) {
+// Home bileşeni artık sadece tek bir props objesi alıyor
+export default async function Home({ searchParams }: HomeProps) {
   const { canceled } = searchParams;
 
   if (canceled) {
@@ -37,7 +38,7 @@ export default async function Home({ searchParams }: SuccessProps) {
       <main className="px-4 py-6 sm:px-6 sm:py-8">
         
         <div className="text-center my-12">
-          
+          {/* Buraya bir başlık veya başka bir bileşen ekleyebilirsiniz */}
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {products.map((product: Product) => (
@@ -52,7 +53,7 @@ export default async function Home({ searchParams }: SuccessProps) {
                     alt={product.title}
                     fill
                     className="object-cover"
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     priority
                   />
                 </div>
@@ -61,13 +62,15 @@ export default async function Home({ searchParams }: SuccessProps) {
                 <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
               </Link>
 
-              <BuyButton productId={String(product.id)} className="mt-2 z-10 relative" />
+              <div className="flex flex-row items-center gap-x-4 mt-2">
+                {/* DÜZELTME: Butonlara o anki 'product' objesi ve 'product.id' gönderiliyor */}
+                <AddToCartButton product={{ ...product, id: String(product.id) }} />
+                <BuyButton productId={String(product.id)} />
+              </div>
             </div>
-
           ))}
         </div>
       </main>
     </>
   );
-
 }

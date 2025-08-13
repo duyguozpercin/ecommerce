@@ -56,9 +56,10 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
         <p className="mb-2 text-neutral-700">{product.availabilityStatus}</p>
         <p className="mb-2 text-neutral-700">{product.returnPolicy}</p>
         <p className="text-lg font-semibold mb-4 text-neutral-800">${product.price}</p>
-
-        <AddToCartButton product={{ ...product, id: productId }} />
-        <BuyButton productId={productId} className="mt-4" />
+        <div className="flex flex-row items-center gap-x-4">
+          <AddToCartButton product={{ ...product, id: productId }} />
+          <BuyButton productId={productId} />
+        </div>
       </div>
     </div>
   );
