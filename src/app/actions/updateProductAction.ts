@@ -6,7 +6,6 @@ import { stripe } from "@/utils/stripe";
 import { z } from "zod";
 import type { Product } from "@/types/product";
 
-// ---- Schemas
 const updateSchema = z.object({
   id: z.string().min(1, "Missing product id"),
   title: z.string().min(3).max(100),
@@ -23,7 +22,6 @@ type ActionErr = {
 };
 type ActionResult = ActionOk | ActionErr;
 
-// ---- Helpers
 const num = (v: FormDataEntryValue | null) =>
   v == null || v === "" ? undefined : Number(v);
 
@@ -38,7 +36,7 @@ const zodIssues = (err: z.ZodError): { path: string; message: string }[] =>
 
 export async function updateProductAction(formData: FormData): Promise<ActionResult> {
   try {
-    // 1) Raw form parse
+    
     const raw = {
       id: String(formData.get("id") || ""),
       title: String(formData.get("title") || ""),
@@ -60,12 +58,12 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       image: formData.get("image")?.toString() || "",
     };
 
-    // 2) Tip kontrol (NaN guard)
+    
     if (!isNumber(raw.price) || raw.price < 0 || !isNumber(raw.stock) || raw.stock < 0) {
       return { success: false, message: "Invalid numeric values for price/stock." };
     }
 
-    // 3) Zod validation (minimum alanlar)
+    
     const parsed = updateSchema.safeParse({
       id: raw.id,
       title: raw.title,
@@ -81,7 +79,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       };
     }
 
-    // 4) Ürünü çek
+    
     const ref = doc(db, collections.products, raw.id);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
@@ -89,7 +87,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     }
     const existing = { id: snap.id, ...snap.data() } as Product;
 
-    // 5) Stripe fiyat güncellemesi (gerekirse)
+    
     const oldPrice = Number(existing.price ?? 0);
     const newPrice = Number(raw.price);
     let stripePriceId: string | undefined = existing.stripePriceId;
@@ -98,16 +96,16 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     const hasStripeProduct = Boolean(existing.stripeProductId);
 
     if (priceChanged && hasStripeProduct) {
-      // Eski price'ı pasifleştir (varsa)
+      
       if (existing.stripePriceId) {
         try {
           await stripe.prices.update(existing.stripePriceId, { active: false });
         } catch {
-          // zaten inactive olabilir → ignore
+          
         }
       }
 
-      // Yeni price oluştur
+    
       try {
         const currency = existing.stripeCurrency || process.env.STRIPE_CURRENCY || "usd";
         const created = await stripe.prices.create({
@@ -117,7 +115,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
         });
         stripePriceId = created.id;
 
-        // Default price güncelle
+      
         await stripe.products.update(existing.stripeProductId!, {
           default_price: stripePriceId,
         });
@@ -126,7 +124,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       }
     }
 
-    // 6) Update payload (sadece tanımlı alanları ekle)
+  
     const meta = typeof existing.meta === "object" && existing.meta ? existing.meta : {};
     const updatePayload: Record<string, unknown> = {
       title: raw.title,
@@ -135,7 +133,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       stock: raw.stock,
       meta: {
         ...meta,
-        updatedAt: new Date().toISOString(), // string → serialize OK
+        updatedAt: new Date().toISOString(),
       },
     };
 
@@ -173,14 +171,13 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       updatePayload.stripePriceId = stripePriceId;
     }
 
-    // 7) Firestore yaz (payload’ın serileştirilebilir olduğundan emin)
-    // Not: JSON.parse/JSON.stringify → undefined’ları temizler.
+    
     const serializablePayload = JSON.parse(JSON.stringify(updatePayload));
     await updateDoc(ref, serializablePayload);
 
     return { success: true, message: "Product updated successfully", stripePriceId };
   } catch (err) {
-    // Buraya düşerse muhtemelen beklenmedik bir exception var
+    
     console.error("updateProductAction error:", err);
     return { success: false, message: "Unexpected server error." };
   }

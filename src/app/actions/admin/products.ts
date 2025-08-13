@@ -5,12 +5,12 @@ import { put } from "@vercel/blob";
 import { db, collections } from "@/utils/firebase";
 import { stripe } from "@/utils/stripe";
 import { z } from "zod";
-import type { NewProductFormState } from "@/app/admin/products/new/page"; // istersen burada bırak
+import type { NewProductFormState } from "@/app/admin/products/new/page";
 import type { Product, ProductForm } from "@/types/product";
 import { AvailabilityStatus, returnPolicy } from "@/types/product";
 import { Category } from "@/types/product";
 
-// ---- sadece bu dosyada kullanılacak, EXPORT ETME ----
+
 const productSchema = z.object({
   title: z.string().min(3).max(100),
   description: z.string().min(50).max(500),
@@ -37,7 +37,6 @@ export async function addNewProductAction(
   formData: FormData
 ): Promise<NewProductFormState> {
 
-  // 1) Form verilerini topla
   const raw: Partial<ProductForm> = {
     title: formData.get("title") as string,
     description: formData.get("description") as string,
@@ -61,7 +60,7 @@ export async function addNewProductAction(
     tags: (formData.get("tags") as string)?.split(",").map(t => t.trim()) || [],
   };
 
-  // 2) Server-side Zod doğrulama
+  
   const parsed = productSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -73,11 +72,11 @@ export async function addNewProductAction(
   }
   const data = parsed.data;
 
-  // 3) ID + tarih
+  
   const id = Date.now().toString();
   const nowIso = new Date().toISOString();
 
-  // 4) Opsiyonel görsel upload
+  
   let imageUrl = "";
   const image = formData.get("image") as File | null;
   if (image && image.size > 0) {
@@ -95,7 +94,7 @@ export async function addNewProductAction(
   }
 
   try {
-    // 5) Stripe Product + Price (tek yer)
+    
     const stripeProduct = await stripe.products.create({
       name: data.title,
       description: data.description,
@@ -109,10 +108,10 @@ export async function addNewProductAction(
     });
     await stripe.products.update(stripeProduct.id, { default_price: price.id });
 
-    // 6) Firestore’a kaydet
+   
     const finalData: Product = {
       id,
-      category: data.category, // zorunlu alan
+      category: data.category,
       title: data.title,
       description: data.description,
       price: data.price,
@@ -134,7 +133,7 @@ export async function addNewProductAction(
       thumbnail: imageUrl || "",
       minimumOrderQuantity: 1,
       meta: {
-        createdAt: Date.now(),  // timestamp formatta
+        createdAt: Date.now(),
         updatedAt: Date.now(),
       },
     

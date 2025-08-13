@@ -22,7 +22,6 @@ export default function ProductTablePage({
           key={product.id}
           className="flex items-center justify-between bg-white rounded-lg shadow p-4 border border-gray-200 hover:shadow-md transition-shadow"
         >
-          {/* Sol taraf: Resim + Başlık + Fiyat */}
           <div className="flex items-center gap-4">
             {product.images?.[0] ? (
               <Image
