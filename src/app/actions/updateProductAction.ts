@@ -119,7 +119,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
         await stripe.products.update(existing.stripeProductId!, {
           default_price: stripePriceId,
         });
-      } catch (e) {
+      } catch {
         return { success: false, message: "Stripe price update failed." };
       }
     }
