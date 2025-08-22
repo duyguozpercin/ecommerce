@@ -1,7 +1,7 @@
 "use server";
 
 import { stripe } from "@/utils/stripe";
-import type { ProductForm, Product } from "@/types/product";
+import type { ProductForm} from "@/types/product";
 
 const STRIPE_CURRENCY = process.env.STRIPE_CURRENCY || "usd";
 
