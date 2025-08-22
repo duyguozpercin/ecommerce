@@ -74,7 +74,7 @@ export async function addNewProductAction(
 
   
   const id = Date.now().toString();
-  const nowIso = new Date().toISOString();
+  
 
   
   let imageUrl = "";
