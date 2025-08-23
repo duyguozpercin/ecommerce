@@ -8,6 +8,7 @@ interface SuccessProps {
   };
 }
 
+
 export default async function Success({ searchParams }: SuccessProps) {
   const { session_id } = searchParams;
 

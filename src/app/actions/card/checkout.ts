@@ -4,6 +4,8 @@ import { stripe } from '@/utils/stripe';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
+
+
 export async function checkout(formData: FormData) {
   const productId = formData.get('productId');
   const origin = (await headers()).get('origin');
