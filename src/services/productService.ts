@@ -1,4 +1,14 @@
-import { collection, getDocs, getDoc, doc, query, orderBy, setDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  query,
+  orderBy,
+  setDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { db, collections } from "@/utils/firebase";
 import { Product } from "@/types/product";
 
@@ -25,4 +35,11 @@ export const getProductsByIds = async (ids: string[]): Promise<Product[]> => {
 export const saveProduct = async (product: Product) => {
   const docRef = doc(db, collections.products, String(product.id));
   await setDoc(docRef, product);
+};
+
+export const decreaseProductStock = async (productId: string) => {
+  const docRef = doc(db, collections.products, productId);
+  await updateDoc(docRef, {
+    stock: increment(-1),
+  });
 };

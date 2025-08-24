@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation';
 import { stripe } from '@/utils/stripe';
 import Link from 'next/link';
+import { decreaseProductStock } from '@/services/productService';
 
 interface SuccessProps {
   searchParams: {
     session_id?: string;
   };
 }
-
 
 export default async function Success({ searchParams }: SuccessProps) {
   const { session_id } = searchParams;
@@ -22,6 +22,21 @@ export default async function Success({ searchParams }: SuccessProps) {
   const status = session.status;
   const customerEmail = session.customer_details?.email;
   const customerName = session.customer_details?.name;
+
+  // ✅ Ürün stoğunu güncelle
+  const productId = session.metadata?.productId;
+
+  if (productId) {
+
+    try {
+      await decreaseProductStock(productId);
+
+    } catch (error) {
+
+    }
+  } else {
+
+  }
 
   if (status === 'open') {
     return redirect('/');

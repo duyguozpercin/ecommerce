@@ -4,8 +4,6 @@ import { stripe } from '@/utils/stripe';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-
-
 export async function checkout(formData: FormData) {
   const productId = formData.get('productId');
   const origin = (await headers()).get('origin');
@@ -18,13 +16,16 @@ export async function checkout(formData: FormData) {
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price: "price_1RvIqEJXhA1otjkSRpDOYEI5",
+          price: "price_1RvIqEJXhA1otjkSRpDOYEI5", // Bunu dinamik yapacaksan ayrıca handle edebiliriz
           quantity: 1,
         },
       ],
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?canceled=true`,
+      metadata: {
+        productId, // ✅ ÖNEMLİ: success sayfasında erişebilmemiz için eklendi
+      },
     });
 
     if (session.url) {
