@@ -52,15 +52,15 @@ export async function addNewProductAction(
     shippingInformation: formData.get("shippingInformation") as string,
     dimensions: formData.get("dimensions.width")
       ? {
-          width: parseFloat(String(formData.get("dimensions.width"))),
-          height: parseFloat(String(formData.get("dimensions.height"))),
-          depth: parseFloat(String(formData.get("dimensions.depth"))),
-        }
+        width: parseFloat(String(formData.get("dimensions.width"))),
+        height: parseFloat(String(formData.get("dimensions.height"))),
+        depth: parseFloat(String(formData.get("dimensions.depth"))),
+      }
       : undefined,
     tags: (formData.get("tags") as string)?.split(",").map(t => t.trim()) || [],
   };
 
-  
+
   const parsed = productSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -72,11 +72,11 @@ export async function addNewProductAction(
   }
   const data = parsed.data;
 
-  
-  const id = Date.now().toString();
-  
 
-  
+  const id = Date.now().toString();
+
+
+
   let imageUrl = "";
   const image = formData.get("image") as File | null;
   if (image && image.size > 0) {
@@ -94,7 +94,7 @@ export async function addNewProductAction(
   }
 
   try {
-    
+
     const stripeProduct = await stripe.products.create({
       name: data.title,
       description: data.description,
@@ -108,7 +108,7 @@ export async function addNewProductAction(
     });
     await stripe.products.update(stripeProduct.id, { default_price: price.id });
 
-   
+
     const finalData: Product = {
       id,
       category: data.category,
@@ -125,7 +125,7 @@ export async function addNewProductAction(
       shippingInformation: data.shippingInformation,
       dimensions: data.dimensions,
       tags: data.tags,
-    
+
       discountPercentage: 0,
       rating: 0,
       reviews: [],
@@ -136,13 +136,13 @@ export async function addNewProductAction(
         createdAt: Date.now(),
         updatedAt: Date.now(),
       },
-    
+
       stripeProductId: stripeProduct.id,
       stripePriceId: price.id,
       stripeCurrency: currency,
     };
-    
-    
+
+
 
     await setDoc(doc(db, collections.products, id), finalData);
 
