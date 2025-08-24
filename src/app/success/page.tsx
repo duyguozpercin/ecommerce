@@ -1,21 +1,17 @@
 'use client';
 
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
-import { decreaseProductStock } from '@/services/productService';
+import { decreaseProductStock, getProductById } from '@/services/productService';
 import { addUserOrder } from '@/services/orderService';
+import { sendOrderConfirmation } from '@/app/actions/email/sendOrderConfirmation';
 import { useEffect, useState } from 'react';
 import { getSession } from '@/app/actions/stripe/getSessions';
 
-interface SuccessProps {
-  searchParams: {
-    session_id?: string;
-  };
-}
-
-export default function Success({ searchParams }: SuccessProps) {
-  const { session_id } = searchParams;
+export default function Success() {
+  const searchParams = useSearchParams();
+  const session_id = searchParams.get('session_id');
   const { user } = useAuth();
   const [status, setStatus] = useState<'loading' | 'done'>('loading');
 
@@ -23,27 +19,35 @@ export default function Success({ searchParams }: SuccessProps) {
     const handleSuccess = async () => {
       if (!session_id) return;
 
-      const { productId, amount, paymentId } = await getSession(session_id);
+      try {
+        const { productId, amount, paymentId } = await getSession(session_id);
 
-      if (productId) {
-        try {
+        if (productId) {
           await decreaseProductStock(productId);
-        } catch (e) {
-          console.error('Stok azaltılamadı:', e);
         }
-      }
 
-      if (user && productId && paymentId) {
-        try {
+        if (user && productId && paymentId) {
           await addUserOrder(user.uid, paymentId, {
             productId,
             amount,
             paymentId,
             createdAt: new Date(),
           });
-        } catch (e) {
-          console.error('Sipariş eklenemedi:', e);
+
+          if (user.email) {
+            const product = await getProductById(productId);
+            const productTitle = product?.title || 'Your Product';
+
+            await sendOrderConfirmation({
+              to: user.email,
+              productTitle,
+              amount,
+              paymentId,
+            });
+          }
         }
+      } catch (e) {
+        console.error('Sipariş işlemlerinde hata oluştu:', e);
       }
 
       setStatus('done');
