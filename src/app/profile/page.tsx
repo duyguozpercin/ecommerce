@@ -11,6 +11,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Order {
   productId: string;
@@ -82,13 +83,13 @@ export default function ProfilePage() {
         <ul className="space-y-4">
           {orders.map((order, index) => (
             <li key={index} className="border rounded-lg p-4 shadow-sm bg-white flex items-start gap-4">
-              {order.productImage && (
-                <img
-                  src={order.productImage}
-                  alt={order.productTitle}
-                  className="w-20 h-20 object-cover rounded-md border"
-                />
-              )}
+              <Image
+                src={order.productImage || '/placeholder.png'}
+                alt={order.productTitle || 'Product image'}
+                width={80}
+                height={80}
+                className="object-cover rounded-md border"
+              />
               <div className="flex-1">
                 <p className="font-semibold text-lg">{order.productTitle}</p>
                 <p className="text-sm text-gray-600">Amount: ${order.amount}</p>
