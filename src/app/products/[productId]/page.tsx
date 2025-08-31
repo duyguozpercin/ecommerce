@@ -4,7 +4,6 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
-import { BuyButton } from "@/app/BuyButton";
 import { SingleBuyButton } from "@/app/SingleBuyButton";
 
 interface ProductDetailPageProps {
