@@ -33,7 +33,7 @@ export const BuyButton = ({ cartItems, className }: BuyButtonProps) => {
 
       <button
         type="submit"
-        className={className ?? 'text-[#49739c] text-sm font-normal leading-normal'}
+        className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ""}`}
       >
         Buy Now
       </button>

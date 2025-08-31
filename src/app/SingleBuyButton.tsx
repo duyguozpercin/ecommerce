@@ -15,7 +15,7 @@ export const SingleBuyButton = ({
       <input type="hidden" name="cartItems[0][quantity]" value="1" />
       <button
         type="submit"
-        className={className ?? 'text-[#49739c] text-sm font-normal leading-normal'}
+        className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ""}`}
       >
         Buy Now
       </button>

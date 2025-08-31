@@ -7,7 +7,7 @@ import { stripe } from "@/utils/stripe";
 import { z } from "zod";
 import type { NewProductFormState } from "@/app/admin/products/new/page";
 import type { Product, ProductForm } from "@/types/product";
-import { AvailabilityStatus, returnPolicy } from "@/types/product";
+import { AvailabilityStatus, ReturnPolicy } from "@/types/product";
 import { Category } from "@/types/product";
 
 
@@ -19,7 +19,7 @@ const productSchema = z.object({
   stock: z.number().min(0),
   brand: z.string().min(1),
   availabilityStatus: z.nativeEnum((AvailabilityStatus as any)),
-  returnPolicy: z.nativeEnum((returnPolicy as any)),
+  returnPolicy: z.nativeEnum((ReturnPolicy as any)),
   tags: z.array(z.string()).min(1),
   sku: z.string().min(1).max(50),
   weight: z.number().min(1),
@@ -45,7 +45,7 @@ export async function addNewProductAction(
     stock: parseInt(String(formData.get("stock") || "0"), 10),
     brand: formData.get("brand") as string,
     availabilityStatus: formData.get("availabilityStatus") as AvailabilityStatus,
-    returnPolicy: formData.get("returnPolicy") as returnPolicy,
+    returnPolicy: formData.get("returnPolicy") as ReturnPolicy,
     sku: formData.get("sku") as string,
     weight: formData.get("weight") ? parseFloat(String(formData.get("weight"))) : undefined,
     warrantyInformation: formData.get("warrantyInformation") as string,
@@ -133,8 +133,8 @@ export async function addNewProductAction(
       thumbnail: imageUrl || "",
       minimumOrderQuantity: 1,
       meta: {
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: Date.now().toString(),
+        updatedAt: Date.now().toString(),
       },
 
       stripeProductId: stripeProduct.id,
