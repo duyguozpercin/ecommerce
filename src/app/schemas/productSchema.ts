@@ -14,7 +14,7 @@ export const productSchema = z.object({
     height: z.number({ invalid_type_error: "Height must be a number." }).min(0.1),
     depth: z.number({ invalid_type_error: "Depth must be a number." }).min(0.1),
   }),
-  
+
   // İsteğe Bağlı (Opsiyonel) Alanlar
   description: z.string().min(10, "Description must be at least 10 characters long.").max(500).optional(),
   brand: z.string().min(1).optional(),
