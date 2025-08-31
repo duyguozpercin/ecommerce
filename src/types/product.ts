@@ -53,9 +53,9 @@ export interface ProductForm {
 
 export enum Category {
   decoration = 'Decoration',
-  chair = 'Chair',
-  sofa = 'Sofa',
-  table = 'Table',
+  chair = 'Chairs',
+  sofa = 'Sofas',
+  table = 'Tables',
   
 }
 
