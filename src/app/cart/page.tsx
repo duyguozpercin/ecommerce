@@ -107,16 +107,23 @@ export default function Cart({ searchParams }: SuccessProps) {
         </h2>
       </div>
 
-      <div className="text-center mt-6">
-        <button onClick={clearCart}
-          className="bg-amber-500 text-white px-6 py-2 rounded hover:bg-amber-600 cursor-pointer"
-        >Clear Cart</button>
+      <div className="text-center mt-6 flex justify-center gap-4">
+  <button
+    onClick={clearCart}
+    className="bg-amber-500 text-white px-6 py-2 rounded hover:bg-amber-600 cursor-pointer"
+  >
+    Clear Cart
+  </button>
 
-        <BuyButton className="ml-4 bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 cursor-pointer"
-          productId={cartItems.length > 0 ? String(cartItems[0].id) : ''}
-        />
+  <BuyButton
+  
+  cartItems={cartItems.map(item => ({
+    id: String(item.id),
+    quantity: item.quantity,
+  }))}
+/>
+</div>
 
-      </div>
     </div>
   );
 }
