@@ -3,15 +3,14 @@
 import { stripe } from '@/utils/stripe';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-// Sunucu tarafı işlemler için 'adminDb' kullanmak daha güvenli ve doğrudur.
 import { adminDb } from '@/utils/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 interface CartItem {
   id: string;
   quantity: number;
 }
 
-// Form verisinden hem sepet ürünlerini hem de userId'yi ayrıştıran yardımcı fonksiyon
 function parseFormData(formData: FormData): { cartItems: CartItem[], userId: string | null } {
   const cartItems: CartItem[] = [];
   const userId = formData.get('userId') as string | null;
@@ -30,8 +29,6 @@ function parseFormData(formData: FormData): { cartItems: CartItem[], userId: str
 
 export async function checkout(formData: FormData) {
   const origin = (await headers()).get('origin');
-  
-  // 1. Form verisinden hem ürünleri hem de KULLANICI KİMLİĞİNİ al
   const { cartItems, userId } = parseFormData(formData);
 
   if (!userId) {
@@ -42,50 +39,84 @@ export async function checkout(formData: FormData) {
     throw new Error('No valid cart items found.');
   }
 
+  // session değişkenini try bloğunun dışında tanımlıyoruz.
+  let session;
+
   try {
-    // 2. Firestore'dan her ürünün Stripe priceId'sini yönetici yetkileriyle çek
-    const line_items = await Promise.all(
-      cartItems.map(async (item) => {
-        // 'db' yerine 'adminDb' kullanıyoruz
-        const productRef = adminDb.collection('products').doc(item.id);
-        const productSnap = await productRef.get();
+    // line_items değişkenini burada tanımlıyoruz ki transaction içinden doldurabilelim.
+    let line_items: any[] = [];
 
-        if (!productSnap.exists) {
-          throw new Error(`Product not found in Firestore: ${item.id}`);
-        }
+    // Firestore transaction'ı başlatıyoruz.
+    // Bu, stok kontrolü ve güncelleme işlemlerinin hepsinin başarılı olmasını
+    // veya bir hata durumunda hiçbirinin uygulanmamasını garanti eder.
+    await adminDb.runTransaction(async (transaction) => {
+      const items_for_stripe = await Promise.all(
+        cartItems.map(async (item) => {
+          const productRef = adminDb.collection('products').doc(item.id);
+          const productSnap = await transaction.get(productRef); // Okuma işlemini transaction içinde yap
 
-        const productData = productSnap.data();
-        if (!productData?.stripePriceId) {
-          throw new Error(`stripePriceId is missing for product: ${item.id}`);
-        }
+          if (!productSnap.exists) {
+            throw new Error(`Ürün bulunamadı: ${item.id}`);
+          }
 
-        return {
-          price: productData.stripePriceId,
-          quantity: item.quantity,
-        };
-      })
-    );
+          const productData = productSnap.data()!;
+          const currentStock = productData.stock;
 
-    // 3. Stripe checkout oturumu oluştururken userId'yi de ekle
-    const session = await stripe.checkout.sessions.create({
+          // Stok alanı var mı diye kontrol et
+          if (currentStock === undefined) {
+            throw new Error(`Ürün için stok bilgisi eksik: ${item.id}`);
+          }
+          
+          // Yeterli stok var mı diye kontrol et
+          if (currentStock < item.quantity) {
+            throw new Error(`Yetersiz stok: ${productData.name}. Kalan: ${currentStock}, İstenen: ${item.quantity}`);
+          }
+          
+          if (!productData.stripePriceId) {
+            throw new Error(`stripePriceId bilgisi eksik: ${item.id}`);
+          }
+
+          // Stok güncelleme işlemini transaction'a ekle
+          transaction.update(productRef, { stock: FieldValue.increment(-item.quantity) });
+
+          return {
+            price: productData.stripePriceId,
+            quantity: item.quantity,
+          };
+        })
+      );
+      // Başarılı olursa, line_items dizisini doldur
+      line_items = items_for_stripe;
+    });
+
+    // NOT: Bu yaklaşım, kullanıcı Stripe'da ödemeyi tamamlamasa bile stoğu düşürür.
+    // Daha sağlam bir çözüm için (üretim ortamında tavsiye edilen), ödeme başarılı
+    // olduktan sonra stoğu düşüren bir Stripe Webhook kurmanız gerekir.
+
+    // Stripe oturumunu, stok kontrolü yapılmış ve güncellenmiş ürünlerle oluştur.
+    session = await stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cart?canceled=true`,
-      
-      // KRİTİK DÜZELTME: Kullanıcı kimliğini Stripe'a bildiriyoruz
       client_reference_id: userId,
     });
 
-    if (session.url) {
-      redirect(session.url);
-    } else {
-      throw new Error('Session URL is null');
-    }
+  } catch (err: any) {
+    console.error('Ödeme işlemi sırasında hata:', err);
+    // Hata mesajını kullanıcıya göstermek için URL'e ekleyebiliriz.
+    const errorMessage = encodeURIComponent(err.message);
+    return redirect(`/cart?error=checkout_failed&message=${errorMessage}`);
+  }
 
-  } catch (err) {
-    console.error('Error creating checkout session', err);
-    // Hata durumunda daha anlaşılır bir mesaja yönlendirebiliriz
-    redirect(`/cart?error=checkout_failed`);
+  // KONTROL VE YÖNLENDİRME ARTIK TRY...CATCH BLOĞUNUN DIŞINDA
+  if (session?.url) {
+    // Her şey başarılıysa, Stripe'a yönlendiriyoruz.
+    redirect(session.url);
+  } else {
+    // Eğer bir şekilde session veya url yoksa, bu da bir hatadır.
+    console.error('Stripe oturumu oluşturuldu ancak URL eksik.');
+    redirect(`/cart?error=session_url_missing`);
   }
 }
+
