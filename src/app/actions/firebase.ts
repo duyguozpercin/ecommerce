@@ -52,6 +52,7 @@ export const createOrder = async (userId: string, orderData: OrderData) => {
       title: productData.title,
       price: productData.price,
       brand: productData.brand,
+      stock: productData.stock,
       // Varsa diğer alanları da buraya ekleyebilirsin, mesela resim URL'i
       // imageUrl: productData.imageUrl || null, 
     };
