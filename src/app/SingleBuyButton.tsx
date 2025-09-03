@@ -1,6 +1,5 @@
 'use client';
 
-import { checkout } from '@/app/actions/card/checkout';
 import { auth } from '@/utils/firebase';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -13,43 +12,62 @@ export const SingleBuyButton = ({
   className?: string;
 }) => {
   const [userId, setUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Kullanıcı oturumunu dinle
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        setUserId(null);
-      }
+      setUserId(user ? user.uid : null);
     });
     return () => unsubscribe();
   }, []);
 
-  // Kullanıcı giriş yapmadıysa butonu devre dışı bırak
+  const handleCheckout = async () => {
+    if (!userId) return;
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/checkout-single', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          cartItems: [{ id: productId, quantity: 1 }],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('Stripe yönlendirme URL’si alınamadı');
+      }
+    } catch (error) {
+      console.error('Stripe yönlendirme hatası:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!userId) {
     return (
       <button
         disabled
-        className={`bg-gray-400 text-white text-sm px-2 py-1 rounded cursor-not-allowed leading-normal ${className ?? ""}`}
+        className={`bg-gray-400 text-white text-sm px-2 py-1 rounded cursor-not-allowed leading-normal ${className ?? ''}`}
       >
         Buy Now
       </button>
     );
   }
 
-  // Kullanıcı giriş yaptıysa, checkout action'ını tetikleyecek formu göster
   return (
-    <form action={checkout}>
-  <input type="hidden" name="cartItems[0][id]" value={productId} />
-  <input type="hidden" name="cartItems[0][quantity]" value="1" />
-  <input type="hidden" name="userId" value={userId} />
-  <button
-    type="submit"
-    className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ""}`}
-  >
-    Buy Now
-  </button>
-</form>
+    <button
+      onClick={handleCheckout}
+      disabled={loading}
+      className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ''}`}
+    >
+      {loading ? 'Redirecting…' : 'Buy Now'}
+    </button>
   );
 };
