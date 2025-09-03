@@ -1,6 +1,12 @@
 'use client';
-
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 
 interface CartItem {
   id: string;
@@ -13,7 +19,7 @@ interface CartContextType {
   removeFromCart: (id: string) => void;
   increaseQuantity: (id: string) => void;
   decreaseQuantity: (id: string) => void;
-  clearCart: () => void; 
+  clearCart: () => void;
   totalItems: number;
 }
 
@@ -66,22 +72,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  const clearCart = () => {
+  // ✅ useCallback ile sarmalandı
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{
-      cart,
-      addToCart,
-      removeFromCart,
-      increaseQuantity,
-      decreaseQuantity,
-      clearCart,
-      totalItems,
-    }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        increaseQuantity,
+        decreaseQuantity,
+        clearCart,
+        totalItems,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

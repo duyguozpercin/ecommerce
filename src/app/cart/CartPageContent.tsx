@@ -123,7 +123,7 @@ export default function CartPageContent() {
       <div className="text-center mt-6 flex justify-center gap-4">
         <button
           onClick={clearCart}
-          className="bg-gray-400 text-white text-sm px-4 py-2 rounded hover:bg-gray-500 cursor-pointer transition-colors"
+          className="bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10"
         >
           Clear Cart
         </button>

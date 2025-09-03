@@ -3,19 +3,20 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
+import { useCart } from '@/app/context/CartContext';
 
 export default function SuccessPageContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
+  const { clearCart } = useCart(); // ✅ clearCart fonksiyonu alındı
+
   useEffect(() => {
-    // Bu sayfanın görevi veritabanını güncellemek DEĞİLDİR.
-    // O işi sunucudaki webhook'umuz zaten güvenli bir şekilde yapıyor.
-    // Burası sadece kullanıcıya bilgi vermek veya analitik verisi göndermek için kullanılabilir.
     if (sessionId) {
       console.log("Kullanıcı, şu session ID ile başarı sayfasına ulaştı:", sessionId);
+      clearCart(); // 🧹 Sepet temizleniyor
     }
-  }, [sessionId]);
+  }, [sessionId, clearCart]);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-100 p-4">

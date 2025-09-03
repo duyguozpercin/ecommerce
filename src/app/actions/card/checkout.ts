@@ -39,21 +39,16 @@ export async function checkout(formData: FormData) {
     throw new Error('No valid cart items found.');
   }
 
-  // session değişkenini try bloğunun dışında tanımlıyoruz.
   let session;
 
   try {
-    // line_items değişkenini burada tanımlıyoruz ki transaction içinden doldurabilelim.
     let line_items: any[] = [];
 
-    // Firestore transaction'ı başlatıyoruz.
-    // Bu, stok kontrolü ve güncelleme işlemlerinin hepsinin başarılı olmasını
-    // veya bir hata durumunda hiçbirinin uygulanmamasını garanti eder.
     await adminDb.runTransaction(async (transaction) => {
       const items_for_stripe = await Promise.all(
         cartItems.map(async (item) => {
           const productRef = adminDb.collection('products').doc(item.id);
-          const productSnap = await transaction.get(productRef); // Okuma işlemini transaction içinde yap
+          const productSnap = await transaction.get(productRef);
 
           if (!productSnap.exists) {
             throw new Error(`Ürün bulunamadı: ${item.id}`);
@@ -62,12 +57,10 @@ export async function checkout(formData: FormData) {
           const productData = productSnap.data()!;
           const currentStock = productData.stock;
 
-          // Stok alanı var mı diye kontrol et
           if (currentStock === undefined) {
             throw new Error(`Ürün için stok bilgisi eksik: ${item.id}`);
           }
           
-          // Yeterli stok var mı diye kontrol et
           if (currentStock < item.quantity) {
             throw new Error(`Yetersiz stok: ${productData.name}. Kalan: ${currentStock}, İstenen: ${item.quantity}`);
           }
@@ -76,7 +69,6 @@ export async function checkout(formData: FormData) {
             throw new Error(`stripePriceId bilgisi eksik: ${item.id}`);
           }
 
-          // Stok güncelleme işlemini transaction'a ekle
           transaction.update(productRef, { stock: FieldValue.increment(-item.quantity) });
 
           return {
@@ -85,38 +77,54 @@ export async function checkout(formData: FormData) {
           };
         })
       );
-      // Başarılı olursa, line_items dizisini doldur
       line_items = items_for_stripe;
     });
 
-    // NOT: Bu yaklaşım, kullanıcı Stripe'da ödemeyi tamamlamasa bile stoğu düşürür.
-    // Daha sağlam bir çözüm için (üretim ortamında tavsiye edilen), ödeme başarılı
-    // olduktan sonra stoğu düşüren bir Stripe Webhook kurmanız gerekir.
-
-    // Stripe oturumunu, stok kontrolü yapılmış ve güncellenmiş ürünlerle oluştur.
     session = await stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cart?canceled=true`,
       client_reference_id: userId,
+
+      // --- İSTEDİĞİNİZ TEK DEĞİŞİKLİK BURADA ---
+      // Webhook'un doğru Firestore ID'lerini alabilmesi için bu bilgiyi ekliyoruz.
+      // Kodunuzun geri kalanının çalışma mantığını etkilemez.
+      metadata: {
+        userId: userId,
+        cartItems: JSON.stringify(cartItems.map(item => ({
+          id: item.id,       // Firestore Ürün ID'si
+          quantity: item.quantity,
+        }))),
+      }
+      // --- DEĞİŞİKLİK SONU ---
     });
 
   } catch (err: any) {
     console.error('Ödeme işlemi sırasında hata:', err);
-    // Hata mesajını kullanıcıya göstermek için URL'e ekleyebiliriz.
     const errorMessage = encodeURIComponent(err.message);
     return redirect(`/cart?error=checkout_failed&message=${errorMessage}`);
   }
 
-  // KONTROL VE YÖNLENDİRME ARTIK TRY...CATCH BLOĞUNUN DIŞINDA
   if (session?.url) {
-    // Her şey başarılıysa, Stripe'a yönlendiriyoruz.
+    try {
+      const cartRef = adminDb.collection('users').doc(userId).collection('cart');
+      const cartSnapshot = await cartRef.get();
+
+      if (!cartSnapshot.empty) {
+        const batch = adminDb.batch();
+        cartSnapshot.docs.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+      }
+    } catch (clearCartError) {
+      console.error(`Could not clear cart for user ${userId}:`, clearCartError);
+    }
+
     redirect(session.url);
   } else {
-    // Eğer bir şekilde session veya url yoksa, bu da bir hatadır.
     console.error('Stripe oturumu oluşturuldu ancak URL eksik.');
     redirect(`/cart?error=session_url_missing`);
   }
 }
-
