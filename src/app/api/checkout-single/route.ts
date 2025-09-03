@@ -6,6 +6,10 @@ export async function POST(req: Request) {
   try {
     const { userId, cartItems } = await req.json();
 
+     console.log('📥 API çağrısı alındı');
+    console.log('🧾 Gelen cartItems:', cartItems);
+    console.log('👤 userId:', userId);
+
     if (!userId) {
       return NextResponse.json({ error: 'Kullanıcı kimliği eksik.' }, { status: 400 });
     }
@@ -40,6 +44,8 @@ export async function POST(req: Request) {
       })
     );
 
+    console.log('🧾 Stripe line_items:', line_items);
+
     const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
     const session = await stripe.checkout.sessions.create({
@@ -53,6 +59,9 @@ export async function POST(req: Request) {
         cartItems: JSON.stringify(cartItems),
       },
     });
+
+     console.log('✅ Stripe Session:', session);
+    console.log('🔗 Stripe URL:', session.url);
 
     return NextResponse.json({ url: session.url });
   } catch (error: any) {

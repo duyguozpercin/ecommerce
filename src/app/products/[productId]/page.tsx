@@ -4,7 +4,7 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import AddToCartButton from "@/components/AddToCartButton";
-import { SingleBuyButton } from "@/app/SingleBuyButton";
+import { BuyButton } from "@/app/BuyButton";
 
 interface ProductDetailPageProps {
   params: { productId: string };
@@ -62,7 +62,7 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
 
         <div className="flex flex-row items-center gap-x-4">
           <AddToCartButton product={{ ...product, id: productId }} />
-          <SingleBuyButton productId={productId} />
+          <BuyButton productId={String(product.id)} />
         </div>
 
       </div>

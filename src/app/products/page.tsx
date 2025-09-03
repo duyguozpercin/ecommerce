@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types/product';
-import { SingleBuyButton } from '../SingleBuyButton';
+import { BuyButton } from '@/app/BuyButton';
 import AddToCartButton from '@/components/AddToCartButton';
 
 interface PageProps {
@@ -86,7 +86,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                     <div className="text-center mt-6 flex justify-center gap-4">
                     <AddToCartButton product={{ ...product, id: String(product.id) }} />
 
-                    <SingleBuyButton productId={String(product.id)} />
+                    <BuyButton productId={String(product.id)} />
                     </div>
                   </div>
                 ))}

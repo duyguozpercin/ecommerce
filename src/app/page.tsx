@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import HeroSlider from "@/components/HeroSlider";
 import AddToCartButton from "@/components/AddToCartButton";
 import { SingleBuyButton } from "./SingleBuyButton";
+import { BuyButton } from "./BuyButton";
 
 // ✅ Yeni tip tanımı
 interface HomeProps {
@@ -59,7 +60,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
               <div className="flex flex-row items-center gap-x-4 mt-2">
                 <AddToCartButton product={{ ...product, id: String(product.id) }} />
-                <SingleBuyButton productId={String(product.id)} />
+                <BuyButton productId={String(product.id)} />
               </div>
             </div>
           ))}
