@@ -40,17 +40,16 @@ export const SingleBuyButton = ({
 
   // Kullanıcı giriş yaptıysa, checkout action'ını tetikleyecek formu göster
   return (
-    <form action={checkout}>
-      {/* Bu gizli input'lar, tek ürünlük "sanal sepeti" oluşturur */}
-      <input type="hidden" name="cartItems[0][id]" value={productId} />
-      <input type="hidden" name="cartItems[0][quantity]" value="1" />
-      <input type="hidden" name="userId" value={userId} />
-      <button
-        type="submit"
-        className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ""}`}
-      >
-        Buy Now
-      </button>
-    </form>
+    <form action={checkout} method="post">
+  <input type="hidden" name="cartItems[0][id]" value={productId} />
+  <input type="hidden" name="cartItems[0][quantity]" value="1" />
+  <input type="hidden" name="userId" value={userId} />
+  <button
+    type="submit"
+    className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ""}`}
+  >
+    Buy Now
+  </button>
+</form>
   );
 };
