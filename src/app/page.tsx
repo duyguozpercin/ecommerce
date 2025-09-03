@@ -4,7 +4,6 @@ import { getAllProducts } from "@/services/productService";
 import { Product } from "@/types/product";
 import HeroSlider from "@/components/HeroSlider";
 import AddToCartButton from "@/components/AddToCartButton";
-import { SingleBuyButton } from "./SingleBuyButton";
 import { BuyButton } from "./BuyButton";
 
 // ✅ Yeni tip tanımı
