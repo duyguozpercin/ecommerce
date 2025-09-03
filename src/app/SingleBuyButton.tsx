@@ -1,9 +1,9 @@
 'use client';
 
 import { checkout } from '@/app/actions/card/checkout';
-import { auth } from '@/utils/firebase'; // Firebase auth nesnesini import edin
-import { useState, useEffect } from 'react'; // React hook'larını import edin
-import { onAuthStateChanged } from 'firebase/auth'; // Firebase auth state dinleyicisini import edin
+import { auth } from '@/utils/firebase';
+import { useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export const SingleBuyButton = ({
   productId,
@@ -12,30 +12,22 @@ export const SingleBuyButton = ({
   productId: string;
   className?: string;
 }) => {
-  // 1. Giriş yapan kullanıcının kimliğini tutmak için bir state oluşturuyoruz.
   const [userId, setUserId] = useState<string | null>(null);
 
-  // 2. Komponent yüklendiğinde Firebase'den kullanıcı durumunu dinliyoruz.
   useEffect(() => {
-    // onAuthStateChanged, kullanıcı giriş yaptığında, çıkış yaptığında veya
-    // sayfa yenilendiğinde anlık olarak kullanıcı bilgisini bize verir.
+    // Kullanıcı oturumunu dinle
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Eğer bir kullanıcı giriş yapmışsa, state'i onun UID'si ile güncelliyoruz.
         setUserId(user.uid);
       } else {
-        // Kullanıcı giriş yapmamışsa state'i null yapıyoruz.
         setUserId(null);
       }
     });
-
-    // Komponent ekrandan kaldırıldığında dinleyiciyi temizliyoruz.
     return () => unsubscribe();
-  }, []); // [] -> Bu effect'in sadece bir kez çalışmasını sağlar.
+  }, []);
 
-  // 3. Eğer kullanıcı giriş yapmamışsa butonu göstermeyebiliriz (veya disabled yapabiliriz).
+  // Kullanıcı giriş yapmadıysa butonu devre dışı bırak
   if (!userId) {
-    // Alternatif olarak burada "Giriş Yap" butonu gösterebilirsiniz.
     return (
       <button
         disabled
@@ -46,12 +38,12 @@ export const SingleBuyButton = ({
     );
   }
 
-  // 4. Formun içine userId'yi gizli bir input olarak ekliyoruz.
+  // Kullanıcı giriş yaptıysa, checkout action'ını tetikleyecek formu göster
   return (
     <form action={checkout}>
+      {/* Bu gizli input'lar, tek ürünlük "sanal sepeti" oluşturur */}
       <input type="hidden" name="cartItems[0][id]" value={productId} />
       <input type="hidden" name="cartItems[0][quantity]" value="1" />
-      {/* KRİTİK EKLEME: Kullanıcı kimliğini sunucuya gönderiyoruz. */}
       <input type="hidden" name="userId" value={userId} />
       <button
         type="submit"
