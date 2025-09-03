@@ -9,6 +9,7 @@ import {
   getDocs,
   query,
   orderBy,
+  where,            // 👈 eklendi
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -30,14 +31,74 @@ export default function ProfilePage() {
     const fetchOrders = async () => {
       if (!user) return;
 
-      const ordersRef = collection(db, 'users', user.uid, 'orders');
-      const q = query(ordersRef, orderBy('createdAt', 'desc'));
-      const snapshot = await getDocs(q);
+      // 1) Önce users/{uid}/orders
+      const userOrdersRef = collection(db, 'users', user.uid, 'orders');
+      let snap = await getDocs(query(userOrdersRef, orderBy('createdAt', 'desc')));
 
-      const orderList: Order[] = await Promise.all(
-        snapshot.docs.map(async (docSnap) => {
-          const data = docSnap.data();
-          const productId = data.productId;
+      // 2) Boşsa top-level orders’a düş (where userId == uid)
+      if (snap.empty) {
+        const topOrdersRef = collection(db, 'orders');
+        snap = await getDocs(
+          query(topOrdersRef, where('userId', '==', user.uid), orderBy('createdAt', 'desc'))
+        );
+      }
+
+      // 3) Siparişi -> products[]’a göre satırlara aç + ürün verisiyle zenginleştir
+      const list: Order[] = [];
+      for (const docSnap of snap.docs) {
+        const data: any = docSnap.data();
+
+        // createdAt güvenli format
+        const createdAtDate =
+          data.createdAt?.toDate?.() ? data.createdAt.toDate() : new Date();
+        const createdAtText = createdAtDate.toLocaleString();
+
+        // amount: yoksa total/100
+        const baseAmount =
+          typeof data.amount === 'number'
+            ? data.amount
+            : typeof data.total === 'number'
+            ? data.total / 100
+            : 0;
+
+        // paymentId: yoksa stripeSessionId veya doc id
+        const paymentId = data.paymentId || data.stripeSessionId || docSnap.id;
+
+        // a) Webhook şeması: products dizisi varsa onu kullan
+        if (Array.isArray(data.products) && data.products.length > 0) {
+          for (const p of data.products) {
+            const productId = String(p.productId);
+
+            let productTitle = 'Unknown Product';
+            let productImage = '';
+
+            try {
+              const pRef = doc(db, 'products', productId);
+              const pSnap = await getDoc(pRef);
+              if (pSnap.exists()) {
+                const pd: any = pSnap.data();
+                productTitle = pd.title || 'Unnamed';
+                productImage = (pd.images?.[0] || pd.thumbnail) ?? '';
+              }
+            } catch (err) {
+              console.warn('Ürün bilgisi alınamadı:', productId, err);
+            }
+
+            list.push({
+              productId,
+              amount: baseAmount,           // tek sipariş toplamını gösteriyor (senin eski alanın)
+              paymentId,
+              createdAt: createdAtText,
+              productTitle,
+              productImage,
+            });
+          }
+          continue;
+        }
+
+        // b) Eski şema: tekil productId alanı varsa (senin önceki yapın)
+        if (data.productId) {
+          const productId = String(data.productId);
 
           let productTitle = 'Unknown Product';
           let productImage = '';
@@ -46,26 +107,26 @@ export default function ProfilePage() {
             const productRef = doc(db, 'products', productId);
             const productSnap = await getDoc(productRef);
             if (productSnap.exists()) {
-              const productData = productSnap.data();
+              const productData: any = productSnap.data();
               productTitle = productData.title || 'Unnamed';
-              productImage = productData.images?.[0] || '';
+              productImage = (productData.images?.[0] || productData.thumbnail) ?? '';
             }
           } catch (err) {
-            console.warn('Ürün bilgisi alınamadı:', err);
+            console.warn('Ürün bilgisi alınamadı:', productId, err);
           }
 
-          return {
+          list.push({
             productId,
-            amount: data.amount,
-            paymentId: data.paymentId,
-            createdAt: data.createdAt?.toDate?.().toLocaleString() ?? '',
+            amount: baseAmount,
+            paymentId,
+            createdAt: createdAtText,
             productTitle,
             productImage,
-          };
-        }),
-      );
+          });
+        }
+      }
 
-      setOrders(orderList);
+      setOrders(list);
     };
 
     fetchOrders();
@@ -82,7 +143,10 @@ export default function ProfilePage() {
       ) : (
         <ul className="space-y-4">
           {orders.map((order, index) => (
-            <li key={index} className="border rounded-lg p-4 shadow-sm bg-white flex items-start gap-4">
+            <li
+              key={index}
+              className="border rounded-lg p-4 shadow-sm bg-white flex items-start gap-4"
+            >
               <Image
                 src={order.productImage || '/placeholder.png'}
                 alt={order.productTitle || 'Product image'}
