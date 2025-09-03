@@ -40,7 +40,7 @@ export const SingleBuyButton = ({
 
   // Kullanıcı giriş yaptıysa, checkout action'ını tetikleyecek formu göster
   return (
-    <form action={checkout} method="post">
+    <form action={checkout}>
   <input type="hidden" name="cartItems[0][id]" value={productId} />
   <input type="hidden" name="cartItems[0][quantity]" value="1" />
   <input type="hidden" name="userId" value={userId} />
