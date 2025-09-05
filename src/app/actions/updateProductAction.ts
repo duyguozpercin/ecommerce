@@ -18,7 +18,7 @@ const zodIssues = (err: z.ZodError): { path: string; message: string }[] =>
     message: i.message,
   }));
 
-// Dimensions: kısmi güncellemeye izin veriyoruz (partial)
+
 const dimensionsSchema = z.object({
   width: z.number().min(0),
   height: z.number().min(0),
@@ -32,10 +32,10 @@ const updateSchema = z.object({
   price: z.number().min(0),
   stock: z.number().min(0),
 
-  // Gönderilirse number olmalı; kısmi olabilir
+  
   dimensions: dimensionsSchema.optional(),
 
-  // Diğerleri opsiyonel
+  
   description: z.string().optional(),
   brand: z.string().optional(),
   sku: z.string().optional(),
@@ -44,8 +44,8 @@ const updateSchema = z.object({
   shippingInformation: z.string().optional(),
   availabilityStatus: z.string().optional(),
   returnPolicy: z.string().optional(),
-  tags: z.string().optional(),       // virgülle ayrılmış string
-  image: z.string().optional(),      // tek görsel URL
+  tags: z.string().optional(),
+  image: z.string().optional(), 
 });
 
 type ActionOk = { success: true; message: string; stripePriceId?: string };
@@ -58,7 +58,7 @@ type ActionResult = ActionOk | ActionErr;
 
 export async function updateProductAction(formData: FormData): Promise<ActionResult> {
   try {
-    // 1) Form'dan ham veriyi al
+    
     const raw = {
       id: String(formData.get("id") || ""),
       title: String(formData.get("title") || ""),
@@ -85,12 +85,12 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       image: formData.get("image")?.toString() || "",
     };
 
-    // 2) Basit guard: price/stock numeric ve >=0 olsun
+    
     if (!isNumber(raw.price) || raw.price < 0 || !isNumber(raw.stock) || raw.stock < 0) {
       return { success: false, message: "Invalid numeric values for price/stock." };
     }
 
-    // dimensions hiç girilmediyse zod'a göndermeyelim
+    
     const hasAnyDim =
       isNumber(raw.dimensions.width) ||
       isNumber(raw.dimensions.height) ||
@@ -132,7 +132,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       };
     }
 
-    // 3) Mevcut ürünü getir
+    
     const ref = doc(db, collections.products, raw.id);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
@@ -140,7 +140,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     }
     const existing = { id: snap.id, ...snap.data() } as Product;
 
-    // 4) Stripe price güncelleme (fiyat değişmişse)
+    
     const oldPrice = Number(existing.price ?? 0);
     const newPrice = Number(raw.price);
     let stripePriceId: string | undefined = existing.stripePriceId;
@@ -172,7 +172,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       }
     }
 
-    // 5) Güncellenecek payload
+    
     const meta = typeof existing.meta === "object" && existing.meta ? existing.meta : {};
     const updatePayload: Record<string, unknown> = {
       title: parsed.data.title,
@@ -181,11 +181,11 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       stock: parsed.data.stock,
       meta: {
         ...meta,
-        updatedAt: new Date().toISOString(), // Meta'nı ISO olarak tutuyorsan tipini de string yap
+        updatedAt: new Date().toISOString(), 
       },
     };
 
-    // Opsiyoneller
+    
     if (parsed.data.description !== undefined) updatePayload.description = parsed.data.description;
     if (parsed.data.brand !== undefined) updatePayload.brand = parsed.data.brand;
     if (parsed.data.sku !== undefined) updatePayload.sku = parsed.data.sku;
@@ -195,7 +195,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     if (parsed.data.availabilityStatus !== undefined) updatePayload.availabilityStatus = parsed.data.availabilityStatus;
     if (parsed.data.returnPolicy !== undefined) updatePayload.returnPolicy = parsed.data.returnPolicy;
 
-    // Dimensions: geldiyse mevcutla merge et, hiç gelmediyse dokunma
+    
     if (parsed.data.dimensions && Object.keys(parsed.data.dimensions).length > 0) {
       const exDims = (existing.dimensions ?? {}) as Partial<{ width:number; height:number; depth:number }>;
       const nextDims = {
@@ -208,7 +208,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       if (hasAny) updatePayload.dimensions = nextDims;
     }
 
-    // tags: virgül ayrılmış string → string[]
+    
     if (parsed.data.tags !== undefined) {
       const list = parsed.data.tags
         ? parsed.data.tags.split(",").map(t => t.trim()).filter(Boolean)
@@ -216,7 +216,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       updatePayload.tags = list;
     }
 
-    // image: tek URL geldiyse thumbnail + images senkron
+    
     if (parsed.data.image) {
       updatePayload.images = [parsed.data.image];
       updatePayload.thumbnail = parsed.data.image;
@@ -224,7 +224,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
 
     if (stripePriceId) updatePayload.stripePriceId = stripePriceId;
 
-    // 6) Firestore güncelle
+    
     const serializablePayload = JSON.parse(JSON.stringify(updatePayload));
     await updateDoc(ref, serializablePayload);
 

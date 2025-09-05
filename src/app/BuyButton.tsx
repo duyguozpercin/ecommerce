@@ -10,8 +10,8 @@ interface CartItem {
 }
 
 interface BuyButtonProps {
-  productId?: string;      // Tek ürün için
-  cartItems?: CartItem[];  // Çoklu ürün için
+  productId?: string;
+  cartItems?: CartItem[];
   className?: string;
 }
 
@@ -32,7 +32,7 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
     setLoading(true);
 
     try {
-      // cartItems varsa onu kullan, yoksa productId'den tek ürün array'i oluştur
+      
       const items: CartItem[] =
         cartItems && cartItems.length > 0
           ? cartItems
@@ -55,7 +55,7 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
       const data = await response.json();
 
       if (data?.url) {
-        window.location.href = data.url; // Stripe yönlendirme
+        window.location.href = data.url;
       } else {
         console.error('Stripe yönlendirme URL’si alınamadı', data);
       }

@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { useCart } from '@/app/context/CartContext'; // Yolun doğru olduğundan emin ol
-import { getProductsByIds } from '@/services/productService'; // Yolun doğru olduğundan emin ol
-import { Product } from '@/types/product'; // Yolun doğru olduğundan emin ol
-import { BuyButton } from '../BuyButton'; // Yolun doğru olduğundan emin ol
+import { useCart } from '@/app/context/CartContext';
+import { getProductsByIds } from '@/services/productService';
+import { Product } from '@/types/product';
+import { BuyButton } from '../BuyButton';
 
 interface CartItemWithDetails extends Product {
   quantity: number;
@@ -19,7 +19,7 @@ export default function CartPageContent() {
   useEffect(() => {
     if (canceled) {
       console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
-      // Burada kullanıcıya bir bildirim de gösterebilirsin.
+      
     }
   }, [canceled]);
 

@@ -9,7 +9,7 @@ import {
   getDocs,
   query,
   orderBy,
-  where,            // 👈 eklendi
+  where,
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -31,11 +31,11 @@ export default function ProfilePage() {
     const fetchOrders = async () => {
       if (!user) return;
 
-      // 1) Önce users/{uid}/orders
+      
       const userOrdersRef = collection(db, 'users', user.uid, 'orders');
       let snap = await getDocs(query(userOrdersRef, orderBy('createdAt', 'desc')));
 
-      // 2) Boşsa top-level orders’a düş (where userId == uid)
+      
       if (snap.empty) {
         const topOrdersRef = collection(db, 'orders');
         snap = await getDocs(
@@ -43,17 +43,17 @@ export default function ProfilePage() {
         );
       }
 
-      // 3) Siparişi -> products[]’a göre satırlara aç + ürün verisiyle zenginleştir
+      
       const list: Order[] = [];
       for (const docSnap of snap.docs) {
         const data: any = docSnap.data();
 
-        // createdAt güvenli format
+        
         const createdAtDate =
           data.createdAt?.toDate?.() ? data.createdAt.toDate() : new Date();
         const createdAtText = createdAtDate.toLocaleString();
 
-        // amount: yoksa total/100
+        
         const baseAmount =
           typeof data.amount === 'number'
             ? data.amount
@@ -61,10 +61,10 @@ export default function ProfilePage() {
             ? data.total / 100
             : 0;
 
-        // paymentId: yoksa stripeSessionId veya doc id
+        
         const paymentId = data.paymentId || data.stripeSessionId || docSnap.id;
 
-        // a) Webhook şeması: products dizisi varsa onu kullan
+        
         if (Array.isArray(data.products) && data.products.length > 0) {
           for (const p of data.products) {
             const productId = String(p.productId);
@@ -86,7 +86,7 @@ export default function ProfilePage() {
 
             list.push({
               productId,
-              amount: baseAmount,           // tek sipariş toplamını gösteriyor (senin eski alanın)
+              amount: baseAmount,
               paymentId,
               createdAt: createdAtText,
               productTitle,
@@ -96,7 +96,7 @@ export default function ProfilePage() {
           continue;
         }
 
-        // b) Eski şema: tekil productId alanı varsa (senin önceki yapın)
+        
         if (data.productId) {
           const productId = String(data.productId);
 

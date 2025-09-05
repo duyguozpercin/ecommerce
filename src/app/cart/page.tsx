@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import CartPageContent from './CartPageContent'; // Az önce oluşturduğumuz component
-// Yüklenme sırasında gösterilecek basit bir component
+import CartPageContent from './CartPageContent';
+
 function CartLoading() {
   return (
     <div className="max-w-xl mx-auto p-8">
@@ -12,8 +12,7 @@ function CartLoading() {
 }
 export default function CartPage() {
   return (
-    // Suspense, CartPageContent'in yüklenmesini beklerken
-    // fallback olarak CartLoading component'ini gösterir.
+    
     <Suspense fallback={<CartLoading />}>
       <CartPageContent />
     </Suspense>

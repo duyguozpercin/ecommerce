@@ -72,7 +72,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  // ✅ useCallback ile sarmalandı
   const clearCart = useCallback(() => {
     setCart([]);
   }, []);

@@ -9,12 +9,12 @@ export default function SuccessPageContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
-  const { clearCart } = useCart(); // ✅ clearCart fonksiyonu alındı
+  const { clearCart } = useCart();
 
   useEffect(() => {
     if (sessionId) {
       console.log("Kullanıcı, şu session ID ile başarı sayfasına ulaştı:", sessionId);
-      clearCart(); // 🧹 Sepet temizleniyor
+      clearCart();
     }
   }, [sessionId, clearCart]);
 

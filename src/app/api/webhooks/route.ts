@@ -2,10 +2,10 @@ import { stripe } from "@/utils/stripe";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { createOrder, updateProductStocks } from "@/app/actions/firebase";
-// ✅ EK: Firestore'a doğrudan yazmak için
+
 import { adminDb } from "@/utils/firebase-admin";
 
-// ✅ (opsiyonel ama önerilir) Stripe SDK için Node runtime
+
 export const runtime = "nodejs";
 
 export const POST = async (req: NextRequest) => {
@@ -31,12 +31,12 @@ export const POST = async (req: NextRequest) => {
       return new Response("Missing userId", { status: 400 });
     }
 
-    // ✅ EK: Sadece ödemesi alınmış oturumları işle
+    
     if (session.payment_status !== "paid") {
       return new Response("Session not paid yet, skipping.", { status: 200 });
     }
 
-    // ✅ EK: Idempotency – aynı event ikinci kez gelirse atla
+    
     try {
       const processedRef = adminDb.collection("processed_events").doc(event.id);
       const processedSnap = await processedRef.get();
@@ -53,23 +53,23 @@ export const POST = async (req: NextRequest) => {
         userId,
         total: session.amount_total,
         currency: session.currency,
-        // İSTEMİYORSAN bu satırı kaldırabilirsin:
+        
         shippingDetails: session.customer_details,
         paymentStatus: session.payment_status,
         products: parsedItems.map((item: any) => ({
           productId: item.id,
           quantity: item.quantity,
         })),
-        // ✅ EK: konsistensi için createdAt
+        
         createdAt: new Date(),
         stripeSessionId: session.id,
       };
 
-      // Mevcut akışın (bozulmadı)
+      
       await createOrder(userId, orderData);
       await updateProductStocks(orderData.products);
 
-      // ✅ EK: Kullanıcı alt koleksiyonuna da yaz (Profil > Siparişlerim için)
+      
       await adminDb
         .collection("users")
         .doc(userId)
@@ -77,7 +77,7 @@ export const POST = async (req: NextRequest) => {
         .doc(session.id)
         .set(orderData);
 
-      // ✅ EK: Event'i işaretle (idempotency)
+      
       await processedRef.set({
         processedAt: new Date(),
         sessionId: session.id,
@@ -86,7 +86,7 @@ export const POST = async (req: NextRequest) => {
 
     } catch (error) {
       console.error("🔥 Fulfillment error:", error);
-      // 5xx dönersek Stripe tekrar dener (idempotency olduğu için güvenli)
+      
       return new Response("Fulfillment error", { status: 500 });
     }
   }

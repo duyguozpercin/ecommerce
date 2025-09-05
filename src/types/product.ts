@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { productSchema } from '@/app/schemas/productSchema';
 
-// ProductForm TİPİNİ ARTIK ZOD ŞEMASINDAN OTOMATİK OLARAK ALIYORUZ
+
 export type ProductForm = z.infer<typeof productSchema>;
 
-// DİĞER TİPLERİNİZ VE ENUM'LARINIZ OLDUĞU GİBİ KALIYOR
+
 export interface Product {
   id: number | string;
   title: string;

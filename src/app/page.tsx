@@ -6,13 +6,12 @@ import HeroSlider from "@/components/HeroSlider";
 import AddToCartButton from "@/components/AddToCartButton";
 import { BuyButton } from "./BuyButton";
 
-// ✅ Yeni tip tanımı
 interface HomeProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  // ✅ Güvenli erişim ve kontrol
+
   const canceled = searchParams?.canceled;
 
   if (canceled) {
