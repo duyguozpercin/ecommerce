@@ -2,7 +2,9 @@
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
+
 import type {Config} from 'jest';
+
 import nextJest from 'next/jest';
 
 const createJestConfig = nextJest({
@@ -10,7 +12,9 @@ const createJestConfig = nextJest({
   dir: './',
 })
 
+
 const customJestConfig = {
+
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -98,7 +102,9 @@ const customJestConfig = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
+
     '^@/(.*)$': '<rootDir>/src/$1',
+
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -205,4 +211,5 @@ const customJestConfig = {
   // watchman: true,
 };
 
-export default createJestConfig(customJestConfig)
+export default createJestConfig(customJestConfig);
+
