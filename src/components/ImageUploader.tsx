@@ -1,45 +1,61 @@
 'use client';
 
-import Image from 'next/image';
+import Image from "next/image";
+import { useState } from "react";
 
 interface ImageUploaderProps {
   previewUrl: string | null;
-  onChange: (file: File | null) => void;
+  setPreviewUrl: (url: string | null) => void;
 }
 
-export default function ImageUploader({ previewUrl, onChange }: ImageUploaderProps) {
+export default function ImageUploader({ previewUrl, setPreviewUrl }: ImageUploaderProps) {
+  const [fileName, setFileName] = useState("No file selected");
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    onChange(file);
+    const file = e.target.files?.[0];
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
+      setFileName(file.name);
+    } else {
+      setPreviewUrl(null);
+      setFileName("No file selected");
+    }
   };
 
   return (
     <div className="flex flex-col items-center">
-      <label htmlFor="image" className="mb-1 text-sm sm:text-base md:text-lg font-medium text-gray-700">
-        Product Image
-      </label>
-
+      <label htmlFor="image" className="mb-1">Product Image</label>
       <input
         type="file"
         id="image"
         accept=".jpeg,.jpg,.webp,.png"
+        name="image"
         className="hidden"
         onChange={handleImageChange}
       />
-
       <label
         htmlFor="image"
-        className="cursor-pointer bg-[#BABA8D] text-white py-2 px-4 rounded-md 
-                   hover:bg-[#A4A489] transition-colors
-                   text-xs sm:text-sm md:text-base 
-                   w-full sm:w-auto text-center"
+        className="cursor-pointer bg-[#BABA8D] text-white py-2 px-4 rounded-md text-center hover:bg-[#A4A489] transition-colors"
       >
         Choose File
       </label>
-
+    <p
+        id="file-label"
+        data-testid="file-label"
+        className="mt-2 text-sm text-gray-600 text-center"
+      >
+        {fileName}
+      </p>
       {previewUrl && (
-        <div className="relative w-full max-w-sm h-40 sm:h-56 md:h-64 mt-4">
-          <Image src={previewUrl} alt="Preview" fill className="rounded shadow object-contain" />
+        <div className="relative mt-4 w-full h-40">
+          <Image
+            src={previewUrl}
+            alt="Preview"
+            fill
+            className="object-contain rounded shadow"
+            unoptimized
+          />
         </div>
       )}
     </div>
