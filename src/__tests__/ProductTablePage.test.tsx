@@ -18,12 +18,12 @@ jest.mock("@/components/DeleteProduct", () => (props: any) => {
   );
 });
 
-  beforeAll(() => {
+beforeAll(() => {
   // Orijinal location'ı sakla
   // @ts-ignore
   delete window.location;
 
-  
+
   window.location = {
     assign: jest.fn(),
     replace: jest.fn(),
