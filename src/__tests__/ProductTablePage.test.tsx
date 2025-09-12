@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import "@testing-library/jest-dom"; // jest-dom matchers
+import "@testing-library/jest-dom";
 import ProductTablePage from "../app/admin/products/manage/ProductTablePage";
 import { Product } from "@/types/product";
 
@@ -44,7 +44,7 @@ describe("ProductTablePage", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
 
     const rows = screen.getAllByRole("row");
-    const firstRow = rows[1]; // header değil, ilk satır
+    const firstRow = rows[1];
 
     expect(within(firstRow).getByText("Chair")).toBeInTheDocument();
     expect(within(firstRow).getByText("$100")).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe("ProductTablePage", () => {
   it("renders product correctly inside mobile card", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
 
-    const cards = screen.getAllByText("Chair"); // hem table hem card olabilir
+    const cards = screen.getAllByText("Chair");
     expect(cards[0]).toBeInTheDocument();
     expect(screen.getAllByText("$100")[0]).toBeInTheDocument();
   });
@@ -89,7 +89,7 @@ describe("ProductTablePage", () => {
     render(<ProductTablePage products={products} onEdit={onEdit} />);
 
     const editButtons = screen.getAllByTitle("Edit");
-    fireEvent.click(editButtons[0]); // mobildeki ilk buton
+    fireEvent.click(editButtons[0]);
     expect(onEdit).toHaveBeenCalledWith(products[0]);
   });
 
@@ -97,7 +97,7 @@ describe("ProductTablePage", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
 
     const deleteButtons = screen.getAllByTestId("delete-btn-1");
-    fireEvent.click(deleteButtons[0]); // mobildeki ilk buton
+    fireEvent.click(deleteButtons[0]);
     expect(deleteButtons[0]).toBeInTheDocument();
   });
 });
