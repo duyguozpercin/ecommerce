@@ -5,10 +5,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-// Mock'lar
+
 jest.mock("firebase/auth", () => ({
   signInWithEmailAndPassword: jest.fn(),
-  getAuth: jest.fn(() => ({})), // <-- ekledik
+  getAuth: jest.fn(() => ({})),
 }));
 
 jest.mock("next/navigation", () => ({
