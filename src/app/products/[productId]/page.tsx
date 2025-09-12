@@ -4,6 +4,7 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
 import { BuyButton } from "@/app/BuyButton";
+import Link from "next/link"; // ✅ eklendi
 
 interface ProductDetailPageProps {
   params: { productId: string };
@@ -32,12 +33,12 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
             <p className="mb-4">
               The product you are looking for does not exist in the database. It may have been removed or never added.
             </p>
-            <a
+            <Link
               href="/products"
               className="inline-block bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition"
             >
               Back to Products
-            </a>
+            </Link>
           </div>
         </div>
       );
@@ -88,12 +89,12 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
           <p className="mb-4">
             There was a problem while fetching the product details. Please try again later.
           </p>
-          <a
+          <Link
             href="/products"
             className="inline-block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
           >
             Back to Products
-          </a>
+          </Link>
         </div>
       </div>
     );
