@@ -6,7 +6,6 @@ import { Product } from "@/types/product";
 
 jest.mock("next/image", () => (props: any) => <img {...props} />);
 
-
 jest.mock("@/components/DeleteProduct", () => (props: any) => {
   return (
     <button
@@ -33,16 +32,13 @@ beforeAll(() => {
 });
 
 
-
-
-
 describe("ProductTablePage", () => {
   const products: Product[] = [
     { id: "1", title: "Chair", price: 100, images: ["/chair.png"] } as Product,
   ];
 
   // -------------------------
-  // Masaüstü (tablo görünümü)
+  // Desktop
   // -------------------------
   it("renders product correctly inside table row (desktop view)", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
@@ -78,7 +74,7 @@ describe("ProductTablePage", () => {
   });
 
   // -------------------------
-  // Mobil (kart görünümü)
+  // Mobile
   // -------------------------
   it("renders product correctly inside mobile card", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
