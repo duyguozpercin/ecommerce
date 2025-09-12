@@ -23,7 +23,7 @@ interface CartContextType {
   totalItems: number;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -106,3 +106,4 @@ export function useCart() {
   }
   return context;
 }
+
