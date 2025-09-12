@@ -89,8 +89,21 @@ export async function addNewProductAction(
       return { success: false, message: "Maksimum resim boyutu 4.5 MB olabilir." };
     }
     const imageName = `${id}.${image.name.split(".").pop()}`;
-    const blob = await put(imageName, image, { access: "public", token: process.env.BLOB_READ_WRITE_TOKEN });
-    imageUrl = blob.url;
+
+    try {
+      const blob = await put(imageName, image, {
+        access: "public",
+        token: process.env.BLOB_READ_WRITE_TOKEN
+      });
+      imageUrl = blob.url;
+    } catch (error) {
+      console.error("Image upload error:", error);
+      return {
+        success: false,
+        message: "Resim yüklenirken bir hata oluştu. Lütfen tekrar deneyin.",
+        inputs: raw as any
+      };
+    }
   }
 
   try {

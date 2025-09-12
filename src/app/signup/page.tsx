@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from "react";
@@ -18,24 +17,19 @@ export default function SignUpPage() {
     setError(null);
 
     try {
-      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      
       await setDoc(doc(db, collections.users, user.uid), {
         email: user.email,
         role: "user",
       });
 
-      
       router.push("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error("Signup error:", err.message);
         setError("Registration failed. The email may already be in use.");
       } else {
-        console.error("Unknown error:", err);
         setError("An unknown error occurred.");
       }
     }
@@ -68,7 +62,10 @@ export default function SignUpPage() {
           </button>
         </form>
         <p className="mt-4 text-sm text-center dark:text-stone-700">
-        Do you already have an account? <a href="/login" className="text-blue-600 underline">Log in</a>
+          Do you already have an account?{" "}
+          <a href="/login" className="text-blue-600 underline">
+            Log in
+          </a>
         </p>
       </div>
     </main>

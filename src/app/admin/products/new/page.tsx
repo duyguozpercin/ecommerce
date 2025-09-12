@@ -9,8 +9,8 @@ import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/schemas/productSchema";
 import Loading from "@/components/shared/Loading";
 import { useRouter } from "next/navigation";
-import DimensionsField from "@/components/DimensionsField";
-import CheckboxField from "@/components/CheckboxField";
+import DimensionsField from "@/components/shared/DimensionsField";
+import CheckboxField from "@/components/shared/CheckboxField";
 import { ProductForm } from "@/types/product";
 import Image from "next/image";
 

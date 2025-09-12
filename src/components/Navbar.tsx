@@ -1,9 +1,9 @@
 'use client';
 
 import Link from "next/link";
-import { useCart } from 'src/app/context/CartContext';
+import { useCart } from '@/context/CartContext';
 import { allCategories } from "@/types/product";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utils/firebase";
 import { useEffect, useRef, useState } from "react";
