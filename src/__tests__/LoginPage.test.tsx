@@ -3,9 +3,10 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginPage from "../app/login/page";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+// DİKKAT: Buradaki yolun, aşağıdaki jest.mock() yoluyla aynı olduğundan emin olun.
 import { useAuth } from "@/context/AuthContext";
 
-
+// Mock'lar
 jest.mock("firebase/auth", () => ({
   signInWithEmailAndPassword: jest.fn(),
   getAuth: jest.fn(() => ({})),
@@ -15,7 +16,9 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock("@/app/context/AuthContext", () => ({
+// --- DÜZELTME BURADA ---
+// jest.mock() içindeki yolun, yukarıdaki import yoluyla aynı olması gerekir.
+jest.mock("@/context/AuthContext", () => ({
   useAuth: jest.fn(),
 }));
 
@@ -92,5 +95,3 @@ describe("LoginPage", () => {
     expect(await screen.findByText(/login failed/i)).toBeInTheDocument();
   });
 });
-
-
