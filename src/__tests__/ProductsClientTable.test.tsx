@@ -18,7 +18,7 @@ jest.mock("@/components/UpdateProduct", () => ({
     <div>
       Mock UpdateProduct
       <button onClick={onUpdated}>Update Done</button>
-      
+
     </div>
   ),
 }));
@@ -26,33 +26,33 @@ jest.mock("@/components/UpdateProduct", () => ({
 
 describe("ProductsClientTable", () => {
   const mockProducts: Product[] = [
-      {
-          id: "1",
-          title: "Test Product",
-          description: "desc",
-          category: "books" as any,
-          price: 100,
-          stock: 5,
-          brand: "brand",
-          availabilityStatus: "inStock" as any,
-          returnPolicy: "noReturn" as any,
-          sku: "sku1",
-          weight: 1,
-          warrantyInformation: "1y",
-          shippingInformation: "fast",
-          dimensions: { width: 1, height: 1, depth: 1 },
-          tags: ["tag"],
-          discountPercentage: 0,
-          rating: 0,
-          reviews: [],
-          images: [],
-          thumbnail: "",
-          minimumOrderQuantity: 1,
-          meta: { createdAt: "now", updatedAt: "now" },
-          stripeProductId: "sp1",
-          stripePriceId: "pr1",
-          stripeCurrency: "usd",
-        },
+    {
+      id: "1",
+      title: "Test Product",
+      description: "desc",
+      category: "books" as any,
+      price: 100,
+      stock: 5,
+      brand: "brand",
+      availabilityStatus: "inStock" as any,
+      returnPolicy: "noReturn" as any,
+      sku: "sku1",
+      weight: 1,
+      warrantyInformation: "1y",
+      shippingInformation: "fast",
+      dimensions: { width: 1, height: 1, depth: 1 },
+      tags: ["tag"],
+      discountPercentage: 0,
+      rating: 0,
+      reviews: [],
+      images: [],
+      thumbnail: "",
+      minimumOrderQuantity: 1,
+      meta: { createdAt: "now", updatedAt: "now" },
+      stripeProductId: "sp1",
+      stripePriceId: "pr1",
+      stripeCurrency: "usd",
+    },
   ];
 
   it("renders ProductTablePage initially", () => {
