@@ -24,7 +24,7 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
     const docRef = doc(db, collections.products, productId);
     const snapshot = await getDoc(docRef);
 
-    
+
     if (!snapshot.exists()) {
       return (
         <div className="p-8 max-w-xl mx-auto">
