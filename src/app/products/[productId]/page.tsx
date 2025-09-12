@@ -4,7 +4,7 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
 import { BuyButton } from "@/app/BuyButton";
-import Link from "next/link"; // ✅ eklendi
+import Link from "next/link";
 
 interface ProductDetailPageProps {
   params: { productId: string };
@@ -24,7 +24,7 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
     const docRef = doc(db, collections.products, productId);
     const snapshot = await getDoc(docRef);
 
-    // Product not found
+    
     if (!snapshot.exists()) {
       return (
         <div className="p-8 max-w-xl mx-auto">
