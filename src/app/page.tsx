@@ -39,7 +39,7 @@ export default async function Home({ searchParams }: HomeProps) {
               key={product.id}
               className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
             >
-              <Link href={`/products/${product.id}`} className="w-full">
+              <Link href={`/products/${product.id}`} className="w-full" data-testid="product-link">
                 <div className="w-full h-[160px] sm:h-[180px] relative overflow-hidden rounded mb-3">
                   <Image
                     src={product.thumbnail || product.images?.[0] || "/placeholder.png"}

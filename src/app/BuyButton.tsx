@@ -27,12 +27,9 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
   }, []);
 
   const handleCheckout = async () => {
-    if (!userId) return;
-
     setLoading(true);
 
     try {
-      
       const items: CartItem[] =
         cartItems && cartItems.length > 0
           ? cartItems
@@ -49,7 +46,10 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, cartItems: items }),
+        body: JSON.stringify({ 
+          userId: userId ?? 'guest',   // ✅ login yoksa guest olarak gönder
+          cartItems: items 
+        }),
       });
 
       const data = await response.json();
@@ -66,19 +66,9 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
     }
   };
 
-  if (!userId) {
-    return (
-      <button
-        disabled
-        className={`bg-gray-400 text-white text-sm px-2 py-1 rounded cursor-not-allowed leading-normal ${className ?? ''}`}
-      >
-        Buy Now (Login Required)
-      </button>
-    );
-  }
-
   return (
     <button
+      data-testid="buy-btn"
       onClick={handleCheckout}
       disabled={loading}
       className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ''}`}

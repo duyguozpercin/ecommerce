@@ -42,6 +42,7 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold text-center mb-6 dark:text-stone-700">Log in</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
+            data-testid="email-input"
             type="email"
             placeholder="E-mail"
             value={email}
@@ -50,6 +51,7 @@ export default function LoginPage() {
             required
           />
           <input
+            data-testid="password-input"
             type="password"
             placeholder="Password"
             value={password}
@@ -58,12 +60,12 @@ export default function LoginPage() {
             required
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button type="submit" className="w-full bg-[#BABA8D] text-white py-2 rounded hover:bg-[#A4A489]">
+          <button data-testid="login-btn" type="submit" className="w-full bg-[#BABA8D] text-white py-2 rounded hover:bg-[#A4A489]">
             Log in
           </button>
         </form>
         <p className="mt-4 text-sm text-center dark:text-stone-700">
-        Do not have an account? <a href="/signup" className="text-blue-600 underline">Sign Up</a>
+          Do not have an account? <a href="/signup" className="text-blue-600 underline">Sign Up</a>
         </p>
       </div>
     </main>
