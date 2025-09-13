@@ -98,7 +98,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
         <ImageUploader
           previewUrl={previewUrl}
           setPreviewUrl={setPreviewUrl}
-          setSelectedImage={setSelectedImage}
+        
         />
 
         <button type="submit" disabled={isSubmitting} className="w-full bg-green-600 text-white py-2 rounded">
