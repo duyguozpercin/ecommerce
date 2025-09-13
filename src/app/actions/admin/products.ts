@@ -5,7 +5,7 @@ import { put } from "@vercel/blob";
 import { db, collections } from "@/utils/firebase";
 import { stripe } from "@/utils/stripe";
 import { z } from "zod";
-import type { NewProductFormState } from "@/app/admin/products/new/page";
+import { NewProductFormState } from "@/components/admin/products/ProductForm";
 import type { Product, ProductForm } from "@/types/product";
 import { AvailabilityStatus, ReturnPolicy } from "@/types/product";
 import { Category } from "@/types/product";
