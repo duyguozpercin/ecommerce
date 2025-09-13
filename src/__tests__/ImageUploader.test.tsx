@@ -6,7 +6,6 @@ describe("ImageUploader", () => {
   let setPreviewUrl: jest.Mock;
 
   beforeAll(() => {
-
     global.URL.createObjectURL = jest.fn(() => "mocked-url");
   });
 
@@ -18,6 +17,7 @@ describe("ImageUploader", () => {
     render(<ImageUploader previewUrl={null} setPreviewUrl={setPreviewUrl} />);
     expect(screen.getByLabelText("Product Image")).toBeInTheDocument();
     expect(screen.getByText("Choose File")).toBeInTheDocument();
+    expect(screen.getByText("No file selected")).toBeInTheDocument();
   });
 
   it("calls setPreviewUrl when a file is selected", () => {

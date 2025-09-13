@@ -95,10 +95,12 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
     <div className="relative">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
         <UpdateProductForm register={register} errors={errors} />
-        <ImageUploader previewUrl={previewUrl} onChange={(file) => {
-          setSelectedImage(file);
-          if (file) setPreviewUrl(URL.createObjectURL(file));
-        }} />
+        <ImageUploader
+          previewUrl={previewUrl}
+          setPreviewUrl={setPreviewUrl}
+          setSelectedImage={setSelectedImage}
+        />
+
         <button type="submit" disabled={isSubmitting} className="w-full bg-green-600 text-white py-2 rounded">
           {isSubmitting ? "Saving..." : "Save"}
         </button>

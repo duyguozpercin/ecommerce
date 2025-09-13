@@ -40,13 +40,10 @@ export default function ImageUploader({ previewUrl, setPreviewUrl }: ImageUpload
       >
         Choose File
       </label>
-    <p
-        id="file-label"
-        data-testid="file-label"
-        className="mt-2 text-sm text-gray-600 text-center"
-      >
-        {fileName}
+      <p id="file-label" className="mt-2 text-sm text-gray-600 text-center">
+        {fileName} {/* ✅ burada dosya adı ya da default text */}
       </p>
+
       {previewUrl && (
         <div className="relative mt-4 w-full h-40">
           <Image
