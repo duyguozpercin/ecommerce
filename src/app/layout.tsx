@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
-import { CartProvider } from "../app/context/CartContext";
+import { CartProvider } from "../app/context/CartContext"
+import { AuthProvider } from "./context/AuthContext";
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +34,12 @@ export default function RootLayout({
           className="relative flex min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
           style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
         >
-          <div className="layout-container flex h-full grow flex-col">
+          <div className="layout-container flex h-full grow flex-col bg-orange-50">
             <CartProvider>
-              <Navbar />
-              <main className="flex-1">{children}</main>
+              <AuthProvider>
+                <Navbar />
+                <main className="flex-1">{children}</main>
+              </AuthProvider>
             </CartProvider>
           </div>
         </div>

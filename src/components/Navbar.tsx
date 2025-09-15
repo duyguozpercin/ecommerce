@@ -1,44 +1,138 @@
+'use client';
+
 import Link from "next/link";
+import { useCart } from 'src/app/context/CartContext';
+import { allCategories } from "@/types/product";
+import { useAuth } from "@/app/context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "@/utils/firebase";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
+  const { totalItems } = useCart();
+  const { user, role } = useAuth();
+  const categories = allCategories;
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#fffff] bg-[#fffff] px-10 py-4">
-      <div className="flex items-center gap-12">
-        <Link href="/" className="text-[#171212] text-xl font-bold leading-normal">
-          Home
-        </Link>
-        <Link href="/products" className="text-[#171212] text-xl font-bold leading-normal">
-          Products
-        </Link>
-      </div>
-      <div className="flex flex-1 justify-end gap-8">
-        <Link
-          href="/cart"
-          className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 text-[#171212] gap-2 text-xl font-extrabold leading-normal tracking-[0.015em] min-w-0 "
-          aria-label="Cart"
-        >
-          <div >
-            
-            <svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" fill="currentColor" viewBox="0 0 256 256">
-              <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z" />
-            </svg>
-          </div>
-        </Link>
-        <Link href="/admin/products/manage" className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 text-[#171212] gap-2 text-xl font-extrabold leading-normal tracking-[0.015em] min-w-0 ">
-          <div>
-          <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="26px"
-      height="26px"
-      fill="currentColor"
-      viewBox="0 0 256 256"
-      
-    >
-      <path d="M128,24A104,104,0,1,0,232,128,104.11791,104.11791,0,0,0,128,24Zm0,32a40,40,0,1,1-40,40A40.00039,40.00039,0,0,1,128,56Zm0,152a87.69613,87.69613,0,0,1-64-28.93066c.31152-21.30762,42.667-33.06934,64-33.06934s63.68848,11.76172,64,33.06934A87.69613,87.69613,0,0,1,128,208Z"/>
+    <header className="bg-blue-50 px-6 py-4 border-b border-neutral-200 shadow-sm">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <Link href="/" className="text-2xl font-bold text-[#171212] hover:text-black font-sans tracking-wide">
+            Home
+          </Link>
+
+          
+          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2">
+            {menuOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
+
+        
+        <nav className="hidden md:flex flex-wrap justify-center gap-6 text-lg font-semibold font-sans text-neutral-700">
+          {categories.map((category) => (
+            <Link
+              key={category}
+              href={`/products?category=${encodeURIComponent(category)}`}
+              className="hover:text-neutral-900 transition-colors"
+            >
+              {category}
+            </Link>
+          ))}
+        </nav>
+
+        
+        <div className="flex items-center justify-center md:justify-end w-full md:w-auto gap-4 relative">
+          
+          <Link
+  href="/cart"
+  className="relative flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
+  aria-label="Cart"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#171212" viewBox="0 0 16 16">
+    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+  </svg>
+  {totalItems > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+      {totalItems}
+    </span>
+  )}
+</Link>
+
+          
+          <div className="relative" ref={dropdownRef}>
+  <button
+    onClick={() => setDropdownOpen((prev) => !prev)}
+    className="flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
+    aria-label="User Menu"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#171212" viewBox="0 0 24 24">
+      <path d="M12 12c2.7 0 5.7 1.3 6 4v2h-12v-2c.3-2.7 3.3-4 6-4zm0-2c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z" />
     </svg>
-          </div>
-        </Link>
+  </button>
+
+  {dropdownOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border border-neutral-300 rounded shadow-lg z-50">
+      {user ? (
+        <>
+          <Link href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</Link>
+          {role === "admin" && (
+            <Link href="/admin/products/manage" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</Link>
+          )}
+          <button
+            onClick={() => {
+              signOut(auth);
+              setDropdownOpen(false);
+            }}
+            className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+          >
+            Log Out
+          </button>
+        </>
+      ) : (
+        <>
+          <Link href="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Login </Link>
+          <Link href="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Up</Link>
+        </>
+      )}
+    </div>
+  )}
+</div>
+        </div>
       </div>
+
+      
+      {menuOpen && (
+        <div className="md:hidden mt-4 space-y-2">
+          {categories.map((category) => (
+            <Link
+              key={category}
+              href={`/products?category=${encodeURIComponent(category)}`}
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-2 bg-white rounded text-sm text-neutral-700 hover:bg-gray-100"
+            >
+              {category}
+            </Link>
+          ))}
+        </div>
+      )}
     </header>
   );
 }
