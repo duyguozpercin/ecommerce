@@ -1,16 +1,14 @@
 "use server";
-
 import { doc, setDoc } from "firebase/firestore";
 import { put } from "@vercel/blob";
 import { db, collections } from "@/utils/firebase";
 import { stripe } from "@/utils/stripe";
 import { z } from "zod";
+// Update the import path if the file was moved or renamed
 import type { NewProductFormState } from "@/app/admin/products/new/page";
 import type { Product, ProductForm } from "@/types/product";
 import { AvailabilityStatus, returnPolicy } from "@/types/product";
 import { Category } from "@/types/product";
-
-
 const productSchema = z.object({
   title: z.string().min(3).max(100),
   description: z.string().min(50).max(500),
@@ -31,12 +29,10 @@ const productSchema = z.object({
     depth: z.number().min(1),
   }),
 });
-
 export async function addNewProductAction(
   _currentState: NewProductFormState,
   formData: FormData
 ): Promise<NewProductFormState> {
-
   const raw: Partial<ProductForm> = {
     title: formData.get("title") as string,
     description: formData.get("description") as string,
@@ -52,15 +48,13 @@ export async function addNewProductAction(
     shippingInformation: formData.get("shippingInformation") as string,
     dimensions: formData.get("dimensions.width")
       ? {
-          width: parseFloat(String(formData.get("dimensions.width"))),
-          height: parseFloat(String(formData.get("dimensions.height"))),
-          depth: parseFloat(String(formData.get("dimensions.depth"))),
-        }
+        width: parseFloat(String(formData.get("dimensions.width"))),
+        height: parseFloat(String(formData.get("dimensions.height"))),
+        depth: parseFloat(String(formData.get("dimensions.depth"))),
+      }
       : undefined,
     tags: (formData.get("tags") as string)?.split(",").map(t => t.trim()) || [],
   };
-
-  
   const parsed = productSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -71,12 +65,7 @@ export async function addNewProductAction(
     };
   }
   const data = parsed.data;
-
-  
   const id = Date.now().toString();
-  const nowIso = new Date().toISOString();
-
-  
   let imageUrl = "";
   const image = formData.get("image") as File | null;
   if (image && image.size > 0) {
@@ -89,12 +78,22 @@ export async function addNewProductAction(
       return { success: false, message: "Maksimum resim boyutu 4.5 MB olabilir." };
     }
     const imageName = `${id}.${image.name.split(".").pop()}`;
-    const blob = await put(imageName, image, { access: "public", token: process.env.BLOB_READ_WRITE_TOKEN });
-    imageUrl = blob.url;
+    try {
+      const blob = await put(imageName, image, {
+        access: "public",
+        token: process.env.BLOB_READ_WRITE_TOKEN
+      });
+      imageUrl = blob.url;
+    } catch (error) {
+      console.error("Image upload error:", error);
+      return {
+        success: false,
+        message: "Resim yüklenirken bir hata oluştu. Lütfen tekrar deneyin.",
+        inputs: raw as any
+      };
+    }
   }
-
   try {
-    
     const stripeProduct = await stripe.products.create({
       name: data.title,
       description: data.description,
@@ -107,8 +106,6 @@ export async function addNewProductAction(
       currency,
     });
     await stripe.products.update(stripeProduct.id, { default_price: price.id });
-
-   
     const finalData: Product = {
       id,
       category: data.category,
@@ -125,7 +122,6 @@ export async function addNewProductAction(
       shippingInformation: data.shippingInformation,
       dimensions: data.dimensions,
       tags: data.tags,
-    
       discountPercentage: 0,
       rating: 0,
       reviews: [],
@@ -136,16 +132,11 @@ export async function addNewProductAction(
         createdAt: Date.now(),
         updatedAt: Date.now(),
       },
-    
       stripeProductId: stripeProduct.id,
       stripePriceId: price.id,
       stripeCurrency: currency,
     };
-    
-    
-
     await setDoc(doc(db, collections.products, id), finalData);
-
     return { success: true, message: "Ürün başarıyla oluşturuldu!", data: finalData };
   } catch (err) {
     console.error("Create product error:", err);
