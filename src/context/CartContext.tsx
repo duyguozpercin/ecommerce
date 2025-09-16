@@ -23,7 +23,7 @@ interface CartContextType {
   totalItems: number;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -39,16 +39,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cart]);
 
   const addToCart = (id: string) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { id, quantity: 1 }];
-    });
-  };
+  if (!id || typeof id !== "string" || id.trim() === "") {
+    return;
+  }
+
+  setCart(prev => {
+    const existing = prev.find(item => item.id === id);
+    if (existing) {
+      return prev.map(item =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    }
+    return [...prev, { id, quantity: 1 }];
+  });
+};
 
   const removeFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.id !== id));
@@ -102,3 +106,4 @@ export function useCart() {
   }
   return context;
 }
+

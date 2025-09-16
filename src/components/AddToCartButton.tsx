@@ -1,6 +1,6 @@
 'use client';
 
-import { useCart } from 'src/app/context/CartContext';
+import { useCart } from '@/context/CartContext';
 import { Product } from '@/types/product';
 
 interface Props {

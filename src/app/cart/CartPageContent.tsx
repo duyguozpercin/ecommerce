@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { useCart } from '@/app/context/CartContext';
+import { useCart } from '@/context/CartContext';
 import { getProductsByIds } from '@/services/productService';
 import { Product } from '@/types/product';
 import { BuyButton } from '../BuyButton';
