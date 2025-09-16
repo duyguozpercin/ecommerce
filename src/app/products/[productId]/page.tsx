@@ -62,7 +62,7 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
 
         <div className="flex flex-row items-center gap-x-4">
           <AddToCartButton product={{ ...product, id: productId }} />
-          <BuyButton productId={productId} />
+          <BuyButton productId={String(product.id)} />
         </div>
 
       </div>

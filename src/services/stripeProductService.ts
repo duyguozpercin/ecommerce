@@ -1,6 +1,7 @@
 "use server";
 import { stripe } from "@/utils/stripe";
 import type { ProductForm} from "@/types/product";
+
 const STRIPE_CURRENCY = process.env.STRIPE_CURRENCY || "usd";
 export async function createStripeProductAndPrice(id: string, form: ProductForm) {
   const product = await stripe.products.create({

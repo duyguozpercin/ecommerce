@@ -7,7 +7,7 @@ import { z } from "zod";
 // Update the import path if the file was moved or renamed
 import type { NewProductFormState } from "@/app/admin/products/new/page";
 import type { Product, ProductForm } from "@/types/product";
-import { AvailabilityStatus, returnPolicy } from "@/types/product";
+import { AvailabilityStatus, ReturnPolicy } from "@/types/product";
 import { Category } from "@/types/product";
 const productSchema = z.object({
   title: z.string().min(3).max(100),
@@ -17,7 +17,7 @@ const productSchema = z.object({
   stock: z.number().min(0),
   brand: z.string().min(1),
   availabilityStatus: z.nativeEnum((AvailabilityStatus as any)),
-  returnPolicy: z.nativeEnum((returnPolicy as any)),
+  returnPolicy: z.nativeEnum((ReturnPolicy as any)),
   tags: z.array(z.string()).min(1),
   sku: z.string().min(1).max(50),
   weight: z.number().min(1),
@@ -41,7 +41,7 @@ export async function addNewProductAction(
     stock: parseInt(String(formData.get("stock") || "0"), 10),
     brand: formData.get("brand") as string,
     availabilityStatus: formData.get("availabilityStatus") as AvailabilityStatus,
-    returnPolicy: formData.get("returnPolicy") as returnPolicy,
+    returnPolicy: formData.get("returnPolicy") as ReturnPolicy,
     sku: formData.get("sku") as string,
     weight: formData.get("weight") ? parseFloat(String(formData.get("weight"))) : undefined,
     warrantyInformation: formData.get("warrantyInformation") as string,
@@ -55,6 +55,7 @@ export async function addNewProductAction(
       : undefined,
     tags: (formData.get("tags") as string)?.split(",").map(t => t.trim()) || [],
   };
+
   const parsed = productSchema.safeParse(raw);
   if (!parsed.success) {
     return {
@@ -65,7 +66,9 @@ export async function addNewProductAction(
     };
   }
   const data = parsed.data;
+
   const id = Date.now().toString();
+
   let imageUrl = "";
   const image = formData.get("image") as File | null;
   if (image && image.size > 0) {
@@ -94,6 +97,7 @@ export async function addNewProductAction(
     }
   }
   try {
+
     const stripeProduct = await stripe.products.create({
       name: data.title,
       description: data.description,
@@ -106,6 +110,7 @@ export async function addNewProductAction(
       currency,
     });
     await stripe.products.update(stripeProduct.id, { default_price: price.id });
+
     const finalData: Product = {
       id,
       category: data.category,
@@ -129,13 +134,14 @@ export async function addNewProductAction(
       thumbnail: imageUrl || "",
       minimumOrderQuantity: 1,
       meta: {
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        createdAt: Date.now().toString(),
+        updatedAt: Date.now().toString(),
       },
       stripeProductId: stripeProduct.id,
       stripePriceId: price.id,
       stripeCurrency: currency,
     };
+
     await setDoc(doc(db, collections.products, id), finalData);
     return { success: true, message: "Ürün başarıyla oluşturuldu!", data: finalData };
   } catch (err) {

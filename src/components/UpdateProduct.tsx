@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Product, ProductForm, Category, AvailabilityStatus, returnPolicy } from '@/types/product';
+import { Product, ProductForm, Category, AvailabilityStatus, ReturnPolicy } from '@/types/product';
 import InputField from '@/components/shared/Input';
 import SelectField from '@/components/shared/select';
 import DimensionsField from '@/components/DimensionsField';
@@ -40,7 +40,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       tags: product.tags || [],
       category: product.category as Category,
       availabilityStatus: product.availabilityStatus as AvailabilityStatus,
-      returnPolicy: product.returnPolicy as returnPolicy,
+      returnPolicy: product.returnPolicy as ReturnPolicy,
     },
   });
 
@@ -60,7 +60,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
     const send = new FormData();
     send.append('id', String(product.id));
     send.append('title', data.title);
-    send.append('description', data.description);
+    send.append('description', data.description ?? '');
     send.append('category', data.category);
     send.append('price', String(data.price));
     send.append('stock', String(data.stock));
@@ -131,7 +131,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
 
         <SelectField label="Category" options={Object.values(Category)} {...register('category')} error={errors.category?.message} />
         <SelectField label="Stock Status" options={Object.values(AvailabilityStatus)} {...register('availabilityStatus')} error={errors.availabilityStatus?.message} />
-        <SelectField label="Return Policy" options={Object.values(returnPolicy)} {...register('returnPolicy')} error={errors.returnPolicy?.message} />
+        <SelectField label="Return Policy" options={Object.values(ReturnPolicy)} {...register('returnPolicy')} error={errors.returnPolicy?.message} />
 
         <div className="flex flex-col items-center">
           <label htmlFor="image" className="mb-1">Product Image</label>

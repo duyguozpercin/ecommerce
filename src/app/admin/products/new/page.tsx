@@ -1,6 +1,6 @@
 'use client';
 import { addNewProductAction } from "@/app/actions/admin/products";
-import { Product, Category, AvailabilityStatus, returnPolicy } from "@/types/product";
+import { Product, Category, AvailabilityStatus, ReturnPolicy } from "@/types/product";
 import { useActionState, startTransition, useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,7 +55,9 @@ export default function Admin() {
     const formData = new FormData();
 
     formData.append("title", data.title);
-    formData.append("description", data.description);
+    if (data.description) {
+      formData.append("description", data.description);
+    }
     formData.append("price", data.price.toString());
     formData.append("stock", data.stock.toString());
     formData.append("category", data.category);
@@ -131,7 +133,7 @@ export default function Admin() {
 
           <SelectField label="Category" options={Object.values(Category)} {...register("category")} error={errors.category?.message} />
           <SelectField label="Stock Status" options={Object.values(AvailabilityStatus)} {...register("availabilityStatus")} error={errors.availabilityStatus?.message} />
-          <SelectField label="Return Policy" options={Object.values(returnPolicy)} {...register("returnPolicy")} error={errors.returnPolicy?.message} />
+          <SelectField label="Return Policy" options={Object.values(ReturnPolicy)} {...register("returnPolicy")} error={errors.returnPolicy?.message} />
 
           <div className="flex flex-col items-center">
             <label htmlFor="image" className="mb-1">Product Image</label>

@@ -16,7 +16,7 @@ export async function createCheckoutSession(items: CartItemWithDetails[]) {
       currency: 'usd',
       product_data: {
         name: item.title,
-        images: [item.thumbnail || item.images[0]],
+        images: [item.thumbnail || (item.images?.[0] ?? '')],
       },
       unit_amount: Math.round(item.price * 100),
     },
