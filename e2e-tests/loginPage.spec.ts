@@ -5,7 +5,7 @@ test.describe("Login Page", () => {
     await page.goto("http://localhost:3000/login");
   });
 
-  test("Başarılı login yönlendirme yapıyor", async ({ page }) => {
+  test("Successful login redirects", async ({ page }) => {
 
     await page.fill('[data-testid="email-input"]', process.env.TEST_EMAIL!);
     await page.fill('[data-testid="password-input"]', process.env.TEST_PASSWORD!);
@@ -21,7 +21,7 @@ test.describe("Login Page", () => {
     );
   });
 
-  test("Yanlış şifre girilince hata mesajı çıkıyor", async ({ page }) => {
+  test("Shows error message when wrong password is entered", async ({ page }) => {
     await page.fill('[data-testid="email-input"]', "fake@test.com");
     await page.fill('[data-testid="password-input"]', "wrongpassword");
 
@@ -34,7 +34,7 @@ test.describe("Login Page", () => {
     await expect(errorMessage).toBeVisible();
   });
 
-  test("Signup sayfasına link var", async ({ page }) => {
+  test("Has link to Signup page", async ({ page }) => {
     const signupLink = page.getByRole("link", { name: "Sign Up" });
     await expect(signupLink).toBeVisible();
 
