@@ -5,18 +5,18 @@ test.describe('Home Page E2E', () => {
     await page.goto('http://localhost:3000/');
   });
 
-  test('HeroSlider görünüyor', async ({ page }) => {
+  test('HeroSlider is visible', async ({ page }) => {
     const hero = page.getByTestId('hero-slider');
     await expect(hero).toBeVisible();
   });
 
-  test('Ürünler listeleniyor', async ({ page }) => {
+  test('Products are listed', async ({ page }) => {
     const productCards = page.locator('div.bg-white');
     const count = await productCards.count();
     expect(count).toBeGreaterThan(0);
   });
 
-  test('Ürün linki çalışıyor', async ({ page }) => {
+  test('Product link works', async ({ page }) => {
     const firstProduct = page.locator('div.bg-white').first();
     const link = firstProduct.getByTestId('product-link').first();
 
@@ -26,7 +26,7 @@ test.describe('Home Page E2E', () => {
     await expect(page).toHaveURL(/\/products\//);
   });
 
-  test('AddToCartButton çalışıyor', async ({ page }) => {
+  test('AddToCartButton works', async ({ page }) => {
     const firstProduct = page.locator('div.bg-white').first();
     const addToCartBtn = firstProduct.getByTestId('add-to-cart-btn').first();
 
@@ -36,34 +36,34 @@ test.describe('Home Page E2E', () => {
     await expect(cartCount).toHaveText(/1/);
   });
 
-  // ✅ GERÇEK KULLANICI LOGIN TESTİ
-  test('Gerçek kullanıcı ile login olabiliyor', async ({ page }) => {
+
+  test('Can login with real user', async ({ page }) => {
     await page.goto('http://localhost:3000/login');
 
     await page.fill('[data-testid="email-input"]', process.env.TEST_EMAIL!);
     await page.fill('[data-testid="password-input"]', process.env.TEST_PASSWORD!);
     await page.click('[data-testid="login-btn"]');
 
-    // login sonrası ana sayfaya yönlendirme
+
     await expect(page).toHaveURL('http://localhost:3000/');
 
-    // ✅ Navbar’da Welcome ve email gözükmeli
+
     const welcomeText = page.getByTestId('welcome-text');
     await expect(welcomeText).toContainText(`Welcome, ${process.env.TEST_EMAIL}`);
   });
 
-  // ✅ LOGIN YOKKEN → BuyButton artık aktif (guest checkout)
-  test('BuyButton login olmasa bile aktif durumda', async ({ page }) => {
+
+  test('BuyButton is active even without login', async ({ page }) => {
     const firstProduct = page.locator('div.bg-white').first();
     const buyBtn = firstProduct.getByTestId('buy-btn').first();
 
     await expect(buyBtn).toBeVisible();
-    await expect(buyBtn).toBeEnabled(); // ✅ artık aktif olmalı
+    await expect(buyBtn).toBeEnabled();
   });
 
-  // ✅ MOCK LOGIN → BuyButton enabled + checkout çalışıyor
-  test('BuyButton mock login ile çalışıyor', async ({ page }) => {
-    // Checkout requestini mockla
+
+  test('BuyButton works with mock login', async ({ page }) => {
+
     await page.route('**/api/checkout', async (route) => {
       await route.fulfill({
         status: 200,
@@ -72,7 +72,7 @@ test.describe('Home Page E2E', () => {
       });
     });
 
-    // Firebase auth state mockla → user varmış gibi göster
+
     await page.addInitScript(() => {
       window.localStorage.setItem(
         'mockUser',
@@ -80,7 +80,7 @@ test.describe('Home Page E2E', () => {
       );
     });
 
-    // sayfayı yeniden yükle ki mock etkili olsun
+
     await page.reload();
 
     const firstProduct = page.locator('div.bg-white').first();
@@ -92,7 +92,7 @@ test.describe('Home Page E2E', () => {
     await expect(page).toHaveURL('http://localhost:3000/checkout-success');
   });
 
-  test('Sipariş iptal parametresi console.log üretiyor', async ({ page }) => {
+  test('Order canceled parameter logs to console', async ({ page }) => {
     const messages: string[] = [];
     page.on('console', (msg) => messages.push(msg.text()));
 
