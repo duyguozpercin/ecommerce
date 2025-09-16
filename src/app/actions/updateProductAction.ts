@@ -1,23 +1,21 @@
 'use server';
-
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, collections } from "@/utils/firebase";
 import { stripe } from "@/utils/stripe";
 import { z } from "zod";
 import type { Product } from "@/types/product";
 
+
 const num = (v: FormDataEntryValue | null) =>
   v == null || v === "" ? undefined : Number(v);
 
 const isNumber = (n: unknown): n is number =>
   typeof n === "number" && Number.isFinite(n);
-
 const zodIssues = (err: z.ZodError): { path: string; message: string }[] =>
   err.issues.map(i => ({
     path: i.path.join("."),
     message: i.message,
   }));
-
 
 const dimensionsSchema = z.object({
   width: z.number().min(0),
@@ -31,11 +29,7 @@ const updateSchema = z.object({
   category: z.string().min(1),
   price: z.number().min(0),
   stock: z.number().min(0),
-
-  
   dimensions: dimensionsSchema.optional(),
-
-  
   description: z.string().optional(),
   brand: z.string().optional(),
   sku: z.string().optional(),
@@ -47,7 +41,6 @@ const updateSchema = z.object({
   tags: z.string().optional(),
   image: z.string().optional(), 
 });
-
 type ActionOk = { success: true; message: string; stripePriceId?: string };
 type ActionErr = {
   success: false;
@@ -58,14 +51,12 @@ type ActionResult = ActionOk | ActionErr;
 
 export async function updateProductAction(formData: FormData): Promise<ActionResult> {
   try {
-    
     const raw = {
       id: String(formData.get("id") || ""),
       title: String(formData.get("title") || ""),
       category: String(formData.get("category") || ""),
       price: num(formData.get("price")),
       stock: num(formData.get("stock")),
-
       description: formData.get("description")?.toString(),
       brand: formData.get("brand")?.toString(),
       sku: formData.get("sku")?.toString(),
@@ -74,22 +65,17 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       shippingInformation: formData.get("shippingInformation")?.toString(),
       availabilityStatus: formData.get("availabilityStatus")?.toString(),
       returnPolicy: formData.get("returnPolicy")?.toString(),
-
       dimensions: {
         width:  num(formData.get("dimensions.width")),
         height: num(formData.get("dimensions.height")),
         depth:  num(formData.get("dimensions.depth")),
       },
-
       tags: formData.get("tags")?.toString(),
       image: formData.get("image")?.toString() || "",
     };
-
-    
     if (!isNumber(raw.price) || raw.price < 0 || !isNumber(raw.stock) || raw.stock < 0) {
       return { success: false, message: "Invalid numeric values for price/stock." };
     }
-
     
     const hasAnyDim =
       isNumber(raw.dimensions.width) ||
@@ -102,7 +88,6 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       category: raw.category,
       price: raw.price,
       stock: raw.stock,
-
       description: raw.description,
       brand: raw.brand,
       sku: raw.sku,
@@ -111,7 +96,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       shippingInformation: raw.shippingInformation,
       availabilityStatus: raw.availabilityStatus,
       returnPolicy: raw.returnPolicy,
-
+      
       ...(hasAnyDim ? {
         dimensions: {
           ...(isNumber(raw.dimensions.width)  ? { width:  raw.dimensions.width }  : {}),
@@ -131,23 +116,17 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
         issues: zodIssues(parsed.error),
       };
     }
-
-    
     const ref = doc(db, collections.products, raw.id);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
       return { success: false, message: "Product not found" };
     }
     const existing = { id: snap.id, ...snap.data() } as Product;
-
-    
     const oldPrice = Number(existing.price ?? 0);
     const newPrice = Number(raw.price);
     let stripePriceId: string | undefined = existing.stripePriceId;
-
     const priceChanged = oldPrice !== newPrice;
     const hasStripeProduct = Boolean(existing.stripeProductId);
-
     if (priceChanged && hasStripeProduct) {
       if (existing.stripePriceId) {
         try {
@@ -172,7 +151,6 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       }
     }
 
-    
     const meta = typeof existing.meta === "object" && existing.meta ? existing.meta : {};
     const updatePayload: Record<string, unknown> = {
       title: parsed.data.title,
@@ -185,7 +163,6 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       },
     };
 
-    
     if (parsed.data.description !== undefined) updatePayload.description = parsed.data.description;
     if (parsed.data.brand !== undefined) updatePayload.brand = parsed.data.brand;
     if (parsed.data.sku !== undefined) updatePayload.sku = parsed.data.sku;
@@ -195,7 +172,6 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     if (parsed.data.availabilityStatus !== undefined) updatePayload.availabilityStatus = parsed.data.availabilityStatus;
     if (parsed.data.returnPolicy !== undefined) updatePayload.returnPolicy = parsed.data.returnPolicy;
 
-    
     if (parsed.data.dimensions && Object.keys(parsed.data.dimensions).length > 0) {
       const exDims = (existing.dimensions ?? {}) as Partial<{ width:number; height:number; depth:number }>;
       const nextDims = {
@@ -208,7 +184,6 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       if (hasAny) updatePayload.dimensions = nextDims;
     }
 
-    
     if (parsed.data.tags !== undefined) {
       const list = parsed.data.tags
         ? parsed.data.tags.split(",").map(t => t.trim()).filter(Boolean)
@@ -216,18 +191,16 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       updatePayload.tags = list;
     }
 
-    
     if (parsed.data.image) {
       updatePayload.images = [parsed.data.image];
       updatePayload.thumbnail = parsed.data.image;
     }
 
+
     if (stripePriceId) updatePayload.stripePriceId = stripePriceId;
 
-    
     const serializablePayload = JSON.parse(JSON.stringify(updatePayload));
     await updateDoc(ref, serializablePayload);
-
     return { success: true, message: "Product updated successfully", stripePriceId };
   } catch (err) {
     console.error("updateProductAction error:", err);
