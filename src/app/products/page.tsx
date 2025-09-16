@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types/product';
 import { BuyButton } from '@/app/BuyButton';
+
 import AddToCartButton from '@/components/AddToCartButton';
 
 interface PageProps {
@@ -60,10 +61,10 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               <h2 className="text-2xl font-semibold mb-4 text-neutral-700 border-b pb-2 border-neutral-300">
                 {category.toUpperCase()}
               </h2>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {items.map(product => (
-                  
+
                   <div
                     key={product.id}
                     className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
