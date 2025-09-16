@@ -11,7 +11,6 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
 
-  // ✅ activeId state
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -72,7 +71,6 @@ export const SuccessPage = ({ product }: { product?: Partial<Product> }) => {
   );
 };
 
-// ✅ ProductTablePage artık activeId ve setActiveId propslarını alıyor
 function ProductTablePage({
   products,
   onEdit,

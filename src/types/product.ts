@@ -21,6 +21,12 @@ export interface Product {
   meta: Meta;
   images: string[];
   thumbnail: string;
+
+
+  stripeProductId?: string;
+  stripePriceId?: string;
+  stripeCurrency?: string;
+
 }
 
 export interface ProductForm {
@@ -47,9 +53,9 @@ export interface ProductForm {
 
 export enum Category {
   decoration = 'Decoration',
-  chair = 'Chair',
-  sofa = 'Sofa',
-  table = 'Table',
+  chair = 'Chairs',
+  sofa = 'Sofas',
+  table = 'Tables',
   
 }
 
@@ -85,8 +91,8 @@ export enum returnPolicy {
 }
 
 export interface Meta {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   barcode?: string;
   qrCode?: string;
 }

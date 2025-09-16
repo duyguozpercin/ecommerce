@@ -22,7 +22,6 @@ export default function ProductTablePage({
           key={product.id}
           className="flex items-center justify-between bg-white rounded-lg shadow p-4 border border-gray-200 hover:shadow-md transition-shadow"
         >
-          {/* Sol taraf: Resim + Başlık + Fiyat */}
           <div className="flex items-center gap-4">
             {product.images?.[0] ? (
               <Image
@@ -44,7 +43,7 @@ export default function ProductTablePage({
             </div>
           </div>
 
-          {/* Sağ taraf: Düzenle / Sil butonları */}
+      
           <div className="flex gap-3">
             <button
               onClick={() => onEdit(product)}
@@ -54,18 +53,17 @@ export default function ProductTablePage({
               <Pencil className="w-5 h-5 text-blue-600" />
             </button>
 
-            <button
+    
+              <DeleteProduct
               className="p-2 rounded-full hover:bg-gray-100 transition"
               title="Delete"
-            >
-              <DeleteProduct
                 productId={String(product.id)}
                 onDeleted={() => window.location.reload()}
                 activeId={activeId}
                 setActiveId={setActiveId}
               />
             
-            </button>
+            
           </div>
         </div>
       ))}

@@ -1,20 +1,23 @@
-import { NewProductFormState } from '@/app/admin/products/new/page';
-import { AvailabilityStatus, Category, returnPolicy } from '@/types/product';
-import { z } from 'zod';
-import { db, collections } from '@/utils/firebase';
+"use server";
 import { doc, setDoc } from "firebase/firestore";
-import { put } from '@vercel/blob';
-
-
-export const productSchema = z.object({
+import { put } from "@vercel/blob";
+import { db, collections } from "@/utils/firebase";
+import { stripe } from "@/utils/stripe";
+import { z } from "zod";
+// Update the import path if the file was moved or renamed
+import type { NewProductFormState } from "@/app/admin/products/new/page";
+import type { Product, ProductForm } from "@/types/product";
+import { AvailabilityStatus, returnPolicy } from "@/types/product";
+import { Category } from "@/types/product";
+const productSchema = z.object({
   title: z.string().min(3).max(100),
   description: z.string().min(50).max(500),
-  category: z.nativeEnum(Category),
+  category: z.nativeEnum((Category as any)),
   price: z.number().min(0),
   stock: z.number().min(0),
   brand: z.string().min(1),
-  availabilityStatus: z.nativeEnum(AvailabilityStatus),
-  returnPolicy: z.nativeEnum(returnPolicy),
+  availabilityStatus: z.nativeEnum((AvailabilityStatus as any)),
+  returnPolicy: z.nativeEnum((returnPolicy as any)),
   tags: z.array(z.string()).min(1),
   sku: z.string().min(1).max(50),
   weight: z.number().min(1),
@@ -26,102 +29,117 @@ export const productSchema = z.object({
     depth: z.number().min(1),
   }),
 });
-
-
 export async function addNewProductAction(
-  currentState: NewProductFormState,
+  _currentState: NewProductFormState,
   formData: FormData
 ): Promise<NewProductFormState> {
-
-  
-  const rawData = {
-    title: formData.get('title') as string,
-    description: formData.get('description') as string,
-    category: formData.get('category') as string,
-    price: parseFloat(formData.get('price') as string),
-    stock: parseInt(formData.get('stock') as string, 10),
-    brand: formData.get('brand') as string || undefined,
-    availabilityStatus: formData.get('availabilityStatus') as AvailabilityStatus,
-    returnPolicy: formData.get('returnPolicy') as returnPolicy || undefined,
-    sku: formData.get('sku') as string || undefined,
-    weight: formData.get('weight') ? parseFloat(formData.get('weight') as string) : undefined,
-    warrantyInformation: formData.get('warrantyInformation') as string || undefined,
-    shippingInformation: formData.get('shippingInformation') as string || undefined,
-    dimensions: formData.get('dimensions.width')
+  const raw: Partial<ProductForm> = {
+    title: formData.get("title") as string,
+    description: formData.get("description") as string,
+    category: formData.get("category") as Category,
+    price: parseFloat(String(formData.get("price") || "0")),
+    stock: parseInt(String(formData.get("stock") || "0"), 10),
+    brand: formData.get("brand") as string,
+    availabilityStatus: formData.get("availabilityStatus") as AvailabilityStatus,
+    returnPolicy: formData.get("returnPolicy") as returnPolicy,
+    sku: formData.get("sku") as string,
+    weight: formData.get("weight") ? parseFloat(String(formData.get("weight"))) : undefined,
+    warrantyInformation: formData.get("warrantyInformation") as string,
+    shippingInformation: formData.get("shippingInformation") as string,
+    dimensions: formData.get("dimensions.width")
       ? {
-        width: parseFloat(formData.get('dimensions.width') as string),
-        height: parseFloat(formData.get('dimensions.height') as string),
-        depth: parseFloat(formData.get('dimensions.depth') as string),
+        width: parseFloat(String(formData.get("dimensions.width"))),
+        height: parseFloat(String(formData.get("dimensions.height"))),
+        depth: parseFloat(String(formData.get("dimensions.depth"))),
       }
       : undefined,
-    tags: (formData.get('tags') as string)?.split(',').map(tag => tag.trim()) || [],
+    tags: (formData.get("tags") as string)?.split(",").map(t => t.trim()) || [],
   };
-
-  
-  const result = productSchema.safeParse(rawData);
-  
- 
-  if (!result.success) {
-    console.error(':x: Form verisi ayrıştırılamadı', result.error.flatten().fieldErrors);
+  const parsed = productSchema.safeParse(raw);
+  if (!parsed.success) {
     return {
       success: false,
-      message: 'Lütfen form girdilerini düzeltin.',
-      inputs: { ...rawData },
-      errors: result.error.flatten().fieldErrors,
+      message: "Lütfen form girdilerini düzeltin.",
+      inputs: raw as any,
+      errors: parsed.error.flatten().fieldErrors as any,
     };
   }
-
+  const data = parsed.data;
   const id = Date.now().toString();
-  const dateNow = Date.now();
-  let imageUrl = '';
-  const image = formData.get('image') as File | null;
-
-
+  let imageUrl = "";
+  const image = formData.get("image") as File | null;
   if (image && image.size > 0) {
-    const MAX_ALLOWED_IMAGE_SIZE = 4.5 * 1024 * 1024;
-    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/webp', 'image/png'];
-
-    if (!allowedImageTypes.includes(image.type)) {
-      return { success: false, message: 'İzin verilen resim formatları: .jpeg, .jpg, .webp, .png' };
+    const MAX = 4.5 * 1024 * 1024;
+    const okTypes = ["image/jpeg", "image/jpg", "image/webp", "image/png"];
+    if (!okTypes.includes(image.type)) {
+      return { success: false, message: "İzin verilen resim formatları: .jpeg, .jpg, .webp, .png" };
     }
-  
-    if (image.size > MAX_ALLOWED_IMAGE_SIZE) {
-      return { success: false, message: 'Maksimum resim boyutu 4.5 MB olabilir.' };
+    if (image.size > MAX) {
+      return { success: false, message: "Maksimum resim boyutu 4.5 MB olabilir." };
     }
-  
-    const imageName = `${id}.${image.name.split('.').pop()}`;
-    const blob = await put(imageName, image, {
-      access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN
-    });
-    imageUrl = blob.url;
+    const imageName = `${id}.${image.name.split(".").pop()}`;
+    try {
+      const blob = await put(imageName, image, {
+        access: "public",
+        token: process.env.BLOB_READ_WRITE_TOKEN
+      });
+      imageUrl = blob.url;
+    } catch (error) {
+      console.error("Image upload error:", error);
+      return {
+        success: false,
+        message: "Resim yüklenirken bir hata oluştu. Lütfen tekrar deneyin.",
+        inputs: raw as any
+      };
+    }
   }
-  
-  
-  const finalData = {
-    ...result.data,
-    meta: {
-      createdAt: dateNow,
-      updatedAt: dateNow,
-    },
-    images: imageUrl ? [imageUrl] : [],
-  };
-  
-  
   try {
+    const stripeProduct = await stripe.products.create({
+      name: data.title,
+      description: data.description,
+      metadata: { appProductId: id, brand: data.brand ?? "", sku: data.sku ?? "" },
+    });
+    const currency = process.env.STRIPE_CURRENCY || "usd";
+    const price = await stripe.prices.create({
+      product: stripeProduct.id,
+      unit_amount: Math.round(Number(data.price) * 100),
+      currency,
+    });
+    await stripe.products.update(stripeProduct.id, { default_price: price.id });
+    const finalData: Product = {
+      id,
+      category: data.category,
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      stock: data.stock,
+      brand: data.brand,
+      availabilityStatus: data.availabilityStatus,
+      returnPolicy: data.returnPolicy,
+      sku: data.sku,
+      weight: data.weight,
+      warrantyInformation: data.warrantyInformation,
+      shippingInformation: data.shippingInformation,
+      dimensions: data.dimensions,
+      tags: data.tags,
+      discountPercentage: 0,
+      rating: 0,
+      reviews: [],
+      images: imageUrl ? [imageUrl] : [],
+      thumbnail: imageUrl || "",
+      minimumOrderQuantity: 1,
+      meta: {
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      },
+      stripeProductId: stripeProduct.id,
+      stripePriceId: price.id,
+      stripeCurrency: currency,
+    };
     await setDoc(doc(db, collections.products, id), finalData);
-    
-    return {
-      success: true,
-      message: 'Ürün başarıyla oluşturuldu!',
-      data: { id, ...result.data },
-    };
+    return { success: true, message: "Ürün başarıyla oluşturuldu!", data: finalData };
   } catch (err) {
-    console.error(':fire: Firebase\'e yeni ürün eklenirken hata oluştu', err);
-    return {
-      success: false,
-      message: 'Veritabanında ürün oluşturulurken bir hata oluştu.',
-      inputs: { ...rawData },
-    };
+    console.error("Create product error:", err);
+    return { success: false, message: "Ürün eklenirken bir hata oluştu.", inputs: raw as any };
   }
 }

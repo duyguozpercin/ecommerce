@@ -6,6 +6,8 @@ interface DeleteProductProps {
   onDeleted?: () => void;
   activeId: string | null;
   setActiveId: (id: string | null) => void;
+  className?: string;
+  title?: string;  
 }
 
 export default function DeleteProduct({
