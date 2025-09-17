@@ -42,7 +42,7 @@ export default function SignUpPage() {
         <form onSubmit={handleSignUp} className="space-y-4">
           <input
             type="email"
-            placeholder="E-posta"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 border rounded"
@@ -50,7 +50,7 @@ export default function SignUpPage() {
           />
           <input
             type="password"
-            placeholder="Şifre"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-2 border rounded"
