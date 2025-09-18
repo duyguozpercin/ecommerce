@@ -9,8 +9,7 @@ test.describe("Navbar behavior", () => {
     const homeLink = page.locator('a[href="/"]');
     await expect(homeLink).toBeVisible();
 
-    const cartBadge = page.getByTestId("cart-count");
-    await expect(cartBadge).toBeVisible();
+    await expect(page.getByTestId("cart-count")).toHaveCount(0);
 
     await expect(page.getByTestId("welcome-text")).toHaveCount(0);
   });
