@@ -26,7 +26,7 @@ export default function Navbar() {
           >
             Home
           </Link>
-          <button aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2">
+          <button aria-label="Toggle menu" data-testid="mobile-toggle" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2">
             {menuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
