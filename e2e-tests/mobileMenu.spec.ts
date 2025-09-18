@@ -6,27 +6,27 @@ test.describe("Mobile Menu behavior", () => {
   });
 
   test("opens and displays all categories", async ({ page }) => {
-    // Menü butonuna tıkla (hamburger ikonu)
-    const toggleBtn = page.getByRole("button").first();
+
+    const toggleBtn = page.getByRole("button", { name: "Toggle menu" });
     await toggleBtn.click();
 
-    // Mobile menu görünür olmalı
-    const mobileMenu = page.locator(".md\\:hidden"); // md:hidden class'lı container
+
+    const mobileMenu = page.getByTestId("mobile-menu");
     await expect(mobileMenu).toBeVisible();
 
-    // allCategories içindeki örnek bir kategori görünmeli
-    await expect(mobileMenu).toContainText("Electronics"); // senin kategorine göre değiştir
+
+    await expect(mobileMenu).toContainText("Decoration");
   });
 
   test("closes menu when clicking a category link", async ({ page }) => {
-    const toggleBtn = page.getByRole("button").first();
+    const toggleBtn = page.getByRole("button", { name: "Toggle menu" });
     await toggleBtn.click();
 
-    const firstCategoryLink = page.locator(".md\\:hidden a").first();
+    const firstCategoryLink = page.getByTestId("mobile-menu").locator("a").first();
     await firstCategoryLink.click();
 
-    // Menü kapanmalı
-    const mobileMenu = page.locator(".md\\:hidden");
+
+    const mobileMenu = page.getByTestId("mobile-menu");
     await expect(mobileMenu).not.toBeVisible();
   });
 });

@@ -11,9 +11,10 @@ export default function MobileMenu({ setMenuOpen }: MobileMenuProps) {
   const categories = allCategories;
 
   return (
-    <div className="md:hidden mt-4 space-y-2">
+    <div data-testid="mobile-menu" className="md:hidden mt-4 space-y-2">
       {categories.map((category) => (
         <Link
+          
           key={category}
           href={`/products?category=${encodeURIComponent(category)}`}
           onClick={() => setMenuOpen(false)}
