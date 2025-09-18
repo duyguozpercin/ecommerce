@@ -7,19 +7,18 @@ import NavigationMenu from "./NavigationMenu";
 import CartBadge from "./CartBadge";
 import UserDropdown from "./UserDropdown";
 import MobileMenu from "./MobileMenu";
-import { useAuth } from "@/context/AuthContext"; // ✅ ekledik
+import { useAuth } from "@/context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utils/firebase";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useAuth(); // ✅ kullanıcı bilgisi
+  const { user } = useAuth();
 
   return (
     <header className="bg-blue-50 px-6 py-4 border-b border-neutral-200 shadow-sm">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
-        {/* Sol taraf */}
         <div className="flex items-center justify-between w-full md:w-auto">
           <Link
             href="/"
@@ -32,12 +31,10 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Orta kısım */}
         <NavigationMenu />
 
-        {/* Sağ taraf */}
         <div className="flex items-center justify-center md:justify-end w-full md:w-auto gap-4 relative">
-          {/* ✅ Kullanıcı varsa welcome mesajı */}
+
           {user && (
             <span
               data-testid="welcome-text"
@@ -50,7 +47,6 @@ export default function Navbar() {
           <CartBadge />
           <UserDropdown />
 
-          {/* ✅ Logout butonu */}
           {user && (
             <button
               onClick={() => signOut(auth)}
@@ -62,7 +58,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobil Menü */}
       {menuOpen && <MobileMenu setMenuOpen={setMenuOpen} />}
     </header>
   );
