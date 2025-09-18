@@ -11,7 +11,7 @@ export default function MobileMenu({ setMenuOpen }: MobileMenuProps) {
   const categories = allCategories;
 
   return (
-    <div className="md:hidden mt-4 space-y-2">
+    <nav data-testid="mobile-menu" className="md:hidden mt-4 space-y-2" role="navigation">
       {categories.map((category) => (
         <Link
           key={category}
@@ -22,6 +22,6 @@ export default function MobileMenu({ setMenuOpen }: MobileMenuProps) {
           {category}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 }

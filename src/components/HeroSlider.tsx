@@ -20,7 +20,7 @@ export default function HeroSlider() {
 
   return (
     <Link href="/products" className="w-full">
-    <div ref={sliderRef} className="keen-slider h-[300px] md:h-[450px] overflow-hidden relative">
+    <div ref={sliderRef} className="keen-slider h-[300px] md:h-[450px] overflow-hidden relative" data-testid="hero-slider">
       {images.map((img, i) => (
         <div
           key={i}
