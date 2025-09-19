@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Product, ProductForm } from '@/types/product';
 import { productSchema } from '@/app/schemas/productSchema';
-import { updateProductAction } from '@/app/actions/updateProductAction';
+import { updateProductAction } from '@/app/actions/admin/products/update';
 import UpdateProductForm from './UpdateProductForm';
 import ImageUploader from './ImageUploader';
 import SuccessMessage from './SuccessMessage';
