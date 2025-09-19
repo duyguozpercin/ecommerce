@@ -1,5 +1,7 @@
 'use client';
+
 import { useState } from 'react';
+import { deleteProductAction } from '@/app/actions/admin/products/deleteProductAction';
 
 interface DeleteProductProps {
   productId: string;
@@ -7,7 +9,7 @@ interface DeleteProductProps {
   activeId: string | null;
   setActiveId: (id: string | null) => void;
   className?: string;
-  title?: string;  
+  title?: string;
 }
 
 export default function DeleteProduct({
@@ -21,15 +23,9 @@ export default function DeleteProduct({
 
   const handleDelete = async () => {
     try {
-      const res = await fetch('/api/delete-product', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId }),
-      });
+      const result = await deleteProductAction(productId); // ✅ doğrudan server action çağrısı
 
-      const data = await res.json();
-
-      if (data.success) {
+      if (result.success) {
         setActiveId(null);
         setShowSuccess(true);
         if (onDeleted) onDeleted();
@@ -37,7 +33,7 @@ export default function DeleteProduct({
           setShowSuccess(false);
         }, 2000);
       } else {
-        console.error('🔥 Deletion failed:', data.message);
+        console.error('🔥 Deletion failed:', result.message);
       }
     } catch (error) {
       console.error('🔥 Error deleting product or image', error);
