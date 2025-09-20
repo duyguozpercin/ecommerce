@@ -1,0 +1,173 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e8]:
+          - link "Decoration" [ref=e9] [cursor=pointer]:
+            - /url: /products?category=Decoration
+          - link "Chairs" [ref=e10] [cursor=pointer]:
+            - /url: /products?category=Chairs
+          - link "Sofas" [ref=e11] [cursor=pointer]:
+            - /url: /products?category=Sofas
+          - link "Tables" [ref=e12] [cursor=pointer]:
+            - /url: /products?category=Tables
+        - generic [ref=e13]:
+          - link "Cart" [ref=e14] [cursor=pointer]:
+            - /url: /cart
+            - img "Cart Icon" [ref=e15] [cursor=pointer]
+          - button "User Menu" [ref=e17]:
+            - img "User Icon" [ref=e18]
+    - main [ref=e19]:
+      - main [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Product List" [level=1] [ref=e23]
+            - link "Add New Product" [ref=e24] [cursor=pointer]:
+              - /url: /admin/products/new
+          - table [ref=e28]:
+            - rowgroup [ref=e29]:
+              - row "Image Title Price Actions" [ref=e30]:
+                - cell "Image" [ref=e31]
+                - cell "Title" [ref=e32]
+                - cell "Price" [ref=e33]
+                - cell "Actions" [ref=e34]
+            - rowgroup [ref=e35]:
+              - row "Luxury Scented Candle Luxury Scented Candle $20 x" [ref=e36]:
+                - cell "Luxury Scented Candle" [ref=e37]:
+                  - img "Luxury Scented Candle" [ref=e38]
+                - cell "Luxury Scented Candle" [ref=e39]
+                - cell "$20" [ref=e40]
+                - cell "x" [ref=e41]:
+                  - generic [ref=e42]:
+                    - button "Edit" [ref=e43]:
+                      - img [ref=e44]
+                    - button "x" [ref=e48]
+              - row "Handwoven Rattan Chair Handwoven Rattan Chair $180 x" [ref=e49]:
+                - cell "Handwoven Rattan Chair" [ref=e50]:
+                  - img "Handwoven Rattan Chair" [ref=e51]
+                - cell "Handwoven Rattan Chair" [ref=e52]
+                - cell "$180" [ref=e53]
+                - cell "x" [ref=e54]:
+                  - generic [ref=e55]:
+                    - button "Edit" [ref=e56]:
+                      - img [ref=e57]
+                    - button "x" [ref=e61]
+              - row "Solid Oak Dining Table Solid Oak Dining Table $620 x" [ref=e62]:
+                - cell "Solid Oak Dining Table" [ref=e63]:
+                  - img "Solid Oak Dining Table" [ref=e64]
+                - cell "Solid Oak Dining Table" [ref=e65]
+                - cell "$620" [ref=e66]
+                - cell "x" [ref=e67]:
+                  - generic [ref=e68]:
+                    - button "Edit" [ref=e69]:
+                      - img [ref=e70]
+                    - button "x" [ref=e74]
+              - row "Abstract Canvas Wall Art Abstract Canvas Wall Art $95 x" [ref=e75]:
+                - cell "Abstract Canvas Wall Art" [ref=e76]:
+                  - img "Abstract Canvas Wall Art" [ref=e77]
+                - cell "Abstract Canvas Wall Art" [ref=e78]
+                - cell "$95" [ref=e79]
+                - cell "x" [ref=e80]:
+                  - generic [ref=e81]:
+                    - button "Edit" [ref=e82]:
+                      - img [ref=e83]
+                    - button "x" [ref=e87]
+              - row "Modern Glass Coffee Table Modern Glass Coffee Table $280 x" [ref=e88]:
+                - cell "Modern Glass Coffee Table" [ref=e89]:
+                  - img "Modern Glass Coffee Table" [ref=e90]
+                - cell "Modern Glass Coffee Table" [ref=e91]
+                - cell "$280" [ref=e92]
+                - cell "x" [ref=e93]:
+                  - generic [ref=e94]:
+                    - button "Edit" [ref=e95]:
+                      - img [ref=e96]
+                    - button "x" [ref=e100]
+              - row "Sage Green Velvet Armchair Sage Green Velvet Armchair $340 x" [ref=e101]:
+                - cell "Sage Green Velvet Armchair" [ref=e102]:
+                  - img "Sage Green Velvet Armchair" [ref=e103]
+                - cell "Sage Green Velvet Armchair" [ref=e104]
+                - cell "$340" [ref=e105]
+                - cell "x" [ref=e106]:
+                  - generic [ref=e107]:
+                    - button "Edit" [ref=e108]:
+                      - img [ref=e109]
+                    - button "x" [ref=e113]
+              - row "Modern Black Dining Chair Modern Black Dining Chair $110 x" [ref=e114]:
+                - cell "Modern Black Dining Chair" [ref=e115]:
+                  - img "Modern Black Dining Chair" [ref=e116]
+                - cell "Modern Black Dining Chair" [ref=e117]
+                - cell "$110" [ref=e118]
+                - cell "x" [ref=e119]:
+                  - generic [ref=e120]:
+                    - button "Edit" [ref=e121]:
+                      - img [ref=e122]
+                    - button "x" [ref=e126]
+              - row "Large Beige Fabric Sofa Large Beige Fabric Sofa $890 x" [ref=e127]:
+                - cell "Large Beige Fabric Sofa" [ref=e128]:
+                  - img "Large Beige Fabric Sofa" [ref=e129]
+                - cell "Large Beige Fabric Sofa" [ref=e130]
+                - cell "$890" [ref=e131]
+                - cell "x" [ref=e132]:
+                  - generic [ref=e133]:
+                    - button "Edit" [ref=e134]:
+                      - img [ref=e135]
+                    - button "x" [ref=e139]
+              - row "White Wooden Sideboard White Wooden Sideboard $420 x" [ref=e140]:
+                - cell "White Wooden Sideboard" [ref=e141]:
+                  - img "White Wooden Sideboard" [ref=e142]
+                - cell "White Wooden Sideboard" [ref=e143]
+                - cell "$420" [ref=e144]
+                - cell "x" [ref=e145]:
+                  - generic [ref=e146]:
+                    - button "Edit" [ref=e147]:
+                      - img [ref=e148]
+                    - button "x" [ref=e152]
+              - row "Pastel Dark Blue Coffee Table Pastel Dark Blue Coffee Table $210 x" [ref=e153]:
+                - cell "Pastel Dark Blue Coffee Table" [ref=e154]:
+                  - img "Pastel Dark Blue Coffee Table" [ref=e155]
+                - cell "Pastel Dark Blue Coffee Table" [ref=e156]
+                - cell "$210" [ref=e157]
+                - cell "x" [ref=e158]:
+                  - generic [ref=e159]:
+                    - button "Edit" [ref=e160]:
+                      - img [ref=e161]
+                    - button "x" [ref=e165]
+              - row "Pastel Yellow Metal Chair Pastel Yellow Metal Chair $95 x" [ref=e166]:
+                - cell "Pastel Yellow Metal Chair" [ref=e167]:
+                  - img "Pastel Yellow Metal Chair" [ref=e168]
+                - cell "Pastel Yellow Metal Chair" [ref=e169]
+                - cell "$95" [ref=e170]
+                - cell "x" [ref=e171]:
+                  - generic [ref=e172]:
+                    - button "Edit" [ref=e173]:
+                      - img [ref=e174]
+                    - button "x" [ref=e178]
+              - row "Pastel Pink 3-Seater Sofa Pastel Pink 3-Seater Sofa $760 x" [ref=e179]:
+                - cell "Pastel Pink 3-Seater Sofa" [ref=e180]:
+                  - img "Pastel Pink 3-Seater Sofa" [ref=e181]
+                - cell "Pastel Pink 3-Seater Sofa" [ref=e182]
+                - cell "$760" [ref=e183]
+                - cell "x" [ref=e184]:
+                  - generic [ref=e185]:
+                    - button "Edit" [ref=e186]:
+                      - img [ref=e187]
+                    - button "x" [ref=e191]
+              - row "No Image Test $30 x" [ref=e192]:
+                - cell "No Image" [ref=e193]:
+                  - generic [ref=e194]: No Image
+                - cell "Test" [ref=e195]
+                - cell "$30" [ref=e196]
+                - cell "x" [ref=e197]:
+                  - generic [ref=e198]:
+                    - button "Edit" [ref=e199]:
+                      - img [ref=e200]
+                    - button "x" [ref=e204]
+  - alert [ref=e205]
+  - button "Open Next.js Dev Tools" [ref=e211] [cursor=pointer]:
+    - img [ref=e212] [cursor=pointer]
+```
