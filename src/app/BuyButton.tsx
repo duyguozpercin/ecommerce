@@ -47,7 +47,7 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          userId: userId ?? 'guest',   // ✅ login yoksa guest olarak gönder
+          userId: userId ?? 'guest',
           cartItems: items 
         }),
       });

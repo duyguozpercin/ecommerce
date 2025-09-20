@@ -22,7 +22,6 @@ test.describe('Home Page E2E', () => {
 
     await expect(link).toHaveAttribute('href', /\/products\//);
 
-    // ✅ Navigation için Promise.all
     await Promise.all([
       page.waitForURL(/\/products\//),
       link.click(),

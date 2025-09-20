@@ -6,14 +6,14 @@ export async function POST(req: Request) {
   try {
     const { userId, cartItems } = await req.json();
 
-    // ✅ Login yoksa guest id üret
+    
     const effectiveUserId = userId || `guest-${Date.now()}`;
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
       return NextResponse.json({ error: 'Sepet boş.' }, { status: 400 });
     }
 
-    // ✅ Ürünlerin varlığı ve stok kontrolü
+   
     const line_items = await Promise.all(
       cartItems.map(async (item: { id: string; quantity: number }) => {
         const snap = await adminDb.collection('products').doc(String(item.id)).get();
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     const origin =
       req.headers.get('origin') || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-    // ✅ Stripe session oluştur (kayıt yok!)
+
     const session = await stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',

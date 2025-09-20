@@ -2,9 +2,7 @@ import { z } from "zod";
 import type { ProductForm } from "@/types/product";
 import { AvailabilityStatus, ReturnPolicy, Category } from "@/types/product";
 
-//
-// Tek Schema (create + update için ortak)
-//
+
 export const productSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(3).max(100),
@@ -30,9 +28,7 @@ export const productSchema = z.object({
   image: z.string().url().optional(),
 });
 
-//
-// Ortak helper fonksiyon
-//
+
 export type ProductFormInput = Partial<ProductForm> & {
   id?: string;
   image?: string;

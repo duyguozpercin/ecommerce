@@ -6,7 +6,7 @@ import { useState } from "react";
 interface ImageUploaderProps {
   previewUrl: string | null;
   setPreviewUrl: (url: string | null) => void;
-  setSelectedImage: (file: File | null) => void; // ✅ yeni props
+  setSelectedImage: (file: File | null) => void;
 }
 
 export default function ImageUploader({
@@ -20,8 +20,8 @@ export default function ImageUploader({
     const file = e.target.files?.[0];
     if (file) {
       const preview = URL.createObjectURL(file);
-      setPreviewUrl(preview);         // ✅ ekranda gösterilecek
-      setSelectedImage(file);         // ✅ parent’a dosya gönderilecek
+      setPreviewUrl(preview);
+      setSelectedImage(file);
       setFileName(file.name);
     } else {
       setPreviewUrl(null);

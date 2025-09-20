@@ -15,7 +15,7 @@ jest.mock("@/components/DeleteProduct", () => (props: any) => (
 ));
 
 beforeAll(() => {
-  // Orijinal location'ı sakla
+  
   // @ts-ignore
   delete window.location;
 

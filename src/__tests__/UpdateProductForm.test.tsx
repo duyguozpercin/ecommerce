@@ -4,7 +4,7 @@ import { ProductForm } from "@/types/product";
 import { UseFormRegister } from "react-hook-form";
 import '@testing-library/jest-dom';
 
-// Basit mock register fonksiyonu
+
 const mockRegister: UseFormRegister<ProductForm> = (() => {
   return () => ({ onChange: jest.fn(), onBlur: jest.fn(), name: "", ref: jest.fn() });
 })() as unknown as UseFormRegister<ProductForm>;
@@ -23,12 +23,12 @@ describe("UpdateProductForm", () => {
     expect(screen.getByLabelText("Warranty Information")).toBeInTheDocument();
     expect(screen.getByLabelText("Shipping Information")).toBeInTheDocument();
 
-    // Select alanları
+
     expect(screen.getByLabelText("Category")).toBeInTheDocument();
     expect(screen.getByLabelText("Stock Status")).toBeInTheDocument();
     expect(screen.getByLabelText("Return Policy")).toBeInTheDocument();
 
-    // Checkbox alanı
+
     expect(screen.getByText("Tags")).toBeInTheDocument();
   });
 

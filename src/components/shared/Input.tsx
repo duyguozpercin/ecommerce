@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 type InputFieldProps = {
   label: string;
-  name?: string;   // artık optional
+  name?: string;
   type?: string;
   error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;

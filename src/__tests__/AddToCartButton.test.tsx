@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import AddToCartButton from "@/components/AddToCartButton"; // kendi dosya yoluna göre ayarla
+import AddToCartButton from "@/components/AddToCartButton";
 import { useCart } from "@/context/CartContext";
 import { Category, Product } from "@/types/product";
 import '@testing-library/jest-dom';

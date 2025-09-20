@@ -31,7 +31,7 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     const filePath = path.resolve(__dirname, 'fixtures/test-image.png');
     await page.setInputFiles('input[name="image"]', filePath);
 
-    // ✅ Mock API isteği
+  
     await page.route('**/api/admin/products', async (route) => {
       await route.fulfill({
         status: 200,
@@ -44,7 +44,7 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     await expect(submitBtn).toBeEnabled();
     await submitBtn.click();
 
-    // Burada redirect bekleme → sadece butonun çalıştığını test ediyoruz
+  
     await expect(submitBtn).toBeVisible();
   });
 });

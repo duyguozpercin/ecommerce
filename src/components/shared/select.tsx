@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 type SelectFieldProps = {
   label: string;
   options: string[];
-  name?: string;   // artık optional
+  name?: string;
   error?: string;
 } & React.SelectHTMLAttributes<HTMLSelectElement>;
 

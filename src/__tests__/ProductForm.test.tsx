@@ -1,4 +1,4 @@
-// Polyfills
+
 import { TextDecoder, TextEncoder } from "util";
 import "whatwg-fetch";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
@@ -6,19 +6,19 @@ import ProductForm from "@/components/admin/products/ProductForm";
 import { useRouter } from "next/navigation";
 import "@testing-library/jest-dom";
 
-// @ts-ignore
+
 if (!global.TextDecoder) global.TextDecoder = TextDecoder as any;
-// @ts-ignore
+
 if (!global.TextEncoder) global.TextEncoder = TextEncoder as any;
 
-// Mock @vercel/blob
+
 jest.mock("@vercel/blob", () => ({
   put: jest.fn(() =>
     Promise.resolve({ url: "http://mocked-url.com/image.png" })
   ),
 }));
 
-// ✅ Mock Stripe
+
 jest.mock("@/utils/stripe", () => ({
   stripe: {
     products: { create: jest.fn().mockResolvedValue({ id: "mock_product" }) },
@@ -26,15 +26,15 @@ jest.mock("@/utils/stripe", () => ({
   },
 }));
 
-// ✅ useActionState sahte
+
 jest.mock("react", () => {
   const actualReact = jest.requireActual("react");
   return {
     ...actualReact,
     useActionState: () => [
       { success: true, message: "Product created successfully" }, // state
-      jest.fn(), // formAction
-      false, // isPending
+      jest.fn(),
+      false,
     ],
   };
 });

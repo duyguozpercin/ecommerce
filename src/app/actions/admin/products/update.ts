@@ -5,7 +5,7 @@ import { db, collections } from "@/utils/firebase";
 import { stripe } from "@/utils/stripe";
 import type { Product } from "@/types/product";
 import { productSchema, formDataToRawProduct } from "./schema";
-import { put } from "@vercel/blob"; // ✅ Vercel Blob import
+import { put } from "@vercel/blob";
 
 const zodIssues = (err: any): { path: string; message: string }[] =>
   err.issues.map((i: any) => ({
@@ -33,13 +33,13 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     const data = parsed.data;
     if (!data.id) return { success: false, message: "Missing product id" };
 
-    // ✅ Firestore mevcut ürün
+    
     const ref = doc(db, collections.products, data.id);
     const snap = await getDoc(ref);
     if (!snap.exists()) return { success: false, message: "Product not found" };
     const existing = { id: snap.id, ...snap.data() } as Product;
 
-    // ✅ Resim upload (eğer yeni resim dosyası varsa)
+    
     let imageUrl = data.image ?? "";
     const imageFile = formData.get("image") as File | null;
     if (imageFile && imageFile.size > 0) {
@@ -64,7 +64,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       }
     }
 
-    // ✅ Stripe fiyat güncelleme
+    
     const oldPrice = Number(existing.price ?? 0);
     const newPrice = Number(data.price);
     let stripePriceId: string | undefined = existing.stripePriceId;
@@ -74,7 +74,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
         try {
           await stripe.prices.update(existing.stripePriceId, { active: false });
         } catch {
-          /* ignore */
+          
         }
       }
       try {
@@ -91,7 +91,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       }
     }
 
-    // ✅ Update payload
+   
     const meta = typeof existing.meta === "object" && existing.meta ? existing.meta : {};
     const updatePayload: Record<string, unknown> = {
       title: data.title,

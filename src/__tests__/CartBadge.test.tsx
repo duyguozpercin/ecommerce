@@ -1,4 +1,4 @@
-// src/__tests__/CartBadge.test.tsx
+
 import { render, screen } from "@testing-library/react";
 import CartBadge from "@/components/CartBadge";
 import { CartContext } from "@/context/CartContext";

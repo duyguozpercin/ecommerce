@@ -13,10 +13,10 @@ export async function deleteProductAction(
   imageUrl?: string
 ): Promise<DeleteResult> {
   try {
-    // ✅ Firestore’dan ürünü sil
+
     await deleteDoc(doc(db, collections.products, productId));
 
-    // ✅ Görsel varsa Blob’dan sil
+
     if (imageUrl) {
       await del(imageUrl, {
         token: process.env.BLOB_READ_WRITE_TOKEN,

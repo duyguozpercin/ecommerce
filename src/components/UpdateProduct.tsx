@@ -41,7 +41,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
   });
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
-    // ✅ FormData oluştur
+    
     const formData = new FormData();
     formData.append('id', String(product.id));
     formData.append('title', data.title);
@@ -67,12 +67,12 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
       formData.append('tags', data.tags.join(','));
     }
 
-    // ✅ Görsel ekle
+    
     if (selectedImage) {
       formData.append('image', selectedImage);
     }
 
-    // ✅ Server Action çağır
+   
     const resp = await updateProductAction(formData);
 
     if (resp?.success) {
@@ -94,7 +94,7 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
         <ImageUploader
           previewUrl={previewUrl}
           setPreviewUrl={setPreviewUrl}
-          setSelectedImage={setSelectedImage} // ✅ yeni props
+          setSelectedImage={setSelectedImage}
         />
         <button type="submit" disabled={isSubmitting} className="w-full bg-green-600 text-white py-2 rounded">
           {isSubmitting ? "Saving..." : "Save"}

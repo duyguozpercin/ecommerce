@@ -19,7 +19,6 @@ export default function CartBadge() {
       className="relative flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
       aria-label="Cart"
     >
-      {/* ✅ Artık inline SVG yerine dışarıdan dosya */}
       <Image
         src="/icons/cart.svg"
         alt="Cart Icon"

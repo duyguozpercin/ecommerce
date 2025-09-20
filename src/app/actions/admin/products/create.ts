@@ -7,7 +7,7 @@ import { stripe } from "@/utils/stripe";
 import { NewProductFormState } from "@/components/admin/products/ProductForm";
 import type { Product } from "@/types/product";
 import { productSchema, formDataToRawProduct } from "./schema";
-import { redirect } from "next/navigation"; // ✅ eklendi
+import { redirect } from "next/navigation";
 
 export async function addNewProductAction(
   _currentState: NewProductFormState,
@@ -19,7 +19,7 @@ export async function addNewProductAction(
   if (!parsed.success) {
     return {
       success: false,
-      message: "Lütfen form girdilerini düzeltin.",
+      message: "Please correct the form inputs.",
       inputs: raw as any,
       errors: parsed.error.flatten().fieldErrors as any,
     };
@@ -28,17 +28,17 @@ export async function addNewProductAction(
   const data = parsed.data;
   const id = Date.now().toString();
 
-  // ✅ Image upload
+  
   let imageUrl = "";
   const image = formData.get("image") as File | null;
   if (image && image.size > 0) {
     const MAX = 4.5 * 1024 * 1024;
     const okTypes = ["image/jpeg", "image/jpg", "image/webp", "image/png"];
     if (!okTypes.includes(image.type)) {
-      return { success: false, message: "İzin verilen resim formatları: .jpeg, .jpg, .webp, .png" };
+      return { success: false, message: "Allowed image formats: .jpeg, .jpg, .webp, .png" };
     }
     if (image.size > MAX) {
-      return { success: false, message: "Maksimum resim boyutu 4.5 MB olabilir." };
+      return { success: false, message: "Maximum image size can be 4.5 MB." };
     }
     const imageName = `${id}.${image.name.split(".").pop()}`;
     try {
@@ -49,12 +49,12 @@ export async function addNewProductAction(
       imageUrl = blob.url;
     } catch (error) {
       console.error("Image upload error:", error);
-      return { success: false, message: "Resim yüklenirken bir hata oluştu.", inputs: raw as any };
+      return { success: false, message: "An error occurred while uploading the image.", inputs: raw as any };
     }
   }
 
   try {
-    // ✅ Stripe create
+   
     const stripeProduct = await stripe.products.create({
       name: data.title!,
       description: data.description!,
@@ -68,7 +68,7 @@ export async function addNewProductAction(
     });
     await stripe.products.update(stripeProduct.id, { default_price: price.id });
 
-    // ✅ Firestore save
+  
     const finalData: Product = {
       id,
       category: data.category!,
@@ -102,10 +102,10 @@ export async function addNewProductAction(
 
     await setDoc(doc(db, collections.products, id), finalData);
 
-    // ✅ Başarılı olunca yönlendirme
+  
     redirect("/admin/products/manage");
   } catch (err) {
     console.error("Create product error:", err);
-    return { success: false, message: "Ürün eklenirken bir hata oluştu.", inputs: raw as any };
+    return { success: false, message: "An error occurred while adding the product.", inputs: raw as any };
   }
 }
