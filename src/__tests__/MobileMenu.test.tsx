@@ -13,18 +13,17 @@ jest.mock("next/link", () => {
 });
 
 describe("MobileMenu", () => {
-  it("tüm kategorileri render etmeli", () => {
+  it("should render all categories", () => {
     const mockSetMenuOpen = jest.fn();
 
     render(<MobileMenu setMenuOpen={mockSetMenuOpen} />);
 
-    
     allCategories.forEach((category) => {
       expect(screen.getByText(category)).toBeInTheDocument();
     });
   });
 
-  it("kategoriye tıklanınca menüyü kapatmalı", () => {
+  it("should close the menu when a category is clicked", () => {
     const mockSetMenuOpen = jest.fn();
 
     render(<MobileMenu setMenuOpen={mockSetMenuOpen} />);

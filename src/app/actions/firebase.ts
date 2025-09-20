@@ -29,13 +29,13 @@ export const createOrder = async (userId: string, orderData: OrderData) => {
     const productDoc = await productRef.get();
 
     if (!productDoc.exists) {
-      console.error(`HATA: ${product.productId} ID'li ürün veritabanında bulunamadı!`);
+      console.error(`ERROR: Product with ID ${product.productId} was not found in the database!`);
       
       return {
         ...product,
-        title: 'Ürün Bulunamadı',
+        title: 'Product Not Found',
         price: 0,
-        brand: 'Bilinmiyor',
+        brand: 'Unknown',
       };
     }
 
@@ -63,8 +63,8 @@ export const createOrder = async (userId: string, orderData: OrderData) => {
     total: total ? total / 100 : 0,
     currency,
     
-    customerName: shippingDetails?.name || 'İsim Belirtilmemiş',
-    customerEmail: shippingDetails?.email || 'Email Belirtilmemiş',
+    customerName: shippingDetails?.name || 'Name Not Provided',
+    customerEmail: shippingDetails?.email || 'Email Not Provided',
     paymentStatus,
     products: enrichedProducts,
     timestamp: FieldValue.serverTimestamp(),
@@ -76,12 +76,12 @@ export const createOrder = async (userId: string, orderData: OrderData) => {
     .collection('orders')
     .add(newOrderPayload);
 
-  console.log(`✅ Firebase: Kullanıcı ${userId} için yeni sipariş oluşturuldu.`);
+  console.log(`✅ Firebase: New order created for user ${userId}.`);
 };
 
 export const updateProductStocks = async (items: StockItem[]) => {
   if (!items?.length) {
-    console.log('⚠️ Stokları güncellenecek ürün bulunamadı.');
+    console.log('⚠️ No products found to update stocks.');
     return;
   }
 
@@ -95,6 +95,5 @@ export const updateProductStocks = async (items: StockItem[]) => {
   });
 
   await batch.commit();
-  console.log(`✅ Firestore: ${items.length} ürünün stoğu güncellendi.`);
+  console.log(`✅ Firestore: Stock updated for ${items.length} products.`);
 };
-
