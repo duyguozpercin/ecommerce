@@ -20,23 +20,24 @@ export default function DeleteProduct({
 }: DeleteProductProps) {
   const isActive = activeId === productId;
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleDelete = async () => {
     try {
-      const result = await deleteProductAction(productId); // ✅ doğrudan server action çağrısı
+      const result = await deleteProductAction(productId);
 
       if (result.success) {
         setActiveId(null);
         setShowSuccess(true);
+        setErrorMessage(null);
         if (onDeleted) onDeleted();
-        setTimeout(() => {
-          setShowSuccess(false);
-        }, 2000);
+        setTimeout(() => setShowSuccess(false), 2000);
       } else {
-        console.error('🔥 Deletion failed:', result.message);
+        setErrorMessage(result.message);
       }
     } catch (error) {
       console.error('🔥 Error deleting product or image', error);
+      setErrorMessage('Unexpected error occurred.');
     }
   };
 
@@ -51,7 +52,9 @@ export default function DeleteProduct({
 
       {isActive && (
         <div className="absolute top-12 right-0 bg-white border border-gray-300 shadow-lg p-4 rounded w-64 z-10">
-          <p className="text-neutral-800 mb-4 text-sm">Are you sure you want to delete this product?</p>
+          <p className="text-neutral-800 mb-4 text-sm">
+            Are you sure you want to delete this product?
+          </p>
           <div className="flex justify-end gap-2">
             <button
               onClick={handleDelete}
@@ -72,6 +75,12 @@ export default function DeleteProduct({
       {showSuccess && (
         <div className="absolute top-12 right-0 bg-green-100 border border-green-300 shadow p-2 rounded w-64 text-center z-10">
           <p className="text-green-700 text-sm">Product deleted successfully!</p>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="absolute top-12 right-0 bg-red-100 border border-red-300 shadow p-2 rounded w-64 text-center z-10">
+          <p className="text-red-700 text-sm">{errorMessage}</p>
         </div>
       )}
     </div>

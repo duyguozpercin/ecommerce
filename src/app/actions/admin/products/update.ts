@@ -5,9 +5,7 @@ import { db, collections } from "@/utils/firebase";
 import { stripe } from "@/utils/stripe";
 import type { Product } from "@/types/product";
 import { productSchema, formDataToRawProduct } from "./schema";
-
-const isNumber = (n: unknown): n is number =>
-  typeof n === "number" && Number.isFinite(n);
+import { put } from "@vercel/blob"; // ✅ Vercel Blob import
 
 const zodIssues = (err: any): { path: string; message: string }[] =>
   err.issues.map((i: any) => ({
@@ -41,6 +39,31 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     if (!snap.exists()) return { success: false, message: "Product not found" };
     const existing = { id: snap.id, ...snap.data() } as Product;
 
+    // ✅ Resim upload (eğer yeni resim dosyası varsa)
+    let imageUrl = data.image ?? "";
+    const imageFile = formData.get("image") as File | null;
+    if (imageFile && imageFile.size > 0) {
+      const MAX = 4.5 * 1024 * 1024;
+      const okTypes = ["image/jpeg", "image/jpg", "image/webp", "image/png"];
+      if (!okTypes.includes(imageFile.type)) {
+        return { success: false, message: "Invalid image format" };
+      }
+      if (imageFile.size > MAX) {
+        return { success: false, message: "Image size must be under 4.5MB" };
+      }
+      const imageName = `${data.id}.${imageFile.name.split(".").pop()}`;
+      try {
+        const blob = await put(imageName, imageFile, {
+          access: "public",
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        });
+        imageUrl = blob.url;
+      } catch (err) {
+        console.error("Image upload error:", err);
+        return { success: false, message: "Image upload failed" };
+      }
+    }
+
     // ✅ Stripe fiyat güncelleme
     const oldPrice = Number(existing.price ?? 0);
     const newPrice = Number(data.price);
@@ -50,7 +73,9 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
       if (existing.stripePriceId) {
         try {
           await stripe.prices.update(existing.stripePriceId, { active: false });
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
       }
       try {
         const currency = existing.stripeCurrency || process.env.STRIPE_CURRENCY || "usd";
@@ -86,9 +111,9 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     if (data.returnPolicy) updatePayload.returnPolicy = data.returnPolicy;
     if (data.dimensions) updatePayload.dimensions = data.dimensions;
     if (data.tags) updatePayload.tags = data.tags;
-    if (data.image) {
-      updatePayload.images = [data.image];
-      updatePayload.thumbnail = data.image;
+    if (imageUrl) {
+      updatePayload.images = [imageUrl];
+      updatePayload.thumbnail = imageUrl;
     }
     if (stripePriceId) updatePayload.stripePriceId = stripePriceId;
 

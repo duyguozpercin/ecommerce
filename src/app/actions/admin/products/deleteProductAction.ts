@@ -2,16 +2,25 @@
 
 import { doc, deleteDoc } from "firebase/firestore";
 import { db, collections } from "@/utils/firebase";
-import { del } from "@vercel/blob"; // Eğer ürün görsellerini blob’a yüklüyorsan
+import { del } from "@vercel/blob";
 
-export async function deleteProductAction(productId: string, imageUrl?: string) {
+type DeleteResult =
+  | { success: true }
+  | { success: false; message: string };
+
+export async function deleteProductAction(
+  productId: string,
+  imageUrl?: string
+): Promise<DeleteResult> {
   try {
     // ✅ Firestore’dan ürünü sil
     await deleteDoc(doc(db, collections.products, productId));
 
-    // ✅ Görsel varsa blob’dan sil
+    // ✅ Görsel varsa Blob’dan sil
     if (imageUrl) {
-      await del(imageUrl);
+      await del(imageUrl, {
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
     }
 
     return { success: true };
