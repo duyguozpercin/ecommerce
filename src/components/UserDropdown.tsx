@@ -29,7 +29,7 @@ export default function UserDropdown() {
         className="flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
         aria-label="User Menu"
       >
-        {/* ✅ Inline svg yerine dışarıdan dosya */}
+      
         <Image
           src="/icons/user.svg"
           alt="User Icon"

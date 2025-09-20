@@ -10,25 +10,25 @@ export async function POST(req: Request) {
     const effectiveUserId = userId || `guest-${Date.now()}`;
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
-      return NextResponse.json({ error: 'Sepet boş.' }, { status: 400 });
+      return NextResponse.json({ error: 'Cart is empty.' }, { status: 400 });
     }
 
    
     const line_items = await Promise.all(
       cartItems.map(async (item: { id: string; quantity: number }) => {
         const snap = await adminDb.collection('products').doc(String(item.id)).get();
-        if (!snap.exists) throw new Error(`Ürün bulunamadı: ${item.id}`);
+        if (!snap.exists) throw new Error(`Product not found: ${item.id}`);
 
         const data = snap.data()!;
         const stock = Number(data.stock ?? 0);
 
         if (!Number.isFinite(stock) || stock < item.quantity) {
           const name = data.title || data.name || item.id;
-          throw new Error(`Yetersiz stok: ${name}. Kalan: ${stock}`);
+          throw new Error(`Insufficient stock: ${name}. Remaining: ${stock}`);
         }
 
         if (!data.stripePriceId) {
-          throw new Error(`stripePriceId eksik: ${item.id}`);
+          throw new Error(`stripePriceId is missing: ${item.id}`);
         }
 
         return { price: String(data.stripePriceId), quantity: item.quantity };
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     });
 
     if (!session.url) {
-      return NextResponse.json({ error: 'Stripe session URL oluşamadı.' }, { status: 500 });
+      return NextResponse.json({ error: 'Stripe session URL could not be created.' }, { status: 500 });
     }
 
     return NextResponse.json({ url: session.url });

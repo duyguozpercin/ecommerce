@@ -36,15 +36,15 @@ export async function checkout(formData: FormData) {
   const line_items = await Promise.all(
     cartItems.map(async (item) => {
       const snap = await adminDb.collection('products').doc(item.id).get();
-      if (!snap.exists) throw new Error(`Ürün bulunamadı: ${item.id}`);
+      if (!snap.exists) throw new Error(`Product not found: ${item.id}`);
 
       const data = snap.data()!;
       const stock = Number(data.stock ?? 0);
       if (!Number.isFinite(stock) || stock < item.quantity) {
         const name = data.title || data.name || item.id;
-        throw new Error(`Yetersiz stok: ${name}. Kalan: ${stock}`);
+        throw new Error(`Insufficient stock: ${name}. Remaining: ${stock}`);
       }
-      if (!data.stripePriceId) throw new Error(`stripePriceId bilgisi eksik: ${item.id}`);
+      if (!data.stripePriceId) throw new Error(`stripePriceId is missing: ${item.id}`);
 
       return { price: String(data.stripePriceId), quantity: item.quantity };
     })

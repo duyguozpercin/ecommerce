@@ -29,7 +29,7 @@ describe("productService", () => {
     jest.clearAllMocks();
   });
 
-  it("getAllProducts → ürünleri listelemeli", async () => {
+  it("getAllProducts → should list products", async () => {
     (getDocs as jest.Mock).mockResolvedValueOnce({
       docs: [
         { id: "1", data: () => ({ title: "A", stock: 5 }) },
@@ -45,7 +45,7 @@ describe("productService", () => {
     ]);
   });
 
-  it("saveProduct → ürünü kaydetmeli", async () => {
+  it("saveProduct → should save product", async () => {
     const product: Product = {
       id: "p1",
       title: "Chair",
@@ -59,7 +59,7 @@ describe("productService", () => {
     expect(setDoc).toHaveBeenCalledWith("mockDocRef", product);
   });
 
-  it("decreaseProductStock → stok azaltmalı", async () => {
+  it("decreaseProductStock → should decrease stock", async () => {
     await decreaseProductStock("p1");
 
     expect(updateDoc).toHaveBeenCalledWith("mockDocRef", {

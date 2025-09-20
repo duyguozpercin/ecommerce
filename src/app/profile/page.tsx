@@ -31,11 +31,9 @@ export default function ProfilePage() {
     const fetchOrders = async () => {
       if (!user) return;
 
-      
       const userOrdersRef = collection(db, 'users', user.uid, 'orders');
       let snap = await getDocs(query(userOrdersRef, orderBy('createdAt', 'desc')));
 
-      
       if (snap.empty) {
         const topOrdersRef = collection(db, 'orders');
         snap = await getDocs(
@@ -43,17 +41,14 @@ export default function ProfilePage() {
         );
       }
 
-      
       const list: Order[] = [];
       for (const docSnap of snap.docs) {
         const data: any = docSnap.data();
 
-        
         const createdAtDate =
           data.createdAt?.toDate?.() ? data.createdAt.toDate() : new Date();
         const createdAtText = createdAtDate.toLocaleString();
 
-        
         const baseAmount =
           typeof data.amount === 'number'
             ? data.amount
@@ -61,10 +56,8 @@ export default function ProfilePage() {
             ? data.total / 100
             : 0;
 
-        
         const paymentId = data.paymentId || data.stripeSessionId || docSnap.id;
 
-        
         if (Array.isArray(data.products) && data.products.length > 0) {
           for (const p of data.products) {
             const productId = String(p.productId);
@@ -81,7 +74,7 @@ export default function ProfilePage() {
                 productImage = (pd.images?.[0] || pd.thumbnail) ?? '';
               }
             } catch (err) {
-              console.warn('Ürün bilgisi alınamadı:', productId, err);
+              console.warn('Product information could not be retrieved:', productId, err);
             }
 
             list.push({
@@ -96,7 +89,6 @@ export default function ProfilePage() {
           continue;
         }
 
-        
         if (data.productId) {
           const productId = String(data.productId);
 
@@ -112,7 +104,7 @@ export default function ProfilePage() {
               productImage = (productData.images?.[0] || productData.thumbnail) ?? '';
             }
           } catch (err) {
-            console.warn('Ürün bilgisi alınamadı:', productId, err);
+            console.warn('Product information could not be retrieved:', productId, err);
           }
 
           list.push({

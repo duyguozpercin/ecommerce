@@ -38,7 +38,7 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
           : [];
 
       if (items.length === 0) {
-        console.error("Checkout başlatılamadı: cartItems veya productId yok.");
+        console.error("Checkout could not be started: cartItems or productId is missing.");
         setLoading(false);
         return;
       }
@@ -57,10 +57,10 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
       if (data?.url) {
         window.location.href = data.url;
       } else {
-        console.error('Stripe yönlendirme URL’si alınamadı', data);
+        console.error('Stripe redirect URL could not be retrieved', data);
       }
     } catch (error) {
-      console.error('Stripe yönlendirme hatası:', error);
+      console.error('Stripe redirect error:', error);
     } finally {
       setLoading(false);
     }
