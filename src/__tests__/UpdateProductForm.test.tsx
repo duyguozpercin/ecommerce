@@ -4,13 +4,13 @@ import { ProductForm } from "@/types/product";
 import { UseFormRegister } from "react-hook-form";
 import '@testing-library/jest-dom';
 
-// Basit mock register fonksiyonu
+
 const mockRegister: UseFormRegister<ProductForm> = (() => {
   return () => ({ onChange: jest.fn(), onBlur: jest.fn(), name: "", ref: jest.fn() });
 })() as unknown as UseFormRegister<ProductForm>;
 
 describe("UpdateProductForm", () => {
-  it("tüm input alanlarını render etmeli", () => {
+  it("should render all input fields", () => {
     render(<UpdateProductForm register={mockRegister} errors={{}} />);
 
     expect(screen.getByLabelText("Title")).toBeInTheDocument();
@@ -23,16 +23,14 @@ describe("UpdateProductForm", () => {
     expect(screen.getByLabelText("Warranty Information")).toBeInTheDocument();
     expect(screen.getByLabelText("Shipping Information")).toBeInTheDocument();
 
-    // Select alanları
     expect(screen.getByLabelText("Category")).toBeInTheDocument();
     expect(screen.getByLabelText("Stock Status")).toBeInTheDocument();
     expect(screen.getByLabelText("Return Policy")).toBeInTheDocument();
 
-    // Checkbox alanı
     expect(screen.getByText("Tags")).toBeInTheDocument();
   });
 
-  it("errors geldiğinde hata mesajını göstermeli", () => {
+  it("should display error messages when errors are present", () => {
     const errors = {
       title: { message: "Title is required" },
       price: { message: "Price must be positive" },
@@ -44,7 +42,7 @@ describe("UpdateProductForm", () => {
     expect(screen.getByText("Price must be positive")).toBeInTheDocument();
   });
 
-  it("checkbox etkileşimini çalıştırmalı", () => {
+  it("should handle checkbox interaction", () => {
     render(<UpdateProductForm register={mockRegister} errors={{}} />);
 
     const checkbox = screen.getByLabelText("Organic") as HTMLInputElement;
@@ -53,7 +51,7 @@ describe("UpdateProductForm", () => {
     expect(checkbox.checked).toBe(true);
   });
 
-  it("select alanları değiştirilebilmeli", () => {
+  it("should allow changing select fields", () => {
     render(<UpdateProductForm register={mockRegister} errors={{}} />);
 
     const categorySelect = screen.getByLabelText("Category") as HTMLSelectElement;

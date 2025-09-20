@@ -6,9 +6,14 @@ import { useState } from "react";
 interface ImageUploaderProps {
   previewUrl: string | null;
   setPreviewUrl: (url: string | null) => void;
+  setSelectedImage: (file: File | null) => void;
 }
 
-export default function ImageUploader({ previewUrl, setPreviewUrl }: ImageUploaderProps) {
+export default function ImageUploader({
+  previewUrl,
+  setPreviewUrl,
+  setSelectedImage,
+}: ImageUploaderProps) {
   const [fileName, setFileName] = useState("No file selected");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,9 +21,11 @@ export default function ImageUploader({ previewUrl, setPreviewUrl }: ImageUpload
     if (file) {
       const preview = URL.createObjectURL(file);
       setPreviewUrl(preview);
+      setSelectedImage(file);
       setFileName(file.name);
     } else {
       setPreviewUrl(null);
+      setSelectedImage(null);
       setFileName("No file selected");
     }
   };
@@ -41,7 +48,7 @@ export default function ImageUploader({ previewUrl, setPreviewUrl }: ImageUpload
         Choose File
       </label>
       <p id="file-label" className="mt-2 text-sm text-gray-600 text-center">
-        {fileName} {/* ✅ burada dosya adı ya da default text */}
+        {fileName}
       </p>
 
       {previewUrl && (

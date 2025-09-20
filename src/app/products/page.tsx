@@ -66,6 +66,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   
                   <div
                     key={product.id}
+                    data-testid="product-card"
                     className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
                   >
                     <Link href={`/products/${product.id}`} className="w-full">

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           setRole(roleFromDb || "user");
         } catch (error) {
-          console.error("Rol alınırken hata:", error);
+          console.error("Error retrieving role:", error);
           setRole("user");
         }
       } else {

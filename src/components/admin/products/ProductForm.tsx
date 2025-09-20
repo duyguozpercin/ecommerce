@@ -1,6 +1,6 @@
 'use client';
 
-import { addNewProductAction } from "@/app/actions/admin/products";
+import { addNewProductAction } from "@/app/actions/admin/products/create";
 import { Product, Category, AvailabilityStatus, ReturnPolicy } from "@/types/product";
 import { useActionState, startTransition, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";

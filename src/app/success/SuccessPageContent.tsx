@@ -13,7 +13,7 @@ export default function SuccessPageContent() {
 
   useEffect(() => {
     if (sessionId) {
-      console.log("Kullanıcı, şu session ID ile başarı sayfasına ulaştı:", sessionId);
+      console.log("User reached the success page with this session ID:", sessionId);
       clearCart();
     }
   }, [sessionId, clearCart]);

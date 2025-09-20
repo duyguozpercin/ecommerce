@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utils/firebase";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 export default function UserDropdown() {
   const { user, role } = useAuth();
@@ -28,9 +29,14 @@ export default function UserDropdown() {
         className="flex items-center justify-center rounded-full p-2 hover:bg-neutral-200 transition"
         aria-label="User Menu"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#171212" viewBox="0 0 24 24">
-          <path d="M12 12c2.7 0 5.7 1.3 6 4v2h-12v-2c.3-2.7 3.3-4 6-4zm0-2c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z" />
-        </svg>
+      
+        <Image
+          src="/icons/user.svg"
+          alt="User Icon"
+          width={26}
+          height={26}
+          priority
+        />
       </button>
 
       {dropdownOpen && (

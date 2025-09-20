@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Product, ProductForm } from '@/types/product';
 import { productSchema } from '@/app/schemas/productSchema';
-import { updateProductAction } from '@/app/actions/updateProductAction';
+import { updateProductAction } from '@/app/actions/admin/products/update';
 import UpdateProductForm from './UpdateProductForm';
 import ImageUploader from './ImageUploader';
 import SuccessMessage from './SuccessMessage';
@@ -41,43 +41,39 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
   });
 
   const onSubmit: SubmitHandler<ProductForm> = async (data) => {
-    let imageUrl = product.images?.[0] || "";
+    
+    const formData = new FormData();
+    formData.append('id', String(product.id));
+    formData.append('title', data.title);
+    formData.append('description', data.description ?? '');
+    formData.append('category', data.category);
+    formData.append('price', String(data.price));
+    formData.append('stock', String(data.stock));
+    formData.append('brand', data.brand ?? '');
+    formData.append('sku', data.sku ?? '');
+    if (data.weight !== undefined) formData.append('weight', String(data.weight));
+    formData.append('warrantyInformation', data.warrantyInformation ?? '');
+    formData.append('shippingInformation', data.shippingInformation ?? '');
+    formData.append('availabilityStatus', data.availabilityStatus);
+    formData.append('returnPolicy', data.returnPolicy);
 
-    if (selectedImage) {
-      const fd = new FormData();
-      fd.append('file', selectedImage);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      const result = await res.json();
-      if (result.url) imageUrl = result.url as string;
-    }
-
-    const send = new FormData();
-    send.append('id', String(product.id));
-    send.append('title', data.title);
-    send.append('description', data.description ?? '');
-    send.append('category', data.category);
-    send.append('price', String(data.price));
-    send.append('stock', String(data.stock));
-    send.append('brand', data.brand ?? '');
-    send.append('sku', data.sku ?? '');
-    if (data.weight !== undefined) send.append('weight', String(data.weight));
-    send.append('warrantyInformation', data.warrantyInformation ?? '');
-    send.append('shippingInformation', data.shippingInformation ?? '');
-    send.append('availabilityStatus', data.availabilityStatus);
-    send.append('returnPolicy', data.returnPolicy);
     if (data.dimensions) {
-      send.append('dimensions.width', String(data.dimensions.width));
-      send.append('dimensions.height', String(data.dimensions.height));
-      send.append('dimensions.depth', String(data.dimensions.depth));
-    }
-    if (data.tags?.length) {
-      send.append('tags', data.tags.join(','));
-    }
-    if (imageUrl) {
-      send.append('image', imageUrl);
+      formData.append('dimensions.width', String(data.dimensions.width));
+      formData.append('dimensions.height', String(data.dimensions.height));
+      formData.append('dimensions.depth', String(data.dimensions.depth));
     }
 
-    const resp = await updateProductAction(send);
+    if (data.tags?.length) {
+      formData.append('tags', data.tags.join(','));
+    }
+
+    
+    if (selectedImage) {
+      formData.append('image', selectedImage);
+    }
+
+   
+    const resp = await updateProductAction(formData);
 
     if (resp?.success) {
       setShowSuccess(true);
@@ -98,9 +94,8 @@ export default function UpdateProduct({ product, onUpdated }: UpdateProductProps
         <ImageUploader
           previewUrl={previewUrl}
           setPreviewUrl={setPreviewUrl}
-        
+          setSelectedImage={setSelectedImage}
         />
-
         <button type="submit" disabled={isSubmitting} className="w-full bg-green-600 text-white py-2 rounded">
           {isSubmitting ? "Saving..." : "Save"}
         </button>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { renderHook, act } from "@testing-library/react";
 import { CartProvider, useCart } from "@/context/CartContext";
@@ -13,13 +12,13 @@ describe("CartContext", () => {
     jest.spyOn(Storage.prototype, "setItem");
   });
 
-  it("başlangıçta boş sepet dönmeli", () => {
+  it("should return an empty cart initially", () => {
     const { result } = renderHook(() => useCart(), { wrapper });
     expect(result.current.cart).toEqual([]);
     expect(result.current.totalItems).toBe(0);
   });
 
-  it("ürün eklenince localStorage'a kaydedilmeli", () => {
+  it("should save to localStorage when a product is added", () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {
@@ -32,7 +31,7 @@ describe("CartContext", () => {
     );
   });
 
-  it("aynı ürün eklenirse miktar artmalı", () => {
+  it("should increase quantity if the same product is added", () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {
@@ -44,7 +43,7 @@ describe("CartContext", () => {
     expect(result.current.totalItems).toBe(2);
   });
 
-  it("sayfa yenilendiğinde localStorage'daki sepet geri yüklenmeli", () => {
+  it("should restore cart from localStorage when the page reloads", () => {
     localStorage.setItem("cart", JSON.stringify([{ id: "p2", quantity: 3 }]));
 
     const { result } = renderHook(() => useCart(), { wrapper });
@@ -53,7 +52,7 @@ describe("CartContext", () => {
     expect(result.current.totalItems).toBe(3);
   });
 
-  it("clearCart hem state'i hem localStorage'ı temizlemeli", () => {
+  it("clearCart should clear both state and localStorage", () => {
     const { result } = renderHook(() => useCart(), { wrapper });
 
     act(() => {

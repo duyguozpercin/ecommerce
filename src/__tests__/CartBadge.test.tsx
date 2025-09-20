@@ -1,4 +1,3 @@
-// src/__tests__/CartBadge.test.tsx
 import { render, screen } from "@testing-library/react";
 import CartBadge from "@/components/CartBadge";
 import { CartContext } from "@/context/CartContext";
@@ -25,33 +24,30 @@ function renderWithCart(itemsCount: number) {
 }
 
 describe("CartBadge", () => {
-  it("sepet boşken badge göstermemeli", () => {
+  it("should not show badge when cart is empty", () => {
     renderWithCart(0);
 
-    
     const badge = screen.queryByText("0");
     expect(badge).not.toBeInTheDocument();
   });
 
-  it("sepette ürün varsa badge görünmeli ve doğru sayıyı göstermeli", () => {
+  it("should show badge and display correct number when cart has items", () => {
     renderWithCart(3);
 
     const badge = screen.getByText("3");
     expect(badge).toBeInTheDocument();
   });
 
-  it("Cart linki doğru yönlendirmeli", async () => {
+  it("Cart link should navigate correctly", async () => {
     renderWithCart(2);
 
     const link = screen.getByRole("link", { name: /cart/i });
     expect(link).toHaveAttribute("href", "/cart");
 
-    
     await userEvent.click(link);
-    
   });
 
-  it("erişilebilirlik için aria-label içermeli", () => {
+  it("should contain aria-label for accessibility", () => {
     renderWithCart(1);
 
     const link = screen.getByRole("link", { name: /cart/i });

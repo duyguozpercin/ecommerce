@@ -6,16 +6,16 @@ export async function POST(req: Request) {
   try {
     const { userId, cartItems } = await req.json();
 
-     console.log('📥 API çağrısı alındı');
-    console.log('🧾 Gelen cartItems:', cartItems);
+     console.log('📥 API request received');
+    console.log('🧾 Incoming cartItems:', cartItems);
     console.log('👤 userId:', userId);
 
     if (!userId) {
-      return NextResponse.json({ error: 'Kullanıcı kimliği eksik.' }, { status: 400 });
+      return NextResponse.json({ error: 'User ID is missing.' }, { status: 400 });
     }
 
     if (!Array.isArray(cartItems) || cartItems.length === 0) {
-      return NextResponse.json({ error: 'Sepet boş.' }, { status: 400 });
+      return NextResponse.json({ error: 'Cart is empty.' }, { status: 400 });
     }
 
     const line_items = await Promise.all(
@@ -24,17 +24,17 @@ export async function POST(req: Request) {
         const productSnap = await productRef.get();
 
         if (!productSnap.exists) {
-          throw new Error(`Ürün bulunamadı: ${item.id}`);
+          throw new Error(`Product not found: ${item.id}`);
         }
 
         const productData = productSnap.data();
 
         if (!productData?.stripePriceId) {
-          throw new Error(`stripePriceId eksik: ${item.id}`);
+          throw new Error(`stripePriceId is missing: ${item.id}`);
         }
 
         if (productData.stock < item.quantity) {
-          throw new Error(`Yetersiz stok: ${item.id}`);
+          throw new Error(`Insufficient stock: ${item.id}`);
         }
 
         return {

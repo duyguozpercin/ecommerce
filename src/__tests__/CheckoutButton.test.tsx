@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { CheckoutButton } from "@/components/CheckoutButton"; // dosya yolunu projene göre ayarla
+import { CheckoutButton } from "@/components/CheckoutButton";
 import { createCheckoutSession } from "@/app/actions/stripe";
 import { Product, Category } from "@/types/product";
 import '@testing-library/jest-dom';
