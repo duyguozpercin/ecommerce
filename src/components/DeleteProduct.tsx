@@ -46,6 +46,7 @@ export default function DeleteProduct({
       <button
         onClick={() => setActiveId(productId)}
         className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700 transition-colors"
+        data-testid="delete-btn"
       >
         x
       </button>
