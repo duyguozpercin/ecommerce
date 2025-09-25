@@ -40,18 +40,18 @@ export default function ProductFormComponent() {
     initialState
   );
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid }
-  } = useForm<ProductForm>({
-    resolver: zodResolver(productSchema),
-    mode: "onBlur",
-    defaultValues: {
-      category: Object.values(Category)[0],
-      availabilityStatus: Object.values(AvailabilityStatus)[0],
-    },
-  });
+const {
+  register,
+  handleSubmit,
+  formState: { errors, isValid }
+} = useForm<ProductForm>({
+  resolver: zodResolver(productSchema),
+  mode: "all",
+  defaultValues: {
+    category: Object.values(Category)[0],
+    availabilityStatus: Object.values(AvailabilityStatus)[0],
+  },
+});
 
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
     const formData = new FormData();
