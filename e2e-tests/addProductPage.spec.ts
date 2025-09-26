@@ -6,6 +6,7 @@ test.describe('Admin New Product Page E2E', () => {
   });
 
   test('fills out and submits product form and redirects', async ({ page }) => {
+    // ✅ Fill form fields
     await page.fill('input[name="title"]', 'Playwright Test Product');
     await page.fill(
       'input[name="description"]',
@@ -29,19 +30,12 @@ test.describe('Admin New Product Page E2E', () => {
 
     await page.getByLabel('Organic').check();
 
-    await page.route('**/api/admin/products', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ success: true, message: 'Product added successfully!' }),
-      });
-    });
-
+    // ✅ Submit
     const submitBtn = page.getByRole('button', { name: /create product/i });
     await expect(submitBtn).toBeEnabled();
     await submitBtn.click();
 
-    // ✅ Redirect kontrolü
+    // ✅ Redirect kontrolü (server action redirect çalışınca URL değişecek)
     await expect(page).toHaveURL(/.*\/admin\/products\/manage/);
   });
 });
