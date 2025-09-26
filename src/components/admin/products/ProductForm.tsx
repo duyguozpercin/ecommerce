@@ -2,14 +2,13 @@
 
 import { addNewProductAction } from "@/app/actions/admin/products/create";
 import { Product, Category, AvailabilityStatus, ReturnPolicy } from "@/types/product";
-import { useActionState, startTransition, useEffect } from "react";
+import { useActionState, startTransition } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import InputField from "@/components/shared/Input";
 import SelectField from "@/components/shared/select";
 import { productSchema } from "@/app/schemas/productSchema";
 import Loading from "@/components/shared/Loading";
-import { useRouter } from "next/navigation";
 import DimensionsField from "@/components/shared/DimensionsField";
 import CheckboxField from "@/components/shared/CheckboxField";
 import { ProductForm } from "@/types/product";
@@ -33,25 +32,24 @@ const initialState: NewProductFormState = {
 };
 
 export default function ProductFormComponent() {
-  const router = useRouter();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [state, formAction, isPending] = useActionState<NewProductFormState, FormData>(
     addNewProductAction,
     initialState
   );
 
-const {
-  register,
-  handleSubmit,
-  formState: { errors, isValid }
-} = useForm<ProductForm>({
-  resolver: zodResolver(productSchema),
-  mode: "all",
-  defaultValues: {
-    category: Object.values(Category)[0],
-    availabilityStatus: Object.values(AvailabilityStatus)[0],
-  },
-});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid }
+  } = useForm<ProductForm>({
+    resolver: zodResolver(productSchema),
+    mode: "all",
+    defaultValues: {
+      category: Object.values(Category)[0],
+      availabilityStatus: Object.values(AvailabilityStatus)[0],
+    },
+  });
 
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
     const formData = new FormData();
@@ -89,12 +87,6 @@ const {
       formAction(formData);
     });
   };
-
-  useEffect(() => {
-    if (state.success) {
-      router.push("/admin/products/manage");
-    }
-  }, [state.success, router]);
 
   if (isPending) return <Loading />;
 
