@@ -7,7 +7,7 @@ import { stripe } from "@/utils/stripe";
 import { NewProductFormState } from "@/components/admin/products/ProductForm";
 import type { Product } from "@/types/product";
 import { productSchema, formDataToRawProduct } from "./schema";
-import { redirect } from "next/navigation";
+
 
 export async function addNewProductAction(
   _currentState: NewProductFormState,
@@ -103,7 +103,11 @@ export async function addNewProductAction(
     await setDoc(doc(db, collections.products, id), finalData);
 
   
-    redirect("/admin/products/manage");
+   return {
+  success: true,
+  message: "Product created successfully!",
+  data: finalData,
+};
   } catch (err) {
     console.error("Create product error:", err);
     return { success: false, message: "An error occurred while adding the product.", inputs: raw as any };

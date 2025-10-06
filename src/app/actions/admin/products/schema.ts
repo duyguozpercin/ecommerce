@@ -2,18 +2,18 @@ import { z } from "zod";
 import type { ProductForm } from "@/types/product";
 import { AvailabilityStatus, ReturnPolicy, Category } from "@/types/product";
 
-
+// ✅ Hem File hem URL kabul ediyor (Blob öncesi & sonrası)
 export const productSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(3).max(100),
-  description: z.string().min(50).max(500),
+  title: z.string().min(3, "Title must be at least 3 characters long.").max(100),
+  description: z.string().min(50, "Description must be at least 50 characters long.").max(500),
   category: z.nativeEnum(Category as any),
-  price: z.number().min(0),
-  stock: z.number().min(0),
-  brand: z.string().min(1),
+  price: z.number().min(0, "Price must be at least 0."),
+  stock: z.number().min(0, "Stock must be at least 0."),
+  brand: z.string().min(1, "Brand is required."),
   availabilityStatus: z.nativeEnum(AvailabilityStatus as any),
   returnPolicy: z.nativeEnum(ReturnPolicy as any),
-  tags: z.array(z.string()).min(1).optional(),
+  tags: z.array(z.string()).min(1, "At least one tag must be selected.").optional(),
   sku: z.string().min(1).max(50),
   weight: z.number().min(1).optional(),
   warrantyInformation: z.string().min(1).optional(),
@@ -25,16 +25,24 @@ export const productSchema = z.object({
       depth: z.number().min(1),
     })
     .optional(),
-  image: z.string().url().optional(),
-});
 
+  // ✅ images artık hem File hem URL olabilir
+  images: z
+    .union([
+      z.instanceof(File),       // formData’dan File geldiğinde
+      z.string().url(),         // Blob yüklemesi sonrası URL olduğunda
+    ])
+    .optional(),
+});
 
 export type ProductFormInput = Partial<ProductForm> & {
   id?: string;
-  image?: string;
+  images?: File | string; // ✅ File veya string URL olabilir
 };
 
 export function formDataToRawProduct(formData: FormData): ProductFormInput {
+  const imageValue = formData.get("images");
+
   return {
     id: formData.get("id")?.toString(),
     title: formData.get("title")?.toString(),
@@ -49,6 +57,7 @@ export function formDataToRawProduct(formData: FormData): ProductFormInput {
     weight: formData.get("weight") ? parseFloat(String(formData.get("weight"))) : undefined,
     warrantyInformation: formData.get("warrantyInformation")?.toString(),
     shippingInformation: formData.get("shippingInformation")?.toString(),
+
     dimensions: formData.get("dimensions.width")
       ? {
           width: parseFloat(String(formData.get("dimensions.width"))),
@@ -56,8 +65,13 @@ export function formDataToRawProduct(formData: FormData): ProductFormInput {
           depth: parseFloat(String(formData.get("dimensions.depth"))),
         }
       : undefined,
+
     tags:
       (formData.get("tags") as string)?.split(",").map(t => t.trim()).filter(Boolean) || [],
-    image: formData.get("image")?.toString(),
+
+    // ✅ File geldiyse File olarak, URL geldiyse string olarak döner
+     images: imageValue
+    ? (imageValue instanceof File ? imageValue : imageValue.toString())
+    : undefined,
   };
 }

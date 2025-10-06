@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { productSchema } from '@/app/schemas/productSchema';
 
 
+
 export type ProductForm = z.infer<typeof productSchema>;
 
 
@@ -17,6 +18,7 @@ export interface Product {
   tags?: string[];
   brand?: string;
   sku?: string;
+  images?: string[];
   weight?: number;
   dimensions?: Dimensions;
   warrantyInformation?: string;
@@ -26,7 +28,8 @@ export interface Product {
   returnPolicy?: ReturnPolicy;
   minimumOrderQuantity?: number;
   meta?: Meta;
-  images?: string[];
+  
+
   thumbnail?: string;
   stripeProductId?: string;
   stripePriceId?: string;

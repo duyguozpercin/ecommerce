@@ -17,14 +17,15 @@ export default function ProductTablePage({
 
   return (
     <div className="mx-auto max-w-5xl w-full px-4">
-      
+      {/* ✅ Mobile view */}
       <div className="space-y-4 sm:hidden">
         {products.map((product) => (
           <div
             key={product.id}
+            data-testid="product-card"  // ⬅️ TEST-ID eklendi
             className="flex flex-col bg-white rounded-lg shadow p-4 border border-gray-200 hover:shadow-md transition-shadow gap-3"
           >
-            
+            {/* Image */}
             <div className="mx-auto">
               {product.images?.[0] ? (
                 <Image
@@ -41,13 +42,13 @@ export default function ProductTablePage({
               )}
             </div>
 
-            
+            {/* Title + Price */}
             <div className="text-center">
               <p className="font-medium text-gray-800">{product.title}</p>
               <p className="text-sm text-gray-500">${product.price}</p>
             </div>
 
-          
+            {/* Actions */}
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => onEdit(product)}
@@ -70,7 +71,7 @@ export default function ProductTablePage({
         ))}
       </div>
 
-      
+      {/* ✅ Table view */}
       <div className="hidden sm:table w-full border border-gray-200 rounded-lg shadow bg-white">
         <table className="w-full border-collapse">
           <thead>
@@ -85,9 +86,10 @@ export default function ProductTablePage({
             {products.map((product) => (
               <tr
                 key={product.id}
+                data-testid="product-card"  // ⬅️ TEST-ID eklendi
                 className="border-t hover:bg-gray-50 transition-colors"
               >
-                
+                {/* Image */}
                 <td className="p-3">
                   {product.images?.[0] ? (
                     <Image
@@ -104,13 +106,13 @@ export default function ProductTablePage({
                   )}
                 </td>
 
-                
+                {/* Title */}
                 <td className="p-3 font-medium text-gray-800">{product.title}</td>
 
-                
+                {/* Price */}
                 <td className="p-3 text-gray-600">${product.price}</td>
 
-                
+                {/* Actions */}
                 <td className="p-3 text-right">
                   <div className="flex gap-3 justify-end">
                     <button

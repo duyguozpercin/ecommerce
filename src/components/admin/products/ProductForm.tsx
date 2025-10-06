@@ -12,8 +12,9 @@ import Loading from "@/components/shared/Loading";
 import DimensionsField from "@/components/shared/DimensionsField";
 import CheckboxField from "@/components/shared/CheckboxField";
 import { ProductForm } from "@/types/product";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageUploader from "@/components/admin/products/ImageUploader";
+import { useRouter } from "next/navigation";
 
 export interface NewProductFormState {
   success: boolean;
@@ -32,7 +33,9 @@ const initialState: NewProductFormState = {
 };
 
 export default function ProductFormComponent() {
+  const router = useRouter();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [state, formAction, isPending] = useActionState<NewProductFormState, FormData>(
     addNewProductAction,
     initialState
@@ -41,7 +44,7 @@ export default function ProductFormComponent() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
   } = useForm<ProductForm>({
     resolver: zodResolver(productSchema),
     mode: "all",
@@ -52,41 +55,97 @@ export default function ProductFormComponent() {
   });
 
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
+    console.log("🟢 Form submit triggered");
+    console.log("Form values:", data);
+    console.log("Selected file in state:", selectedFile);
+
     const formData = new FormData();
 
+    // bütün inputları tek tek logluyoruz:
     formData.append("title", data.title);
-    if (data.description) formData.append("description", data.description);
-    formData.append("price", data.price.toString());
-    formData.append("stock", data.stock.toString());
-    formData.append("category", data.category);
-    formData.append("availabilityStatus", data.availabilityStatus);
+    console.log("📦 Title:", data.title);
 
-    if (data.brand) formData.append("brand", data.brand);
-    if (data.returnPolicy) formData.append("returnPolicy", data.returnPolicy);
-    if (data.sku) formData.append("sku", data.sku);
-    if (data.weight) formData.append("weight", data.weight.toString());
-    if (data.warrantyInformation) formData.append("warrantyInformation", data.warrantyInformation);
-    if (data.shippingInformation) formData.append("shippingInformation", data.shippingInformation);
+    if (data.description) {
+      formData.append("description", data.description);
+      console.log("📦 Description:", data.description);
+    }
+
+    formData.append("price", data.price.toString());
+    console.log("📦 Price:", data.price);
+
+    formData.append("stock", data.stock.toString());
+    console.log("📦 Stock:", data.stock);
+
+    formData.append("category", data.category);
+    console.log("📦 Category:", data.category);
+
+    formData.append("availabilityStatus", data.availabilityStatus);
+    console.log("📦 Availability:", data.availabilityStatus);
+
+    if (data.brand) {
+      formData.append("brand", data.brand);
+      console.log("📦 Brand:", data.brand);
+    }
+
+    if (data.returnPolicy) {
+      formData.append("returnPolicy", data.returnPolicy);
+      console.log("📦 ReturnPolicy:", data.returnPolicy);
+    }
+
+    if (data.sku) {
+      formData.append("sku", data.sku);
+      console.log("📦 SKU:", data.sku);
+    }
+
+    if (data.weight) {
+      formData.append("weight", data.weight.toString());
+      console.log("📦 Weight:", data.weight);
+    }
+
+    if (data.warrantyInformation) {
+      formData.append("warrantyInformation", data.warrantyInformation);
+      console.log("📦 Warranty:", data.warrantyInformation);
+    }
+
+    if (data.shippingInformation) {
+      formData.append("shippingInformation", data.shippingInformation);
+      console.log("📦 Shipping:", data.shippingInformation);
+    }
 
     if (data.dimensions) {
       formData.append("dimensions.width", data.dimensions.width.toString());
       formData.append("dimensions.height", data.dimensions.height.toString());
       formData.append("dimensions.depth", data.dimensions.depth.toString());
+      console.log("📦 Dimensions:", data.dimensions);
     }
 
     if (data.tags && data.tags.length > 0) {
       formData.append("tags", data.tags.join(','));
+      console.log("📦 Tags:", data.tags);
     }
 
-    const imageInput = document.getElementById("image") as HTMLInputElement;
-    if (imageInput?.files?.[0]) {
-      formData.append("image", imageInput.files[0]);
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+      console.log("📸 Image appended:", selectedFile.name, selectedFile.size, selectedFile.type);
+    } else {
+      console.warn("⚠️ No selected file detected before submission");
     }
+
+    console.log("🚀 Final FormData keys:", Array.from(formData.keys()));
 
     startTransition(() => {
       formAction(formData);
     });
   };
+
+  useEffect(() => {
+    if (state.success) {
+      console.log("✅ Product successfully created, redirecting...");
+      router.push("/admin/products/manage");
+    } else if (state.message) {
+      console.warn("❌ Form submit failed:", state.message);
+    }
+  }, [state, router]);
 
   if (isPending) return <Loading />;
 
@@ -111,7 +170,12 @@ export default function ProductFormComponent() {
       <SelectField label="Stock Status" options={Object.values(AvailabilityStatus)} {...register("availabilityStatus")} error={errors.availabilityStatus?.message} />
       <SelectField label="Return Policy" options={Object.values(ReturnPolicy)} {...register("returnPolicy")} error={errors.returnPolicy?.message} />
 
-      <ImageUploader previewUrl={previewUrl} setPreviewUrl={setPreviewUrl} />
+      <ImageUploader
+        previewUrl={previewUrl}
+        setPreviewUrl={setPreviewUrl}
+        register={register}
+        setSelectedFile={setSelectedFile}
+      />
 
       <button
         type="submit"
