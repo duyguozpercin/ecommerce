@@ -10,7 +10,7 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     await page.fill('input[name="title"]', 'Test Product');
     await page.fill(
       'input[name="description"]',
-      'This is a long test description that passes validation.'
+      'This is a long test description that passes validation and contains more than fifty characters.'
     );
     await page.fill('input[name="price"]', '99');
     await page.fill('input[name="stock"]', '5');
@@ -29,9 +29,9 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     await page.check('input[name="tags"][value="Eco-Friendly"]');
 
     const filePath = path.resolve(__dirname, 'fixtures/test-image.png');
-    await page.setInputFiles('input[name="image"]', filePath);
+    await page.setInputFiles('input[type="file"][id="image"]', filePath);
 
-  
+    // Mock network route
     await page.route('**/api/admin/products', async (route) => {
       await route.fulfill({
         status: 200,
@@ -44,7 +44,8 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     await expect(submitBtn).toBeEnabled();
     await submitBtn.click();
 
-  
-    await expect(submitBtn).toBeVisible();
+    // ✅ Form gönderilince buton kaybolmalı ve loading görünmeli
+    await expect(submitBtn).not.toBeVisible();
+    await expect(page.getByText(/loading/i)).toBeVisible();
   });
 });
