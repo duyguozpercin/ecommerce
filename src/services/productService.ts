@@ -12,14 +12,9 @@ import {
 import { db, collections } from "@/utils/firebase";
 import { Product } from "@/types/product";
 
-/**
- * ✅ Firestore + Test uyumlu ürün servisleri
- * - Test sırasında globalThis veya window.__mockProducts__ varsa onu döner.
- * - Normal kullanımda Firestore'dan veri çeker.
- */
 export const getAllProducts = async (): Promise<Product[]> => {
   try {
-    // 🧪 1️⃣ TEST ORTAMI: Mock veri varsa onu döndür
+  
     const globalMock =
       (typeof globalThis !== "undefined" && (globalThis as any).__mockProducts__) ||
       (typeof window !== "undefined" && (window as any).__mockProducts__);
@@ -29,7 +24,6 @@ export const getAllProducts = async (): Promise<Product[]> => {
       return globalMock as Product[];
     }
 
-    // 🧩 2️⃣ NORMAL FIRESTORE SORGUSU (production)
     const q = query(collection(db, collections.products), orderBy("title", "asc"));
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Product));

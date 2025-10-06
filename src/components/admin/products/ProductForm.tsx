@@ -55,83 +55,34 @@ export default function ProductFormComponent() {
   });
 
   const onSubmit: SubmitHandler<ProductForm> = (data) => {
-    console.log("🟢 Form submit triggered");
-    console.log("Form values:", data);
-    console.log("Selected file in state:", selectedFile);
-
     const formData = new FormData();
 
-    // bütün inputları tek tek logluyoruz:
     formData.append("title", data.title);
-    console.log("📦 Title:", data.title);
-
-    if (data.description) {
-      formData.append("description", data.description);
-      console.log("📦 Description:", data.description);
-    }
-
+    if (data.description) formData.append("description", data.description);
     formData.append("price", data.price.toString());
-    console.log("📦 Price:", data.price);
-
     formData.append("stock", data.stock.toString());
-    console.log("📦 Stock:", data.stock);
-
     formData.append("category", data.category);
-    console.log("📦 Category:", data.category);
-
     formData.append("availabilityStatus", data.availabilityStatus);
-    console.log("📦 Availability:", data.availabilityStatus);
-
-    if (data.brand) {
-      formData.append("brand", data.brand);
-      console.log("📦 Brand:", data.brand);
-    }
-
-    if (data.returnPolicy) {
-      formData.append("returnPolicy", data.returnPolicy);
-      console.log("📦 ReturnPolicy:", data.returnPolicy);
-    }
-
-    if (data.sku) {
-      formData.append("sku", data.sku);
-      console.log("📦 SKU:", data.sku);
-    }
-
-    if (data.weight) {
-      formData.append("weight", data.weight.toString());
-      console.log("📦 Weight:", data.weight);
-    }
-
-    if (data.warrantyInformation) {
-      formData.append("warrantyInformation", data.warrantyInformation);
-      console.log("📦 Warranty:", data.warrantyInformation);
-    }
-
-    if (data.shippingInformation) {
-      formData.append("shippingInformation", data.shippingInformation);
-      console.log("📦 Shipping:", data.shippingInformation);
-    }
+    if (data.brand) formData.append("brand", data.brand);
+    if (data.returnPolicy) formData.append("returnPolicy", data.returnPolicy);
+    if (data.sku) formData.append("sku", data.sku);
+    if (data.weight) formData.append("weight", data.weight.toString());
+    if (data.warrantyInformation) formData.append("warrantyInformation", data.warrantyInformation);
+    if (data.shippingInformation) formData.append("shippingInformation", data.shippingInformation);
 
     if (data.dimensions) {
       formData.append("dimensions.width", data.dimensions.width.toString());
       formData.append("dimensions.height", data.dimensions.height.toString());
       formData.append("dimensions.depth", data.dimensions.depth.toString());
-      console.log("📦 Dimensions:", data.dimensions);
     }
 
     if (data.tags && data.tags.length > 0) {
       formData.append("tags", data.tags.join(','));
-      console.log("📦 Tags:", data.tags);
     }
 
     if (selectedFile) {
       formData.append("image", selectedFile);
-      console.log("📸 Image appended:", selectedFile.name, selectedFile.size, selectedFile.type);
-    } else {
-      console.warn("⚠️ No selected file detected before submission");
     }
-
-    console.log("🚀 Final FormData keys:", Array.from(formData.keys()));
 
     startTransition(() => {
       formAction(formData);
@@ -140,10 +91,7 @@ export default function ProductFormComponent() {
 
   useEffect(() => {
     if (state.success) {
-      console.log("✅ Product successfully created, redirecting...");
       router.push("/admin/products/manage");
-    } else if (state.message) {
-      console.warn("❌ Form submit failed:", state.message);
     }
   }, [state, router]);
 

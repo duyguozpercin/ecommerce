@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { ProductForm } from "@/types/product";
 import { AvailabilityStatus, ReturnPolicy, Category } from "@/types/product";
 
-// ✅ Hem File hem URL kabul ediyor (Blob öncesi & sonrası)
+
 export const productSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(3, "Title must be at least 3 characters long.").max(100),
@@ -26,18 +26,17 @@ export const productSchema = z.object({
     })
     .optional(),
 
-  // ✅ images artık hem File hem URL olabilir
   images: z
     .union([
-      z.instanceof(File),       // formData’dan File geldiğinde
-      z.string().url(),         // Blob yüklemesi sonrası URL olduğunda
+      z.instanceof(File),
+      z.string().url(), 
     ])
     .optional(),
 });
 
 export type ProductFormInput = Partial<ProductForm> & {
   id?: string;
-  images?: File | string; // ✅ File veya string URL olabilir
+  images?: File | string;
 };
 
 export function formDataToRawProduct(formData: FormData): ProductFormInput {
@@ -69,7 +68,7 @@ export function formDataToRawProduct(formData: FormData): ProductFormInput {
     tags:
       (formData.get("tags") as string)?.split(",").map(t => t.trim()).filter(Boolean) || [],
 
-    // ✅ File geldiyse File olarak, URL geldiyse string olarak döner
+
      images: imageValue
     ? (imageValue instanceof File ? imageValue : imageValue.toString())
     : undefined,

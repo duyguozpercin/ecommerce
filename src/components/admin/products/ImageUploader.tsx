@@ -38,7 +38,6 @@ export default function ImageUploader({
     }
   };
 
-  // ✅ Artık sadece component unmount olduğunda blob temizleniyor (erken silinme yok)
   useEffect(() => {
     console.log("💡 Current previewUrl:", previewUrl);
     return () => {
@@ -47,7 +46,7 @@ export default function ImageUploader({
         console.log("🧹 Preview URL revoked:", previewUrl);
       }
     };
-  }, []); // 👈 sadece component kapanınca çalışır
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
@@ -74,11 +73,10 @@ export default function ImageUploader({
         {fileName}
       </p>
 
-      {/* ✅ Güvenli blob render + yeniden oluşturma */}
       {previewUrl && previewUrl.startsWith("blob:") && (
         <div className="relative mt-4 w-full h-40">
           <Image
-            key={previewUrl} // blob değişirse yeniden oluşturur
+            key={previewUrl}
             src={previewUrl}
             alt="Preview"
             fill

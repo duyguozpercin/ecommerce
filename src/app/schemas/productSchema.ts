@@ -2,7 +2,7 @@ import { z } from "zod";
 import { AvailabilityStatus, Category, ReturnPolicy } from "@/types/product";
 
 export const productSchema = z.object({
-  // --- Gerekli alanlar ---
+ 
   title: z.string().min(3, "Title must be at least 3 characters long.").max(100),
   category: z.nativeEnum(Category),
   price: z.number({ invalid_type_error: "Price must be a number." }).min(0),
@@ -10,14 +10,14 @@ export const productSchema = z.object({
   availabilityStatus: z.nativeEnum(AvailabilityStatus),
   returnPolicy: z.nativeEnum(ReturnPolicy),
 
-  // --- Nesne içi ölçüler ---
+
   dimensions: z.object({
     width: z.number({ invalid_type_error: "Width must be a number." }).min(0.1),
     height: z.number({ invalid_type_error: "Height must be a number." }).min(0.1),
     depth: z.number({ invalid_type_error: "Depth must be a number." }).min(0.1),
   }).optional(),
 
-  // --- Opsiyonel alanlar ---
+
   description: z.string().min(10, "Description must be at least 10 characters long.").max(500).optional(),
   brand: z.string().min(1).optional(),
   tags: z.array(z.string()).min(1, "At least one tag must be selected.").optional(),
@@ -26,13 +26,6 @@ export const productSchema = z.object({
   warrantyInformation: z.string().min(1).optional(),
   shippingInformation: z.string().min(1).optional(),
 
-  // --- 🔥 Kritik alan: images ---
-  /**
-   * Bu alan hem `File` (FormData’dan gelen) hem `string` (Vercel Blob URL)
-   * türlerini destekler.
-   * Eğer birden fazla resim yüklenecekse array yapısı uygundur.
-   * Eğer tek resim varsa `.array()` yerine direkt `.optional()` da kullanılabilir.
-   */
  images: z
   .union([
     z.instanceof(File),

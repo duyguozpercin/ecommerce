@@ -31,7 +31,6 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     const filePath = path.resolve(__dirname, 'fixtures/test-image.png');
     await page.setInputFiles('input[type="file"][id="image"]', filePath);
 
-    // Mock network route
     await page.route('**/api/admin/products', async (route) => {
       await route.fulfill({
         status: 200,
@@ -44,7 +43,6 @@ test.describe('Admin New Product Page E2E - Mock', () => {
     await expect(submitBtn).toBeEnabled();
     await submitBtn.click();
 
-    // ✅ Form gönderilince buton kaybolmalı ve loading görünmeli
     await expect(submitBtn).not.toBeVisible();
     await expect(page.getByText(/loading/i)).toBeVisible();
   });
