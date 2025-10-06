@@ -40,7 +40,7 @@ export async function updateProductAction(formData: FormData): Promise<ActionRes
     const existing = { id: snap.id, ...snap.data() } as Product;
 
     
-    let imageUrl = data.image ?? "";
+    let imageUrl = data.images ?? "";
     const imageFile = formData.get("image") as File | null;
     if (imageFile && imageFile.size > 0) {
       const MAX = 4.5 * 1024 * 1024;
