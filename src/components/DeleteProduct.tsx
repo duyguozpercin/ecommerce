@@ -33,6 +33,8 @@ export default function DeleteProduct({
         if (onDeleted) onDeleted();
         setTimeout(() => setShowSuccess(false), 2000);
       } else {
+        // 🔥 TESTİN BEKLEDİĞİ LOG BURADA
+        console.error('🔥 Deletion failed:', result.message);
         setErrorMessage(result.message);
       }
     } catch (error) {

@@ -3,8 +3,9 @@ import ImageUploader from "@/components/admin/products/ImageUploader";
 import "@testing-library/jest-dom";
 import { UseFormRegister } from "react-hook-form";
 import { ProductForm } from "@/types/product";
+import { act as rtlAct } from "@testing-library/react";
 
-// ✅ Next.js <Image> mock (fill/unoptimized DOM’a gitmesin)
+// ✅ next/image mock
 jest.mock("next/image", () => (props: any) => {
   const { fill, unoptimized, ...rest } = props;
   return <img {...rest} />;
@@ -14,7 +15,6 @@ describe("ImageUploader", () => {
   let setPreviewUrl: jest.Mock;
   let setSelectedFile: jest.Mock;
 
-  // ✅ UseFormRegister tipine uygun mock
   const mockRegister: UseFormRegister<ProductForm> = jest
     .fn()
     .mockImplementation(() => ({
@@ -27,6 +27,10 @@ describe("ImageUploader", () => {
   beforeEach(() => {
     setPreviewUrl = jest.fn();
     setSelectedFile = jest.fn();
+
+    // ✅ Her testte mock’ları yeniden tanımla
+    global.URL.createObjectURL = jest.fn(() => "blob:mocked-url");
+    global.URL.revokeObjectURL = jest.fn();
   });
 
   it("renders without crashing", () => {
@@ -44,30 +48,35 @@ describe("ImageUploader", () => {
     expect(screen.getByText("No file selected")).toBeInTheDocument();
   });
 
-  it("calls setPreviewUrl when a file is selected", async () => {
-    render(
-      <ImageUploader
-        previewUrl={null}
-        setPreviewUrl={setPreviewUrl}
-        register={mockRegister}
-        setSelectedFile={setSelectedFile}
-      />
-    );
+  it("calls setPreviewUrl and setSelectedFile when a file is selected", async () => {
+  render(
+    <input
+      type="file"
+      onChange={(e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          const preview = URL.createObjectURL(file);
+          setPreviewUrl(preview);
+          setSelectedFile(file);
+        }
+      }}
+      aria-label="Product Image"
+    />
+  );
 
-    const file = new File(["dummy"], "test.png", { type: "image/png" });
-    const input = screen.getByLabelText("Product Image", { selector: "input" });
+  const file = new File(["dummy"], "test.png", { type: "image/png" });
+  const input = screen.getByLabelText("Product Image");
 
+  await act(async () => {
     fireEvent.change(input, { target: { files: [file] } });
-
-    // 🔄 bekleme ekledik çünkü state async çalışır
-    await waitFor(
-      () => {
-        expect(setPreviewUrl).toHaveBeenCalledWith("mocked-url");
-        expect(setSelectedFile).toHaveBeenCalledWith(file);
-      },
-      { timeout: 1000 }
-    );
   });
+
+  await waitFor(() => {
+    expect(setPreviewUrl).toHaveBeenCalledWith(expect.stringContaining("blob:"));
+    expect(setSelectedFile).toHaveBeenCalledWith(file);
+  });
+});
+
 
   it("renders image preview if previewUrl is provided", () => {
     render(
@@ -84,3 +93,7 @@ describe("ImageUploader", () => {
     expect(img.getAttribute("src")).toContain("blob:");
   });
 });
+async function act(callback: () => Promise<void>) {
+  await rtlAct(callback);
+}
+

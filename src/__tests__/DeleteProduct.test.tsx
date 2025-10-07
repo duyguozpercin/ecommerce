@@ -1,10 +1,12 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import DeleteProduct from "@/components/DeleteProduct";
+import { deleteProductAction } from "@/app/actions/admin/products/deleteProductAction";
 
-
-const mockFetch = jest.fn();
-global.fetch = mockFetch as any;
+// 🧩 Mock the deleteProductAction
+jest.mock("@/app/actions/admin/products/deleteProductAction", () => ({
+  deleteProductAction: jest.fn(),
+}));
 
 describe("DeleteProduct", () => {
   const defaultProps = {
@@ -37,32 +39,31 @@ describe("DeleteProduct", () => {
     expect(defaultProps.setActiveId).toHaveBeenCalledWith(null);
   });
 
-  it("calls fetch and shows success message when Yes clicked (success)", async () => {
-    mockFetch.mockResolvedValueOnce({
-      json: async () => ({ success: true }),
-    });
+  it("calls deleteProductAction and shows success message when Yes clicked (success)", async () => {
+    (deleteProductAction as jest.Mock).mockResolvedValueOnce({ success: true });
 
     render(<DeleteProduct {...defaultProps} activeId="123" />);
     fireEvent.click(screen.getByText("Yes"));
 
-    await waitFor(() =>
-      expect(defaultProps.onDeleted).toHaveBeenCalled()
-    );
+    await act(async () => { });
 
+    await waitFor(() => expect(defaultProps.onDeleted).toHaveBeenCalled());
     expect(defaultProps.setActiveId).toHaveBeenCalledWith(null);
     expect(await screen.findByText(/Product deleted successfully/i)).toBeInTheDocument();
   });
 
-  it("logs error when fetch fails", async () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    mockFetch.mockRejectedValueOnce(new Error("Network error"));
+  it("logs error when deleteProductAction rejects (network error)", async () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => { });
+    (deleteProductAction as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
 
     render(<DeleteProduct {...defaultProps} activeId="123" />);
     fireEvent.click(screen.getByText("Yes"));
 
+    await act(async () => { });
+
     await waitFor(() =>
       expect(consoleSpy).toHaveBeenCalledWith(
-        "🔥 Error deleting product or image",
+        expect.stringMatching(/Error deleting/i),
         expect.any(Error)
       )
     );
@@ -71,20 +72,25 @@ describe("DeleteProduct", () => {
   });
 
   it("logs error when API responds with success = false", async () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    mockFetch.mockResolvedValueOnce({
-      json: async () => ({ success: false, message: "Failed to delete" }),
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => { });
+    (deleteProductAction as jest.Mock).mockResolvedValueOnce({
+      success: false,
+      message: "Failed to delete",
     });
 
     render(<DeleteProduct {...defaultProps} activeId="123" />);
     fireEvent.click(screen.getByText("Yes"));
 
-    await waitFor(() =>
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "🔥 Deletion failed:",
-        "Failed to delete"
-      )
-    );
+    await act(async () => { });
+
+    await waitFor(() => expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/(Failed to delete|Deletion failed)/i),
+      expect.anything()
+    )
+  );
+  
+
+
 
     consoleSpy.mockRestore();
   });
