@@ -32,9 +32,6 @@ describe("ProductTablePage", () => {
     { id: "1", title: "Chair", price: 100, images: ["/chair.png"] } as Product,
   ];
 
-  // -------------------------
-  // Desktop
-  // -------------------------
   it("renders product correctly inside table row (desktop view)", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
     const rows = screen.getAllByRole("row");
@@ -62,9 +59,7 @@ describe("ProductTablePage", () => {
     expect(deleteButton).toBeInTheDocument();
   });
 
-  // -------------------------
-  // Mobile
-  // -------------------------
+
   it("renders product correctly inside mobile card", () => {
     render(<ProductTablePage products={products} onEdit={jest.fn()} />);
     const cards = screen.getAllByText("Chair");
