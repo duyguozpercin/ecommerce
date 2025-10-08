@@ -3,7 +3,6 @@ import "@testing-library/jest-dom";
 import DeleteProduct from "@/components/DeleteProduct";
 import { deleteProductAction } from "@/app/actions/admin/products/deleteProductAction";
 
-// 🧩 Mock the deleteProductAction
 jest.mock("@/app/actions/admin/products/deleteProductAction", () => ({
   deleteProductAction: jest.fn(),
 }));
@@ -89,8 +88,6 @@ describe("DeleteProduct", () => {
     )
   );
   
-
-
 
     consoleSpy.mockRestore();
   });

@@ -5,7 +5,6 @@ import { UseFormRegister } from "react-hook-form";
 import { ProductForm } from "@/types/product";
 import { act as rtlAct } from "@testing-library/react";
 
-// ✅ next/image mock
 jest.mock("next/image", () => (props: any) => {
   const { fill, unoptimized, ...rest } = props;
   return <img {...rest} />;
@@ -28,7 +27,6 @@ describe("ImageUploader", () => {
     setPreviewUrl = jest.fn();
     setSelectedFile = jest.fn();
 
-    // ✅ Her testte mock’ları yeniden tanımla
     global.URL.createObjectURL = jest.fn(() => "blob:mocked-url");
     global.URL.revokeObjectURL = jest.fn();
   });
