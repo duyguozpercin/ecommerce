@@ -50,9 +50,9 @@ export default function Navbar() {
           {user && (
             <button
               onClick={() => signOut(auth)}
-              className="text-xs text-red-500 hover:underline"
+              className="text-xs text-gray-700 hover:underline"
             >
-              Logout
+              Log Out
             </button>
           )}
         </div>
