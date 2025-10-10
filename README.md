@@ -1,4 +1,4 @@
-# 🛍️ Ecom – Full-Stack E-commerce Application
+# 🛍️Full-Stack E-commerce Application
 
 A modern and scalable **e-commerce web application** built with **Next.js (App Router)** and **React 19**, designed for a seamless online shopping experience.  
 The project integrates **Firebase**, **Stripe**, **Vercel Blob**, and **Resend** for a production-ready workflow — including authentication, payments, file storage, and transactional emails.
