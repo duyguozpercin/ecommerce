@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import HeroSlider from "@/components/HeroSlider";
 import AddToCartButton from "@/components/AddToCartButton";
 import { BuyButton } from "./BuyButton";
+import FavoriteButton from "@/components/FavoriteButton";
 
 interface HomeProps {
   searchParams?: { [key: string]: string | string[] | undefined };
@@ -49,6 +50,8 @@ export default async function Home({ searchParams }: HomeProps) {
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     priority
                   />
+                  <FavoriteButton productId={String(product.id)} />
+
                 </div>
 
                 <h2 className="text-sm sm:text-base font-semibold text-center">{product.brand}</h2>

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import { CartProvider } from "../context/CartContext"
 import { AuthProvider } from "../context/AuthContext";
+import { FavoritesProvider } from "../context/FavoriteContext";
 
 
 
@@ -35,12 +36,14 @@ export default function RootLayout({
           style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
         >
           <div className="layout-container flex h-full grow flex-col bg-orange-50">
+            <FavoritesProvider>
             <CartProvider>
               <AuthProvider>
                 <Navbar />
                 <main className="flex-1">{children}</main>
               </AuthProvider>
             </CartProvider>
+            </FavoritesProvider>
           </div>
         </div>
       </body>
