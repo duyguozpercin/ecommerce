@@ -15,7 +15,10 @@ const FavoriteButton = ({ productId }: FavoriteButtonProps) => {
 
   return (
     <button
-      onClick={() => toggleFavorite(productId)}
+      onClick={(e) => {
+        e.stopPropagation();
+        toggleFavorite(productId);
+      }}
       className="absolute top-2 right-2 text-xl cursor-pointer transition-transform hover:scale-110"
     >
       {favorite ? (

@@ -17,7 +17,6 @@ const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       if (prevFavorites.includes(productId)) {
         return prevFavorites.filter((id) => id !== productId);
       }
-      // ensure we always return a string[] (no undefined)
       return [...prevFavorites, productId];
     });
   }
