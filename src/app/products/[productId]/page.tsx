@@ -5,6 +5,7 @@ import Image from "next/image";
 import AddToCartButton from "@/components/AddToCartButton";
 import { BuyButton } from "@/app/BuyButton";
 import Link from "next/link";
+import FavoriteButton from "@/components/FavoriteButton";
 
 interface ProductDetailPageProps {
   params: { productId: string };
@@ -39,6 +40,7 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
             >
               Back to Products
             </Link>
+
           </div>
         </div>
       );
@@ -51,13 +53,17 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
         <div className="product-details bg-white shadow-md rounded-lg p-6">
           <h1 className="text-3xl font-bold mb-4 text-neutral-900">{product.title}</h1>
 
-          <Image
-            src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
-            alt={product.title}
-            width={500}
-            height={500}
-            className="w-full rounded mb-4 object-cover"
-          />
+          <div className="relative w-full mb-4">
+            <Image
+              src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
+              alt={product.title}
+              width={500}
+              height={500}
+              className="w-full rounded object-cover"
+            />
+            
+            <FavoriteButton productId={productId} />
+          </div>
 
           <h3 className="font-bold text-neutral-800">Description:</h3>
           <p className="mb-2 text-neutral-700">{product.description}</p>
@@ -76,7 +82,9 @@ export default async function ProductDetail({ params, searchParams }: ProductDet
           <div className="flex flex-row items-center gap-x-4">
             <AddToCartButton product={{ ...product, id: productId }} />
             <BuyButton productId={String(product.id)} />
+
           </div>
+
         </div>
       </div>
     );
