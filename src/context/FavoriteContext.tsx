@@ -28,16 +28,13 @@ const { user, loading } = useAuth();
 const [favorites, setFavorites] = useState<string[]>([]);
 
  useEffect(() => {
-  // Eğer Auth durumu hâlâ yükleniyorsa hiçbir şey yapma
   if (loading) return;
 
-  // Kullanıcı yoksa favorileri sıfırla
   if (!user) {
     setFavorites([]);
     return;
   }
 
-  // Kullanıcı varsa Firestore'dan favorileri dinle
   const favRef = collection(db, "users", user.uid, "favorites");
   const q = query(favRef);
 
@@ -50,7 +47,6 @@ const [favorites, setFavorites] = useState<string[]>([]);
 }, [user, loading]);
 
 
-  // 🔹 Favoriyi ekle / kaldır
   async function toggleFavorite(productId: string) {
     if (!user) {
       console.warn("Please sign in to use favorites.");
@@ -75,7 +71,6 @@ const [favorites, setFavorites] = useState<string[]>([]);
     }
   }
 
-  // 🔹 Favori kontrolü
   function isFavorite(productId: string) {
     return favorites.includes(productId);
   }
@@ -87,7 +82,6 @@ const [favorites, setFavorites] = useState<string[]>([]);
   );
 };
 
-// 🔹 Hook export
 export const useFavorites = () => {
   const context = useContext(FavoriteContext);
   if (!context) {

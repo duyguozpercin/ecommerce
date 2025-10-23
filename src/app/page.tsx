@@ -64,7 +64,8 @@ export default async function Home({ searchParams }: HomeProps) {
 
              
               <div className="flex flex-row items-center gap-x-4 mt-2">
-                <AddToCartButton product={{ ...product, id: String(product.id) }} />
+                <AddToCartButton productId={String(product.id)} />
+
                 <BuyButton productId={String(product.id)} />
               </div>
             </div>

@@ -77,7 +77,8 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                       <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
                     </Link>
                     <div className="text-center mt-6 flex justify-center gap-4">
-                    <AddToCartButton product={{ ...product, id: String(product.id) }} />
+                    <AddToCartButton productId={String(product.id)} />
+
                     <BuyButton productId={String(product.id)} />
                     </div>
                   </div>

@@ -32,7 +32,7 @@ export default function RootLayout({
           style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
         >
           <div className="layout-container flex h-full grow flex-col bg-orange-50">
-            {/* ✅ AuthProvider en dışta olmalı */}
+           
             <AuthProvider>
               <FavoritesProvider>
                 <CartProvider>

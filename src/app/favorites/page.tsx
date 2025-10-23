@@ -90,7 +90,7 @@ const FavoritesPage = () => {
             key={product.id}
             className="bg-white dark:text-stone-900 shadow-xl rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
           >
-            {/* 🔹 Görsel alanı */}
+
             <div className="relative w-full h-[160px] sm:h-[180px] overflow-hidden rounded mb-3">
               <Link
                 href={`/products/${product.id}`}
@@ -106,13 +106,13 @@ const FavoritesPage = () => {
                 />
               </Link>
 
-              {/* ❤️ Favori kalbi resmin üstünde */}
+
               <div className="absolute top-2 right-2 z-10">
                 <FavoriteButton productId={product.id} />
               </div>
             </div>
 
-            {/* 🔹 Ürün bilgileri */}
+
             <h2 className="text-sm sm:text-base font-semibold text-center">
               {product.brand}
             </h2>
@@ -121,7 +121,7 @@ const FavoritesPage = () => {
               {product.price}$
             </h2>
 
-            {/* 🔹 Add to Cart & Buy Now butonları */}
+         
             <div className="flex flex-row items-center gap-x-4 mt-2">
               <AddToCartButton productId={String(product.id)} />
 
