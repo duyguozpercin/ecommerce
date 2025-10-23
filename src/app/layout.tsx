@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
-import { CartProvider } from "../context/CartContext"
+import { CartProvider } from "../context/CartContext";
 import { AuthProvider } from "../context/AuthContext";
 import { FavoritesProvider } from "../context/FavoriteContext";
-
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
@@ -36,14 +32,15 @@ export default function RootLayout({
           style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
         >
           <div className="layout-container flex h-full grow flex-col bg-orange-50">
-            <FavoritesProvider>
-            <CartProvider>
-              <AuthProvider>
-                <Navbar />
-                <main className="flex-1">{children}</main>
-              </AuthProvider>
-            </CartProvider>
-            </FavoritesProvider>
+            {/* ✅ AuthProvider en dışta olmalı */}
+            <AuthProvider>
+              <FavoritesProvider>
+                <CartProvider>
+                  <Navbar />
+                  <main className="flex-1">{children}</main>
+                </CartProvider>
+              </FavoritesProvider>
+            </AuthProvider>
           </div>
         </div>
       </body>
