@@ -25,7 +25,7 @@ export default function Navbar() {
             href="/"
             className="text-2xl font-bold text-[#171212] hover:text-black font-sans tracking-wide"
           >
-            Home
+            SweetHome
           </Link>
           <button
             aria-label="Toggle menu"
