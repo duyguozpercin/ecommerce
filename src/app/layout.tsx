@@ -5,6 +5,13 @@ import Navbar from "../components/Navbar";
 import { CartProvider } from "../context/CartContext";
 import { AuthProvider } from "../context/AuthContext";
 import { FavoritesProvider } from "../context/FavoriteContext";
+import { Playfair_Display } from 'next/font/google';
+
+export const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+});
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +33,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={playfair.className}>
         <div
           className="relative flex min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
           style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
