@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Heart } from "lucide-react";
 import { useState } from "react";
 import NavigationMenu from "./NavigationMenu";
 import CartBadge from "./CartBadge";
@@ -19,18 +19,25 @@ export default function Navbar() {
     <header className="bg-blue-50 px-6 py-4 border-b border-neutral-200 shadow-sm">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
+    
         <div className="flex items-center justify-between w-full md:w-auto">
           <Link
             href="/"
             className="text-2xl font-bold text-[#171212] hover:text-black font-sans tracking-wide"
           >
-            Home
+            SweetHome
           </Link>
-          <button aria-label="Toggle menu" data-testid="mobile-toggle" onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2">
+          <button
+            aria-label="Toggle menu"
+            data-testid="mobile-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden p-2"
+          >
             {menuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
 
+      
         <NavigationMenu />
 
         <div className="flex items-center justify-center md:justify-end w-full md:w-auto gap-4 relative">
@@ -44,7 +51,19 @@ export default function Navbar() {
             </span>
           )}
 
+  
           <CartBadge />
+
+    
+          <Link
+            href="/favorites"
+            aria-label="Go to Favorites"
+            className="text-gray-700 hover:text-red-500 transition-colors duration-300 relative"
+          >
+            <Heart size={22} strokeWidth={2} />
+          </Link>
+
+     
           <UserDropdown />
 
           {user && (

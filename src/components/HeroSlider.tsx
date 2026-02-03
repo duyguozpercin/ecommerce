@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const images = [
-  '/sofa.png'
+  '/livingroom1.png'
 ];
 
 export default function HeroSlider() {
@@ -38,8 +38,8 @@ export default function HeroSlider() {
           
           <div className="absolute inset-0 flex items-center justify-center">
           <div
-        className="px-10 py-5 text-2xl font-bold text-white rounded-lg shadow-lg"
-        style={{ backgroundColor: 'rgba(180, 142, 120, 0.8)' }}
+        className="px-10 py-5 text-2xl font-bold text-gray-800 rounded-lg shadow-lg"
+        style={{ backgroundColor: 'rgba(240, 238, 237, 0.8)' }}
       >
         Explore All Products
       </div>

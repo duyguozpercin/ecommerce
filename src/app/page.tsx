@@ -5,13 +5,13 @@ import { Product } from "@/types/product";
 import HeroSlider from "@/components/HeroSlider";
 import AddToCartButton from "@/components/AddToCartButton";
 import { BuyButton } from "./BuyButton";
+import FavoriteButton from "@/components/FavoriteButton";
 
 interface HomeProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-
   const canceled = searchParams?.canceled;
 
   if (canceled) {
@@ -39,8 +39,10 @@ export default async function Home({ searchParams }: HomeProps) {
               key={product.id}
               className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
             >
-              <Link href={`/products/${product.id}`} className="w-full" data-testid="product-link">
-                <div className="w-full h-[160px] sm:h-[180px] relative overflow-hidden rounded mb-3">
+              
+              <div className="w-full h-[160px] sm:h-[180px] relative overflow-hidden rounded mb-3">
+                
+                <Link href={`/products/${product.id}`} className="block w-full h-full" data-testid="product-link">
                   <Image
                     src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
                     alt={product.title}
@@ -49,15 +51,21 @@ export default async function Home({ searchParams }: HomeProps) {
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     priority
                   />
-                </div>
+                </Link>
 
-                <h2 className="text-sm sm:text-base font-semibold text-center">{product.brand}</h2>
-                <p className="text-sm sm:text-md text-center">{product.title}</p>
-                <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
-              </Link>
+                <FavoriteButton productId={String(product.id)} />
+              </div>
+  
 
+         
+              <h2 className="text-sm sm:text-base font-semibold text-center">{product.brand}</h2>
+              <p className="text-sm sm:text-md text-center">{product.title}</p>
+              <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
+
+             
               <div className="flex flex-row items-center gap-x-4 mt-2">
-                <AddToCartButton product={{ ...product, id: String(product.id) }} />
+                <AddToCartButton productId={String(product.id)} />
+
                 <BuyButton productId={String(product.id)} />
               </div>
             </div>

@@ -4,6 +4,8 @@ import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types/product';
 import { BuyButton } from '@/app/BuyButton';
 import AddToCartButton from '@/components/AddToCartButton';
+import FavoriteButton from '@/components/FavoriteButton';
+
 interface PageProps {
   searchParams: {
     canceled?: string;
@@ -68,13 +70,15 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                           sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                           priority
                         />
+                        <FavoriteButton productId={String(product.id)} /> 
                       </div>
                       <h2 className="text-sm sm:text-base font-semibold text-center">{product.brand}</h2>
                       <p className="text-sm sm:text-md text-center">{product.title}</p>
                       <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
                     </Link>
                     <div className="text-center mt-6 flex justify-center gap-4">
-                    <AddToCartButton product={{ ...product, id: String(product.id) }} />
+                    <AddToCartButton productId={String(product.id)} />
+
                     <BuyButton productId={String(product.id)} />
                     </div>
                   </div>
