@@ -1,27 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import { CartProvider } from "../context/CartContext";
 import { AuthProvider } from "../context/AuthContext";
 import { FavoritesProvider } from "../context/FavoriteContext";
-import { Playfair_Display } from 'next/font/google';
+import { Playfair_Display } from "next/font/google";
 import Footer from "@/components/Footer";
 
 export const playfair = Playfair_Display({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-});
-
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -33,24 +21,27 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={playfair.className}>
-        <div
-          className="relative flex min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
-          style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
-        >
-          <div className="layout-container flex h-full grow flex-col bg-orange-50">
-           
-            <AuthProvider>
-              <FavoritesProvider>
-                <CartProvider>
-                  <Navbar />
-                  <main className="flex-1">{children}</main>
-                  <Footer />
-                </CartProvider>
-              </FavoritesProvider>
-            </AuthProvider>
-          </div>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${playfair.className} bg-[#F5F3EF] text-stone-900`}
+        suppressHydrationWarning
+      >
+        {/* App Shell */}
+        <div className="min-h-screen flex flex-col overflow-x-hidden">
+          <AuthProvider>
+            <FavoritesProvider>
+              <CartProvider>
+                <Navbar />
+
+                {/* Main content */}
+                <main className="flex-1">
+                  {children}
+                </main>
+
+                <Footer />
+              </CartProvider>
+            </FavoritesProvider>
+          </AuthProvider>
         </div>
       </body>
     </html>

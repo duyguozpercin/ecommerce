@@ -43,7 +43,6 @@ export default async function Home({ searchParams }: HomeProps) {
     );
   }
 
-  // simple search
   const filtered = q
     ? products.filter((p) => {
         const brand = (p.brand ?? "").toLowerCase();
@@ -52,7 +51,6 @@ export default async function Home({ searchParams }: HomeProps) {
       })
     : products;
 
-  // simple sort
   const sorted = [...filtered].sort((a, b) => {
     const ap = Number(a.price) || 0;
     const bp = Number(b.price) || 0;
@@ -60,10 +58,9 @@ export default async function Home({ searchParams }: HomeProps) {
     if (sort === "price-asc") return ap - bp;
     if (sort === "price-desc") return bp - ap;
     if (sort === "brand") return String(a.brand ?? "").localeCompare(String(b.brand ?? ""));
-    return 0; // featured/default: keep original-ish
+    return 0;
   });
 
-  // top picks (UI amaçlı)
   const topPicks = sorted.slice(0, 4);
 
   return (
@@ -73,34 +70,51 @@ export default async function Home({ searchParams }: HomeProps) {
       <main className="px-4 pb-14 pt-6 sm:px-6">
         <section className="mx-auto max-w-7xl">
           {/* Header */}
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-500">
                 SweetHome Market
               </p>
-              <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+              <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900">
                 New arrivals, timeless pieces
               </h1>
-              <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">
+              <p className="mt-1 text-sm text-stone-600">
                 Browse, favorite, add to cart, or checkout instantly.
               </p>
             </div>
 
-            {/* Toolbar (GET form -> searchParams) */}
-            <form className="mt-4 sm:mt-0 flex w-full sm:w-auto gap-2" action="/" method="get">
-              <div className="relative flex-1 sm:w-[280px]">
+            {/* Toolbar */}
+            <form
+              className="mt-2 sm:mt-0 flex w-full sm:w-auto gap-2"
+              action="/"
+              method="get"
+            >
+              <div className="relative flex-1 sm:w-[300px]">
                 <input
                   name="q"
                   defaultValue={q}
                   placeholder="Search brand or title…"
-                  className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-stone-900 shadow-sm outline-none transition focus:border-stone-300 focus:ring-2 focus:ring-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:focus:ring-stone-700"
+                  className="
+                    w-full rounded-xl
+                    border border-stone-200/70
+                    bg-white/80 backdrop-blur
+                    px-4 py-2.5 text-sm text-stone-900
+                    shadow-sm outline-none transition
+                    focus:border-stone-300 focus:ring-2 focus:ring-stone-200
+                  "
                 />
               </div>
 
               <select
                 name="sort"
                 defaultValue={sort}
-                className="rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm text-stone-900 shadow-sm outline-none transition focus:border-stone-300 focus:ring-2 focus:ring-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:focus:ring-stone-700"
+                className="
+                  rounded-xl border border-stone-200/70
+                  bg-white/80 backdrop-blur
+                  px-3 py-2.5 text-sm text-stone-900
+                  shadow-sm outline-none transition
+                  focus:border-stone-300 focus:ring-2 focus:ring-stone-200
+                "
                 aria-label="Sort products"
               >
                 <option value="featured">Featured</option>
@@ -110,7 +124,12 @@ export default async function Home({ searchParams }: HomeProps) {
               </select>
 
               <button
-                className="rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+                className="
+                  rounded-xl bg-stone-900
+                  px-4 py-2.5 text-sm font-semibold
+                  text-white shadow-sm transition
+                  hover:bg-stone-800 active:scale-[0.98]
+                "
                 type="submit"
               >
                 Apply
@@ -127,23 +146,83 @@ export default async function Home({ searchParams }: HomeProps) {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900"
+                className="
+                  rounded-2xl
+                  border border-stone-200/70
+                  bg-stone-50/70
+                  p-4 shadow-sm
+                  backdrop-blur
+                "
               >
-                <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">{item.title}</p>
-                <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{item.desc}</p>
+                <p className="text-sm font-semibold text-stone-900">{item.title}</p>
+                <p className="mt-1 text-sm text-stone-600">{item.desc}</p>
               </div>
             ))}
           </div>
 
+          {/* Featured picks (modern şerit) */}
+          {topPicks.length > 0 && (
+            <div className="mt-8 overflow-hidden rounded-3xl border border-stone-200/70 bg-white/70 backdrop-blur shadow-sm">
+              <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-500">
+                    Featured picks
+                  </p>
+                  <p className="mt-1 text-sm text-stone-700">
+                    A small selection we think you’ll love.
+                  </p>
+                </div>
+
+                <Link
+                  href="/products"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98]"
+                >
+                  Explore all products
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 p-5 pt-0 md:grid-cols-4">
+                {topPicks.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/products/${p.id}`}
+                    className="
+                      group rounded-2xl
+                      border border-stone-200/70
+                      bg-white
+                      p-3 shadow-sm transition
+                      hover:-translate-y-0.5 hover:shadow-md
+                    "
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+                      {p.brand}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-sm font-semibold text-stone-900">
+                      {p.title}
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-stone-900">
+                      {formatPrice(p.price)}
+                    </p>
+                    <p className="mt-2 text-xs text-stone-500 group-hover:text-stone-700">
+                      View details →
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Result meta */}
-          <div className="mt-10 flex items-center justify-between text-sm text-stone-600 dark:text-stone-300">
+          <div className="mt-10 flex items-center justify-between text-sm text-stone-600">
             <p>
-              Showing <span className="font-semibold text-stone-900 dark:text-stone-100">{sorted.length}</span> items
+              Showing{" "}
+              <span className="font-semibold text-stone-900">{sorted.length}</span>{" "}
+              items
               {q ? (
                 <>
                   {" "}
-                  for <span className="font-semibold text-stone-900 dark:text-stone-100">“{q}”</span>
+                  for{" "}
+                  <span className="font-semibold text-stone-900">“{q}”</span>
                 </>
               ) : null}
             </p>
@@ -151,7 +230,7 @@ export default async function Home({ searchParams }: HomeProps) {
             {q ? (
               <Link
                 href="/"
-                className="underline decoration-stone-300 underline-offset-4 hover:text-stone-900 dark:hover:text-white"
+                className="underline decoration-stone-300 underline-offset-4 hover:text-stone-900"
               >
                 Clear search
               </Link>
@@ -162,15 +241,17 @@ export default async function Home({ searchParams }: HomeProps) {
 
           {/* Empty state */}
           {sorted.length === 0 ? (
-            <div className="mt-10 rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm dark:border-stone-700 dark:bg-stone-900">
-              <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">No products found</h2>
-              <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">
+            <div className="mt-10 rounded-3xl border border-stone-200/70 bg-white/80 backdrop-blur p-8 text-center shadow-sm">
+              <h2 className="text-lg font-semibold text-stone-900">
+                No products found
+              </h2>
+              <p className="mt-2 text-sm text-stone-600">
                 Try a different keyword or clear the search.
               </p>
               <div className="mt-5">
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98]"
                 >
                   Back to all products
                 </Link>
@@ -178,25 +259,30 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
           ) : null}
 
-          {/* Grid (4 per row on desktop) */}
+          {/* Grid */}
           <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
             {sorted.map((product) => {
-              const imgSrc = product.thumbnail || product.images?.[0] || "/placeholder.png";
+              const imgSrc =
+                product.thumbnail || product.images?.[0] || "/placeholder.png";
 
               return (
                 <article
                   key={product.id}
                   className="
                     group relative overflow-hidden rounded-2xl
-                    border border-stone-200 bg-white
+                    border border-stone-200/70
+                    bg-white/90 backdrop-blur
                     shadow-sm transition
-                    hover:shadow-lg hover:-translate-y-0.5
-                    dark:border-stone-700 dark:bg-stone-900
+                    hover:-translate-y-0.5 hover:shadow-lg
                   "
                 >
-                  {/* Image area */}
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
-                    <Link href={`/products/${product.id}`} className="block h-full w-full" data-testid="product-link">
+                  {/* Image */}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-100">
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="block h-full w-full"
+                      data-testid="product-link"
+                    >
                       <Image
                         src={imgSrc}
                         alt={product.title}
@@ -210,26 +296,26 @@ export default async function Home({ searchParams }: HomeProps) {
 
                     <FavoriteButton productId={String(product.id)} />
 
-                    <div className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-stone-900 shadow-sm backdrop-blur dark:bg-stone-950/70 dark:text-stone-100">
+                    <div className="absolute left-3 top-3 rounded-full bg-white/85 px-2.5 py-1 text-[11px] font-medium text-stone-900 shadow-sm backdrop-blur">
                       Curated
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="p-3 sm:p-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500 dark:text-stone-400">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                       {product.brand}
                     </h3>
 
-                    <p className="mt-1 line-clamp-2 text-sm font-medium text-stone-900 dark:text-stone-100">
+                    <p className="mt-1 line-clamp-2 text-sm font-medium text-stone-900">
                       {product.title}
                     </p>
 
                     <div className="mt-2 flex items-center justify-between">
-                      <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">
+                      <p className="text-sm font-semibold text-stone-900">
                         {formatPrice(product.price)}
                       </p>
-                      <span className="text-xs text-stone-500 dark:text-stone-400">Free returns</span>
+                      <span className="text-xs text-stone-500">Free returns</span>
                     </div>
 
                     {/* Actions */}
@@ -247,13 +333,14 @@ export default async function Home({ searchParams }: HomeProps) {
             })}
           </div>
 
-          {/* Bottom: why + mini FAQ */}
+          {/* Bottom */}
           <div className="mt-12 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700 dark:bg-stone-900">
-              <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100">Why SweetHome?</h3>
-              <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">
+            <div className="rounded-3xl border border-stone-200/70 bg-white/80 backdrop-blur p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-stone-900">Why SweetHome?</h3>
+              <p className="mt-2 text-sm text-stone-600">
                 We keep the catalog curated, the experience fast, and the checkout frictionless.
               </p>
+
               <div className="mt-5 grid gap-3 sm:grid-cols-2">
                 {[
                   { title: "Curated picks", desc: "No clutter, just good pieces." },
@@ -261,25 +348,29 @@ export default async function Home({ searchParams }: HomeProps) {
                   { title: "Favorites", desc: "Save and revisit anytime." },
                   { title: "Cart ready", desc: "Add and manage instantly." },
                 ].map((x) => (
-                  <div key={x.title} className="rounded-2xl border border-stone-200 p-4 dark:border-stone-700">
-                    <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">{x.title}</p>
-                    <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{x.desc}</p>
+                  <div
+                    key={x.title}
+                    className="rounded-2xl border border-stone-200/70 bg-white p-4 shadow-sm"
+                  >
+                    <p className="text-sm font-semibold text-stone-900">{x.title}</p>
+                    <p className="mt-1 text-sm text-stone-600">{x.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700 dark:bg-stone-900">
-              <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100">Quick FAQ</h3>
+            <div className="rounded-3xl border border-stone-200/70 bg-white/80 backdrop-blur p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-stone-900">Quick FAQ</h3>
+
               <div className="mt-4 space-y-4">
                 {[
                   { q: "Do I need an account to buy?", a: "You can checkout as guest. Favorites require sign-in." },
                   { q: "Is checkout secure?", a: "Payments are handled via Stripe." },
                   { q: "How do returns work?", a: "Simple returns flow—contact support and we’ll guide you." },
                 ].map((f) => (
-                  <div key={f.q} className="rounded-2xl border border-stone-200 p-4 dark:border-stone-700">
-                    <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">{f.q}</p>
-                    <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{f.a}</p>
+                  <div key={f.q} className="rounded-2xl border border-stone-200/70 bg-white p-4 shadow-sm">
+                    <p className="text-sm font-semibold text-stone-900">{f.q}</p>
+                    <p className="mt-1 text-sm text-stone-600">{f.a}</p>
                   </div>
                 ))}
               </div>
@@ -287,7 +378,7 @@ export default async function Home({ searchParams }: HomeProps) {
               <div className="mt-6">
                 <Link
                   href="/contact"
-                  className="inline-flex h-11 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98]"
                 >
                   Contact support
                 </Link>
