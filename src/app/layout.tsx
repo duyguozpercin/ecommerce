@@ -6,6 +6,7 @@ import { CartProvider } from "../context/CartContext";
 import { AuthProvider } from "../context/AuthContext";
 import { FavoritesProvider } from "../context/FavoriteContext";
 import { Playfair_Display } from 'next/font/google';
+import Footer from "@/components/Footer";
 
 export const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -45,6 +46,7 @@ export default function RootLayout({
                 <CartProvider>
                   <Navbar />
                   <main className="flex-1">{children}</main>
+                  <Footer />
                 </CartProvider>
               </FavoritesProvider>
             </AuthProvider>

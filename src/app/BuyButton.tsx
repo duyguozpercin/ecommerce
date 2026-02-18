@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { auth } from '@/utils/firebase';
-import { useState, useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from "@/utils/firebase";
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
 
 interface CartItem {
   id: string;
@@ -34,8 +34,8 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
         cartItems && cartItems.length > 0
           ? cartItems
           : productId
-          ? [{ id: productId, quantity: 1 }]
-          : [];
+            ? [{ id: productId, quantity: 1 }]
+            : [];
 
       if (items.length === 0) {
         console.error("Checkout could not be started: cartItems or productId is missing.");
@@ -43,12 +43,12 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
         return;
       }
 
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          userId: userId ?? 'guest',
-          cartItems: items 
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userId ?? "guest",
+          cartItems: items,
         }),
       });
 
@@ -57,10 +57,10 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
       if (data?.url) {
         window.location.href = data.url;
       } else {
-        console.error('Stripe redirect URL could not be retrieved', data);
+        console.error("Stripe redirect URL could not be retrieved", data);
       }
     } catch (error) {
-      console.error('Stripe redirect error:', error);
+      console.error("Stripe redirect error:", error);
     } finally {
       setLoading(false);
     }
@@ -71,9 +71,31 @@ export const BuyButton = ({ productId, cartItems, className }: BuyButtonProps) =
       data-testid="buy-btn"
       onClick={handleCheckout}
       disabled={loading}
-      className={`bg-[#c6937b] text-white text-sm px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 leading-normal z-10 ${className ?? ''}`}
+      className={`
+    inline-flex items-center justify-center gap-2
+    h-11 w-full
+    rounded-xl
+    text-sm font-semibold
+    border border-stone-200
+    bg-white text-stone-900
+    shadow-sm
+    transition
+    hover:bg-stone-50
+    active:scale-[0.98]
+    disabled:cursor-not-allowed disabled:opacity-70
+    ${className ?? ""}
+  `}
     >
-      {loading ? 'Redirecting…' : 'Buy Now'}
+
+
+      {loading ? (
+        <>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-stone-300 border-t-stone-900 dark:border-stone-600 dark:border-t-white" />
+          Redirecting…
+        </>
+      ) : (
+        "Buy Now"
+      )}
     </button>
   );
 };

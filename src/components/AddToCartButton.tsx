@@ -1,19 +1,31 @@
-'use client';
+"use client";
 
-import { useCart } from '@/context/CartContext';
+import { useCart } from "@/context/CartContext";
 
 interface Props {
   productId: string;
+  className?: string;
 }
 
-export default function AddToCartButton({ productId }: Props) {
+export default function AddToCartButton({ productId, className }: Props) {
   const { addToCart } = useCart();
 
   return (
     <button
       data-testid="add-to-cart-btn"
-      className="bg-[#c6937b] text-white px-2 py-1 rounded hover:bg-amber-600 cursor-pointer transition-colors duration-300 text-sm"
       onClick={() => addToCart(productId)}
+      className={`
+        inline-flex items-center justify-center
+        h-11 w-full
+        rounded-xl
+        text-sm font-semibold
+        bg-stone-900 text-white
+        shadow-sm
+        transition
+        hover:bg-stone-800
+        active:scale-[0.98]
+        ${className ?? ""}
+      `}
     >
       Add to Cart
     </button>

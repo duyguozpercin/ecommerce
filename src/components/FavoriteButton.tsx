@@ -28,13 +28,22 @@ const FavoriteButton = ({ productId }: FavoriteButtonProps) => {
   return (
     <button
       onClick={handleClick}
-      className="absolute top-2 right-2 text-xl cursor-pointer transition-transform hover:scale-110"
+      className="
+        absolute right-3 top-3
+        inline-flex h-9 w-9 items-center justify-center
+        rounded-full bg-white/90 shadow-sm backdrop-blur
+        transition
+        hover:scale-105 active:scale-[0.98]
+        dark:bg-stone-950/70
+      "
       aria-label="Toggle Favorite"
+      title={favorite ? "Remove from favorites" : "Add to favorites"}
+      type="button"
     >
       {favorite ? (
-        <FaHeart className="text-red-500" />
+        <FaHeart className="text-[18px] text-rose-500" />
       ) : (
-        <FaRegHeart className="text-gray-600" />
+        <FaRegHeart className="text-[18px] text-stone-700 dark:text-stone-200" />
       )}
     </button>
   );

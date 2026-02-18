@@ -11,8 +11,20 @@ interface HomeProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
+function normalizeParam(p?: string | string[]) {
+  return Array.isArray(p) ? p[0] : p;
+}
+
+function formatPrice(price: number | string) {
+  const n = typeof price === "string" ? Number(price) : price;
+  if (Number.isNaN(n)) return `${price}$`;
+  return `$${n.toFixed(2)}`;
+}
+
 export default async function Home({ searchParams }: HomeProps) {
-  const canceled = searchParams?.canceled;
+  const canceled = normalizeParam(searchParams?.canceled);
+  const q = (normalizeParam(searchParams?.q) ?? "").trim().toLowerCase();
+  const sort = normalizeParam(searchParams?.sort) ?? "featured";
 
   if (canceled) {
     console.log("Order canceled -- continue to shop around and checkout when you’re ready.");
@@ -24,53 +36,203 @@ export default async function Home({ searchParams }: HomeProps) {
     products = await getAllProducts();
   } catch (error) {
     console.error("Failed to fetch products:", error);
-    return <p className="text-center text-red-500 mt-10">Failed to load products.</p>;
+    return (
+      <main className="px-4 py-10 sm:px-6">
+        <p className="text-center text-red-500">Failed to load products.</p>
+      </main>
+    );
   }
+
+  // simple search
+  const filtered = q
+    ? products.filter((p) => {
+      const brand = (p.brand ?? "").toLowerCase();
+      const title = (p.title ?? "").toLowerCase();
+      return brand.includes(q) || title.includes(q);
+    })
+    : products;
+
+  // simple sort
+  const sorted = [...filtered].sort((a, b) => {
+    const ap = Number(a.price) || 0;
+    const bp = Number(b.price) || 0;
+
+    if (sort === "price-asc") return ap - bp;
+    if (sort === "price-desc") return bp - ap;
+    if (sort === "brand") return String(a.brand ?? "").localeCompare(String(b.brand ?? ""));
+    return 0; // featured/default: keep original-ish
+  });
 
   return (
     <>
       <HeroSlider />
-      <main className="px-4 py-6 sm:px-6 sm:py-8">
-        <div className="text-center my-12"></div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {products.map((product: Product) => (
-            <div
-              key={product.id}
-              className="bg-white shadow-xl dark:text-stone-900 rounded p-3 sm:p-4 flex flex-col items-center hover:scale-105 transition-transform duration-200 cursor-pointer bg-[#C2C2AF] w-full"
-            >
-              
-              <div className="w-full h-[160px] sm:h-[180px] relative overflow-hidden rounded mb-3">
-                
-                <Link href={`/products/${product.id}`} className="block w-full h-full" data-testid="product-link">
-                  <Image
-                    src={product.thumbnail || product.images?.[0] || "/placeholder.png"}
-                    alt={product.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                    priority
-                  />
-                </Link>
+      <main className="px-4 pb-10 pt-6 sm:px-6">
+        {/* Title + subtext */}
+        <section className="mx-auto max-w-7xl">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+                New arrivals, timeless pieces
+              </h1>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">
+                Browse, favorite, add to cart, or checkout instantly.
+              </p>
+            </div>
 
-                <FavoriteButton productId={String(product.id)} />
+            {/* Toolbar (GET form -> searchParams) */}
+            <form className="mt-4 sm:mt-0 flex w-full sm:w-auto gap-2" action="/" method="get">
+              <div className="relative flex-1 sm:w-[280px]">
+                <input
+                  name="q"
+                  defaultValue={q}
+                  placeholder="Search brand or title…"
+                  className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-stone-900 shadow-sm outline-none transition focus:border-stone-300 focus:ring-2 focus:ring-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:focus:ring-stone-700"
+                />
               </div>
-  
 
-         
-              <h2 className="text-sm sm:text-base font-semibold text-center">{product.brand}</h2>
-              <p className="text-sm sm:text-md text-center">{product.title}</p>
-              <h2 className="font-semibold text-center text-sm sm:text-base">{product.price + "$"}</h2>
+              <select
+                name="sort"
+                defaultValue={sort}
+                className="rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm text-stone-900 shadow-sm outline-none transition focus:border-stone-300 focus:ring-2 focus:ring-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:focus:ring-stone-700"
+                aria-label="Sort products"
+              >
+                <option value="featured">Featured</option>
+                <option value="price-asc">Price: Low → High</option>
+                <option value="price-desc">Price: High → Low</option>
+                <option value="brand">Brand</option>
+              </select>
 
-             
-              <div className="flex flex-row items-center gap-x-4 mt-2">
-                <AddToCartButton productId={String(product.id)} />
+              <button
+                className="rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+                type="submit"
+              >
+                Apply
+              </button>
+            </form>
+          </div>
 
-                <BuyButton productId={String(product.id)} />
+          {/* Result meta */}
+          <div className="mt-6 flex items-center justify-between text-sm text-stone-600 dark:text-stone-300">
+            <p>
+              Showing <span className="font-semibold text-stone-900 dark:text-stone-100">{sorted.length}</span>{" "}
+              items
+              {q ? (
+                <>
+                  {" "}
+                  for <span className="font-semibold text-stone-900 dark:text-stone-100">“{q}”</span>
+                </>
+              ) : null}
+            </p>
+
+            {q ? (
+              <Link
+                href="/"
+                className="underline decoration-stone-300 underline-offset-4 hover:text-stone-900 dark:hover:text-white"
+              >
+                Clear search
+              </Link>
+            ) : (
+              <span />
+            )}
+          </div>
+
+          {/* Empty state */}
+          {sorted.length === 0 ? (
+            <div className="mt-10 rounded-2xl border border-stone-200 bg-white p-8 text-center shadow-sm dark:border-stone-700 dark:bg-stone-900">
+              <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-100">No products found</h2>
+              <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">
+                Try a different keyword or clear the search.
+              </p>
+              <div className="mt-5">
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+                >
+                  Back to all products
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
+          ) : null}
+
+          {/* Grid */}
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+            {sorted.map((product) => {
+              const imgSrc = product.thumbnail || product.images?.[0] || "/placeholder.png";
+
+              return (
+                <article
+                  key={product.id}
+                  className="
+                    group relative overflow-hidden rounded-2xl
+                    border border-stone-200 bg-white
+                    shadow-sm transition
+                    hover:shadow-lg hover:-translate-y-0.5
+                    dark:border-stone-700 dark:bg-stone-900
+                  "
+                >
+                  {/* Image area */}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
+                    <Link
+                      href={`/products/${product.id}`}
+                      className="block h-full w-full"
+                      data-testid="product-link"
+                    >
+                      <Image
+                        src={imgSrc}
+                        alt={product.title}
+                        fill
+                        className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        priority={false}
+                      />
+
+                      {/* subtle gradient for text contrast */}
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent opacity-0 transition group-hover:opacity-100" />
+                    </Link>
+
+                    <FavoriteButton productId={String(product.id)} />
+
+                    {/* optional badge */}
+                    <div className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-stone-900 shadow-sm backdrop-blur dark:bg-stone-950/70 dark:text-stone-100">
+                      Curated
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-3 sm:p-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-500 dark:text-stone-400">
+                      {product.brand}
+                    </h3>
+
+                    <p className="mt-1 line-clamp-2 text-sm font-medium text-stone-900 dark:text-stone-100">
+                      {product.title}
+                    </p>
+
+                    <div className="mt-2 flex items-center justify-between">
+                      <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">
+                        {formatPrice(product.price)}
+                      </p>
+
+                      {/* small hint */}
+                      <span className="text-xs text-stone-500 dark:text-stone-400">Free returns</span>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-4 flex items-center gap-2">
+                      <div className="flex-1">
+                        <AddToCartButton productId={String(product.id)} />
+                      </div>
+                      <div className="flex-1">
+                        <BuyButton productId={String(product.id)} />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
       </main>
     </>
   );
