@@ -46,10 +46,10 @@ export default async function Home({ searchParams }: HomeProps) {
   // simple search
   const filtered = q
     ? products.filter((p) => {
-      const brand = (p.brand ?? "").toLowerCase();
-      const title = (p.title ?? "").toLowerCase();
-      return brand.includes(q) || title.includes(q);
-    })
+        const brand = (p.brand ?? "").toLowerCase();
+        const title = (p.title ?? "").toLowerCase();
+        return brand.includes(q) || title.includes(q);
+      })
     : products;
 
   // simple sort
@@ -63,16 +63,22 @@ export default async function Home({ searchParams }: HomeProps) {
     return 0; // featured/default: keep original-ish
   });
 
+  // top picks (UI amaçlı)
+  const topPicks = sorted.slice(0, 4);
+
   return (
     <>
       <HeroSlider />
 
-      <main className="px-4 pb-10 pt-6 sm:px-6">
-        {/* Title + subtext */}
+      <main className="px-4 pb-14 pt-6 sm:px-6">
         <section className="mx-auto max-w-7xl">
+          {/* Header */}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">
+                SweetHome Market
+              </p>
+              <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
                 New arrivals, timeless pieces
               </h1>
               <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">
@@ -112,11 +118,28 @@ export default async function Home({ searchParams }: HomeProps) {
             </form>
           </div>
 
+          {/* USP cards */}
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {[
+              { title: "Fast delivery", desc: "Carefully packed & quick shipment." },
+              { title: "Secure checkout", desc: "Stripe-powered payments." },
+              { title: "Easy returns", desc: "Simple return flow & support." },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-700 dark:bg-stone-900"
+              >
+                <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">{item.title}</p>
+                <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+
           {/* Result meta */}
-          <div className="mt-6 flex items-center justify-between text-sm text-stone-600 dark:text-stone-300">
+          <div className="mt-10 flex items-center justify-between text-sm text-stone-600 dark:text-stone-300">
             <p>
-              Showing <span className="font-semibold text-stone-900 dark:text-stone-100">{sorted.length}</span>{" "}
-              items
+              Showing <span className="font-semibold text-stone-900 dark:text-stone-100">{sorted.length}</span> items
               {q ? (
                 <>
                   {" "}
@@ -155,8 +178,8 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
           ) : null}
 
-          {/* Grid */}
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+          {/* Grid (4 per row on desktop) */}
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
             {sorted.map((product) => {
               const imgSrc = product.thumbnail || product.images?.[0] || "/placeholder.png";
 
@@ -173,27 +196,20 @@ export default async function Home({ searchParams }: HomeProps) {
                 >
                   {/* Image area */}
                   <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone-100 dark:bg-stone-800">
-                    <Link
-                      href={`/products/${product.id}`}
-                      className="block h-full w-full"
-                      data-testid="product-link"
-                    >
+                    <Link href={`/products/${product.id}`} className="block h-full w-full" data-testid="product-link">
                       <Image
                         src={imgSrc}
                         alt={product.title}
                         fill
                         className="object-cover transition duration-300 group-hover:scale-[1.03]"
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         priority={false}
                       />
-
-                      {/* subtle gradient for text contrast */}
                       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/35 to-transparent opacity-0 transition group-hover:opacity-100" />
                     </Link>
 
                     <FavoriteButton productId={String(product.id)} />
 
-                    {/* optional badge */}
                     <div className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-stone-900 shadow-sm backdrop-blur dark:bg-stone-950/70 dark:text-stone-100">
                       Curated
                     </div>
@@ -213,24 +229,70 @@ export default async function Home({ searchParams }: HomeProps) {
                       <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">
                         {formatPrice(product.price)}
                       </p>
-
-                      {/* small hint */}
                       <span className="text-xs text-stone-500 dark:text-stone-400">Free returns</span>
                     </div>
 
                     {/* Actions */}
                     <div className="mt-4 flex items-center gap-2">
                       <div className="flex-1">
-                        <AddToCartButton productId={String(product.id)} />
+                        <AddToCartButton productId={String(product.id)} className="w-full" />
                       </div>
                       <div className="flex-1">
-                        <BuyButton productId={String(product.id)} />
+                        <BuyButton productId={String(product.id)} className="w-full h-11" />
                       </div>
                     </div>
                   </div>
                 </article>
               );
             })}
+          </div>
+
+          {/* Bottom: why + mini FAQ */}
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+              <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100">Why SweetHome?</h3>
+              <p className="mt-2 text-sm text-stone-600 dark:text-stone-300">
+                We keep the catalog curated, the experience fast, and the checkout frictionless.
+              </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {[
+                  { title: "Curated picks", desc: "No clutter, just good pieces." },
+                  { title: "Fast checkout", desc: "Stripe redirect in seconds." },
+                  { title: "Favorites", desc: "Save and revisit anytime." },
+                  { title: "Cart ready", desc: "Add and manage instantly." },
+                ].map((x) => (
+                  <div key={x.title} className="rounded-2xl border border-stone-200 p-4 dark:border-stone-700">
+                    <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">{x.title}</p>
+                    <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{x.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+              <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100">Quick FAQ</h3>
+              <div className="mt-4 space-y-4">
+                {[
+                  { q: "Do I need an account to buy?", a: "You can checkout as guest. Favorites require sign-in." },
+                  { q: "Is checkout secure?", a: "Payments are handled via Stripe." },
+                  { q: "How do returns work?", a: "Simple returns flow—contact support and we’ll guide you." },
+                ].map((f) => (
+                  <div key={f.q} className="rounded-2xl border border-stone-200 p-4 dark:border-stone-700">
+                    <p className="text-sm font-semibold text-stone-900 dark:text-stone-100">{f.q}</p>
+                    <p className="mt-1 text-sm text-stone-600 dark:text-stone-300">{f.a}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6">
+                <Link
+                  href="/contact"
+                  className="inline-flex h-11 items-center justify-center rounded-xl bg-stone-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 active:scale-[0.98] dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+                >
+                  Contact support
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
       </main>
