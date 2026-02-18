@@ -45,10 +45,10 @@ export default async function Home({ searchParams }: HomeProps) {
 
   const filtered = q
     ? products.filter((p) => {
-        const brand = (p.brand ?? "").toLowerCase();
-        const title = (p.title ?? "").toLowerCase();
-        return brand.includes(q) || title.includes(q);
-      })
+      const brand = (p.brand ?? "").toLowerCase();
+      const title = (p.title ?? "").toLowerCase();
+      return brand.includes(q) || title.includes(q);
+    })
     : products;
 
   const sorted = [...filtered].sort((a, b) => {
